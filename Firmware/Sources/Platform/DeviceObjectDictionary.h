@@ -69,8 +69,6 @@
 #define REG_CELL6_GATEV7			111	// Gate voltage setpoint 7 for cell 6
 #define REG_CELL6_VRATE7			112	// Voltage rate setpoint 7 for cell 6
 //
-#define REG_SP__1					127
-//
 // ----------------------------------------
 //
 #define REG_DESIRED_VOLTAGE			128	// Desired plate voltage
@@ -85,9 +83,6 @@
 #define REG_DIAG_TEST_CELL_ID		185
 #define REG_DIAG_TEST_PARAM_1		186
 #define REG_DIAG_TEST_PARAM_2		187
-// 186 - 190
-//
-#define REG_SP__2					191
 //
 // ----------------------------------------
 //
@@ -135,9 +130,13 @@
 #define REG_DIAG_GATEV_CELL5		234	// Cell 5 gate voltage
 #define REG_DIAG_GATEV_CELL6		235	// Cell 6 gate voltage
 //
-#define REG_SP__3					255
-//
 // ----------------------------------------
+//
+#define REG_FWINFO_SLAVE_NID		256	// Device CAN slave node ID
+#define REG_FWINFO_MASTER_NID		257	// Device CAN master node ID (if presented)
+// 258 - 259
+#define REG_FWINFO_STR_LEN			260	// Length of the information string record
+#define REG_FWINFO_STR_BEGIN		261	// Begining of the information string record
 
 // CELL ACTIONS
 //
