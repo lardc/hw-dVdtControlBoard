@@ -236,7 +236,6 @@ static void CONTROL_SwitchToFault(Int16U FaultReason, Int16U ErrorCodeEx)
 {
 	ZbGPIO_SwitchMeanwell(FALSE);
 	LOGIC_Reset();
-	ZbFan_SetSilent(TRUE);
 
 	CONTROL_SetDeviceState(DS_Fault);
 	DataTable[REG_FAULT_REASON] = FaultReason;
@@ -300,10 +299,7 @@ static Boolean CONTROL_DispatchAction(Int16U ActionID, pInt16U UserError)
 					if(!CELLMUX_SetCellPowerState(TRUE))
 						CONTROL_SwitchToFaultEx();
 					else
-					{
-						ZbFan_SetSilent(FALSE);
 						CONTROL_SetDeviceState(DS_Ready);
-					}
 				}
 				else
 					*UserError = ERR_DEVICE_NOT_READY;
@@ -317,7 +313,6 @@ static Boolean CONTROL_DispatchAction(Int16U ActionID, pInt16U UserError)
 						CONTROL_SwitchToFaultEx();
 					else
 					{
-						ZbFan_SetSilent(TRUE);
 						CONTROL_SetDeviceState(DS_None);
 						CONTROL_FillWPPartDefault();
 					}
@@ -346,7 +341,10 @@ static Boolean CONTROL_DispatchAction(Int16U ActionID, pInt16U UserError)
 				if(CONTROL_State == DS_Ready)
 				{
 					if (CONTROL_ValidateSettings(DataTable[REG_VOLTAGE_RATE]))
+					{
+						CONTROL_HandleFanLogic(TRUE);
 						CONTROL_StartTest(DataTable[REG_VOLTAGE_RATE], DataTable[REG_TUNE_CUSTOM_SETTING]);
+					}
 					else
 						*UserError = ERR_OUT_OF_RANGE;
 				}
@@ -360,7 +358,10 @@ static Boolean CONTROL_DispatchAction(Int16U ActionID, pInt16U UserError)
 				if(CONTROL_State == DS_Ready)
 				{
 					if (CONTROL_ValidateSettings(500))
+					{
+						CONTROL_HandleFanLogic(TRUE);
 						CONTROL_StartTest(500, TRUE);
+					}
 					else
 						*UserError = ERR_OUT_OF_RANGE;
 				}
@@ -373,7 +374,10 @@ static Boolean CONTROL_DispatchAction(Int16U ActionID, pInt16U UserError)
 				if(CONTROL_State == DS_Ready)
 				{
 					if (CONTROL_ValidateSettings(1000))
+					{
+						CONTROL_HandleFanLogic(TRUE);
 						CONTROL_StartTest(1000, TRUE);
+					}
 					else
 						*UserError = ERR_OUT_OF_RANGE;
 				}
@@ -386,7 +390,10 @@ static Boolean CONTROL_DispatchAction(Int16U ActionID, pInt16U UserError)
 				if(CONTROL_State == DS_Ready)
 				{
 					if (CONTROL_ValidateSettings(1600))
+					{
+						CONTROL_HandleFanLogic(TRUE);
 						CONTROL_StartTest(1600, TRUE);
+					}
 					else
 						*UserError = ERR_OUT_OF_RANGE;
 				}
@@ -399,7 +406,10 @@ static Boolean CONTROL_DispatchAction(Int16U ActionID, pInt16U UserError)
 				if(CONTROL_State == DS_Ready)
 				{
 					if (CONTROL_ValidateSettings(2000))
+					{
+						CONTROL_HandleFanLogic(TRUE);
 						CONTROL_StartTest(2000, TRUE);
+					}
 					else
 						*UserError = ERR_OUT_OF_RANGE;
 				}
@@ -412,7 +422,10 @@ static Boolean CONTROL_DispatchAction(Int16U ActionID, pInt16U UserError)
 				if(CONTROL_State == DS_Ready)
 				{
 					if (CONTROL_ValidateSettings(2500))
+					{
+						CONTROL_HandleFanLogic(TRUE);
 						CONTROL_StartTest(2500, TRUE);
+					}
 					else
 						*UserError = ERR_OUT_OF_RANGE;
 				}
@@ -450,4 +463,28 @@ static Boolean CONTROL_DispatchAction(Int16U ActionID, pInt16U UserError)
 }
 // ----------------------------------------
 
-// No more.
+void CONTROL_HandleFanLogic(Boolean IsImpulse)
+{
+	static Int32U IncrementCounter = 0;
+	static Int64U FanOnTimeout = 0;
+
+	// Idle counter increment
+	if(!IsImpulse)
+		IncrementCounter++;
+
+	// Fan turn on
+	if((IncrementCounter > ((Int32U)DataTable[REG_FAN_OPERATE_PERIOD] * 1000)) || IsImpulse)
+	{
+		IncrementCounter = 0;
+		FanOnTimeout = CONTROL_TimeCounter + (Int32U)DataTable[REG_FAN_OPERATE_MIN_TIME] * 1000;
+		ZbGPIO_SwitchFAN(TRUE);
+	}
+
+	// Fan turn off
+	if(FanOnTimeout && (CONTROL_TimeCounter > FanOnTimeout))
+	{
+		FanOnTimeout = 0;
+		ZbGPIO_SwitchFAN(FALSE);
+	}
+}
+// ----------------------------------------

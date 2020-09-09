@@ -61,7 +61,8 @@
 #define REG_CELL_MAX_VOLTAGE		10	// Cell max voltage (in V)
 #define REG_CELL_MIN_RATE			11	// Cell min rate (in V/us)
 #define REG_CELL_MAX_RATE			12	// Cell max rate (in V/us)
-#define REG_COOLER_MAX_SPEED		13	// Cooling fan active duty cicle (in %)
+#define REG_FAN_OPERATE_PERIOD		13	// Default fan turn on period (in s)
+#define REG_FAN_OPERATE_MIN_TIME	14	// Minimum fan turn on time (in s)
 // 14 -  29
 #define REG_CELL1_GATEV1			30	// Gate voltage setpoint 1 for cell 1
 #define REG_CELL1_VRATE1			31	// Voltage rate setpoint 1 for cell 1

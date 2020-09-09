@@ -1,4 +1,4 @@
-// -----------------------------------------
+// ----------------------------------------
 // Board-specific GPIO functions
 // ----------------------------------------
 
@@ -38,6 +38,7 @@ void ZbGPIO_Init()
 	ZwGPIO_WritePin(PIN_RESULT_OUT, FALSE);
 	ZwGPIO_WritePin(PIN_START_PULSE, FALSE);
 	ZwGPIO_WritePin(PIN_SYNC_EN, INVERT_SYNC ? TRUE : FALSE);
+	ZwGPIO_WritePin(PIN_OPT_V1V2, FALSE);
 	ZwGPIO_WritePin(PIN_OPT_V3V4, FALSE);
 	ZwGPIO_WritePin(PIN_OPT_V5V6, FALSE);
 	ZwGPIO_WritePin(PIN_OPT_V7V8, FALSE);
@@ -52,6 +53,7 @@ void ZbGPIO_Init()
    	ZwGPIO_PinToOutput(PIN_RESULT_OUT);
    	ZwGPIO_PinToOutput(PIN_START_PULSE);
    	ZwGPIO_PinToOutput(PIN_SYNC_EN);
+   	ZwGPIO_PinToOutput(PIN_OPT_V1V2);
    	ZwGPIO_PinToOutput(PIN_OPT_V3V4);
    	ZwGPIO_PinToOutput(PIN_OPT_V5V6);
    	ZwGPIO_PinToOutput(PIN_OPT_V7V8);
@@ -59,6 +61,12 @@ void ZbGPIO_Init()
    	ZwGPIO_PinToOutput(PIN_CELL_IND_2);
    	ZwGPIO_PinToOutput(PIN_CELL_IND_3);
    	ZwGPIO_PinToOutput(PIN_MEANWELL_EN);
+}
+// ----------------------------------------
+
+void ZbGPIO_SwitchFAN(Boolean Set)
+{
+	ZwGPIO_WritePin(PIN_OPT_V1V2, Set);
 }
 // ----------------------------------------
 

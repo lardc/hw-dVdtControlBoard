@@ -65,6 +65,10 @@ typedef struct __TableItemConstraint
 #define CELL_V_DEF_MAX				900		// in V
 #define CELL_V_DEF_MIN				50		// in V
 
+#define FAN_TIME_MIN				10		// in s
+#define FAN_TIME_MAX				600		// in s
+#define FAN_TIME_DEF				30		// in s
+
 // Variables
 //
 extern const TableItemConstraint NVConstraint[DATA_TABLE_NV_SIZE];

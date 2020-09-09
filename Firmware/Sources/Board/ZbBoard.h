@@ -10,7 +10,6 @@
 //
 #include "ZbGPIO.h"
 #include "ZbMemory.h"
-#include "ZbFAN.h"
 #include "ZbWatchDog.h"
 
 #endif // __ZB_BOARD_H

@@ -47,6 +47,7 @@ void CONTROL_Update();
 void CONTROL_NotifyCANFault(ZwCAN_SysFlags Flag);
 // Notify end of test
 void CONTROL_NotifyEndTest(Boolean Result, Int16U FaultReason, Int16U Warning);
+void CONTROL_HandleFanLogic(Boolean IsImpulse);
 
 
 #endif // __CONTROLLER_H

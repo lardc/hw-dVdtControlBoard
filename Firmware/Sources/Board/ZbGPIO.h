@@ -1,4 +1,4 @@
-// -----------------------------------------
+// ----------------------------------------
 // Board-specific GPIO functions
 // ----------------------------------------
 
@@ -33,6 +33,8 @@ void ZbGPIO_SwitchSyncEn(Boolean Enable);
 void ZbGPIO_SetActiveCell(Int16U CellNumber);
 // Switch relays
 void ZbGPIO_RelayLine(Boolean Out);
+// Switch fan
+void ZbGPIO_SwitchFAN(Boolean Set);
 
 // Inline functions
 //

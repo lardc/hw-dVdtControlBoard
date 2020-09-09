@@ -182,8 +182,6 @@ void InitializeBoard()
 	ZbMemory_Init();
 	// Init on-board GPIO
 	ZbGPIO_Init();
-	// Init cooling system
-	ZbFan_Init();
 }
 // -----------------------------------------
 
@@ -220,6 +218,8 @@ ISRCALL Timer0_ISR(void)
 		ZwSystem_ServiceDog();
 		ZbWatchDog_Strobe();
 	}
+
+	CONTROL_HandleFanLogic(FALSE);
 
 	++LedCounter;
 	if(LedCounter == DBG_COUNTER_PERIOD)
