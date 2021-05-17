@@ -165,6 +165,9 @@ Boolean CONTROL_ApplySettings(Int16U VRate, Boolean PerfomRateCorrection)
 
 		// global correction
 		VRate = (Int32U)VRate * DataTable[REG_RATE_GLOBAL_K_N] / DataTable[REG_RATE_GLOBAL_K_D];
+
+		// rate offset correction
+		VRate = (Int32U)((Int16S)VRate + (Int16S)DataTable[REG_RATE_OFFSET]);
 	}
 
 	// Check if settings differ

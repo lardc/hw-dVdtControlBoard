@@ -28,7 +28,7 @@ const TableItemConstraint NVConstraint[DATA_TABLE_NV_SIZE] =
 											   {CELL_RATE_MIN, CELL_RATE_MAX, CELL_RATE_DEF_MAX},						// 12
 											   {FAN_TIME_MIN, FAN_TIME_MAX, FAN_TIME_DEF},								// 13
 											   {FAN_TIME_MIN, FAN_TIME_MAX, FAN_TIME_DEF},								// 14
-											   {0, 0, 0},																// 15
+											   {0, INT16U_MAX, 0},														// 15
 											   {0, 0, 0},																// 16
 											   {0, 0, 0},																// 17
 											   {0, 0, 0},																// 18

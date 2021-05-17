@@ -63,6 +63,7 @@
 #define REG_CELL_MAX_RATE			12	// Cell max rate (in V/us)
 #define REG_FAN_OPERATE_PERIOD		13	// Default fan turn on period (in s)
 #define REG_FAN_OPERATE_MIN_TIME	14	// Minimum fan turn on time (in s)
+#define REG_RATE_OFFSET				15	// Rate offset (in V)
 // 14 -  29
 #define REG_CELL1_GATEV1			30	// Gate voltage setpoint 1 for cell 1
 #define REG_CELL1_VRATE1			31	// Voltage rate setpoint 1 for cell 1
