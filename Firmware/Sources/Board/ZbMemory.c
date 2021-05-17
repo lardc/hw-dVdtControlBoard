@@ -1,4 +1,4 @@
-// -----------------------------------------
+// ----------------------------------------
 // Driver for EEPROM via SPI
 // ----------------------------------------
 
@@ -7,12 +7,10 @@
 //
 #include "SysConfig.h"
 
-
 // Constants
 //
 #define EPROM_DATA_BUFFER_SIZE	16
-#define EPROM_DATA_SEGMENT		4		// 4 * 2 + (3) < 16 - SPI FIFO max depth
-#define MEM_CL					8
+#define EPROM_DATA_SEGMENT		4		// 4 * 2 + (3) < 16 - SPI FIFO max depth#define MEM_CL					8
 #define EPROM_WRITE_DELAY_US	5000
 //
 // EPROM commands
@@ -20,16 +18,13 @@
 #define EPROM_READ				0x03
 #define EPROM_WREN				0x06
 
-
 // Variables
 //
 static Int16U EPROMDataBuffer[EPROM_DATA_BUFFER_SIZE];
 
-
 // Forward functions
 //
 void ZbMemory_EnableWriteEPROM();
-
 
 // Functions
 //
@@ -40,9 +35,9 @@ void ZbMemory_Init()
 
 	EALLOW;
 	GpioCtrlRegs.GPAPUD.bit.SPI_B_SOMI_V = 1;   		// Select pull-up on (SPISOMIB)
-	GpioCtrlRegs.SPI_B_QSEL_V.bit.SPI_B_SOMI_V = 3; 		// Asynch input (SPISOMIB)
+	GpioCtrlRegs.SPI_B_QSEL_V.bit.SPI_B_SOMI_V = 3; 	// Asynch input (SPISOMIB)
 	GpioCtrlRegs.SPI_B_MUX_V.bit.SPI_B_SOMI_V = 3; 		// Configure as SPISOMIB
-    EDIS;
+	EDIS;
 
 	ZwSPIb_InitFIFO(0, 0);
 	ZwSPIb_ConfigInterrupts(FALSE, FALSE);
@@ -55,8 +50,8 @@ void ZbMemory_WriteValuesEPROM(Int16U EPROMAddress, pInt16U Buffer, Int16U Buffe
 	Int16U i, j, segCount;
 
 	// Calculate segment count: only 16 SRAM bytes can be written per one transaction (FIFO limit)
-	segCount = (BufferSize / EPROM_DATA_SEGMENT) + ((BufferSize % EPROM_DATA_SEGMENT) ? 1 : 0); 
-		
+	segCount = (BufferSize / EPROM_DATA_SEGMENT) + ((BufferSize % EPROM_DATA_SEGMENT) ? 1 : 0);
+
 	// Write segments
 	for(j = 0; j < segCount; ++j)
 	{
@@ -79,14 +74,13 @@ void ZbMemory_WriteValuesEPROM(Int16U EPROMAddress, pInt16U Buffer, Int16U Buffe
 			EPROMDataBuffer[3 + i * 2] = Buffer[j * EPROM_DATA_SEGMENT + i] >> 8;
 			EPROMDataBuffer[3 + i * 2 + 1] = Buffer[j * EPROM_DATA_SEGMENT + i] & 0x00FF;
 		}
-	
+
 		// Do SPI communication
 		dataSize = 3 + MIN(BufferSize - j * EPROM_DATA_SEGMENT, EPROM_DATA_SEGMENT) * 2;
 		ZwSPIb_Send(EPROMDataBuffer, dataSize, MEM_CL, STTNormal);
 
 		DELAY_US(EPROM_WRITE_DELAY_US);
 	}
-
 }
 // ----------------------------------------
 
@@ -95,8 +89,8 @@ void ZbMemory_ReadValuesEPROM(Int16U EPROMAddress, pInt16U Buffer, Int16U Buffer
 	Int16U i, j, segCount, dataSize;
 
 	// Calculate segment count: only 16 FRAM bytes can be read per one transaction (FIFO limit)
-	segCount = (BufferSize / EPROM_DATA_SEGMENT) + ((BufferSize % EPROM_DATA_SEGMENT) ? 1 : 0); 
-		
+	segCount = (BufferSize / EPROM_DATA_SEGMENT) + ((BufferSize % EPROM_DATA_SEGMENT) ? 1 : 0);
+
 	// Read segments
 	for(j = 0; j < segCount; ++j)
 	{
@@ -129,8 +123,6 @@ void ZbMemory_ReadValuesEPROM(Int16U EPROMAddress, pInt16U Buffer, Int16U Buffer
 		}
 	}
 }
-
-// ----------------------------------------
 // ----------------------------------------
 
 void ZbMemory_EnableWriteEPROM()
@@ -140,5 +132,4 @@ void ZbMemory_EnableWriteEPROM()
 	// Do SPI communication
 	ZwSPIb_Send(EPROMDataBuffer, 1, MEM_CL, STTNormal);
 }
-
-// No more.
+// ----------------------------------------

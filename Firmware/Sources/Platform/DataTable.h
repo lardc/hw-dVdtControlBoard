@@ -8,7 +8,6 @@
 // Include
 #include "stdinc.h"
 
-
 // Constants
 //
 #define DATA_TABLE_SIZE			300
@@ -35,7 +34,6 @@
  * DATA TABLE END 					------------- [300]
  */
 
-
 // Types
 //
 typedef void (*FUNC_SetDefaultValues)();
@@ -48,11 +46,9 @@ typedef struct __EPROMServiceConfig
 	FUNC_EPROM_ReadValues ReadService;
 } EPROMServiceConfig, *pERPOMServiceConfig;
 
-
 // Variables
 //
 extern volatile Int16U DataTable[DATA_TABLE_SIZE];
-
 
 // Functions
 //
@@ -69,4 +65,4 @@ void DT_ResetWRPart(FUNC_SetDefaultValues SetFunc);
 // Save firmware information to data table
 void DT_SaveFirmwareInfo(Int16U SlaveNID, Int16U MasterNID);
 
-#endif // __DATA_TABLE_H
+#endif // __DATA_TABLE_H
