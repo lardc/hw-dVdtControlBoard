@@ -133,7 +133,13 @@ Boolean CELLMUX_SetCellsState(Int16U CellVoltage, Int16U CellVRate, Int16U Fine)
 		{
 			ZbGPIO_SetActiveCell(i);
 
+
 			GateV = SP_Generate(i, CellVRate);
+
+			// Проверка превышения выходного напряжения ЦАП
+			if(GateV > GATE_VOLTAGE_MAX)
+				GateV = GATE_VOLTAGE_MAX;
+
 			DataTable[REG_DIAG_GATEV_CELL1 + i] = GateV;
 
 			if((ErrorCodeEx = SCCIM_Write16(&DEVICE_UART_Interface, SCCI_CELL_NODE_ID,

@@ -29,7 +29,7 @@
 #define CELL6_MASK						BIT5
 
 // Miscellaneous
-#define MAX_CELLS_COUNT					6			// maximum cells 6
+#define MAX_CELLS_COUNT					5			// maximum cells 6
 #define SCCI_CELL_NODE_ID				0			// cells have NodeID 0
 #define	SCCI_TIMEOUT_TICKS_MS			500			// (in ms)
 #define TEST_PREPARE_TIMEOUT_MS			5000		// (in ms)
@@ -50,6 +50,9 @@
 #define CORR_RATE_BY_FS_VOLTAGE			FALSE		// Tune rate by rate depending on full scale voltage
 
 #define INVERT_SYNC						FALSE		// Invert SYNC pin
+
+// CellBoard
+#define GATE_VOLTAGE_MAX				(5000 - 1)		// Max voltage from dVdtCellBoard DAC, in mV
 //--------------------------------------------------------
 
 #endif // __GLOBAL_H
