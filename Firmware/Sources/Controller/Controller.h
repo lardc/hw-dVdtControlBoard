@@ -11,17 +11,15 @@
 #include "ZwDSP.h"
 #include "Global.h"
 
-
 // Constants
 typedef enum __DeviceState
 {
-	DS_None			= 0,
-	DS_Fault		= 1,
-	DS_Disabled		= 2,
-	DS_Ready		= 3,
-	DS_InProcess	= 4
+	DS_None = 0,
+	DS_Fault = 1,
+	DS_Disabled = 2,
+	DS_Ready = 3,
+	DS_InProcess = 4
 } DeviceState;
-
 
 // Variables
 //
@@ -31,7 +29,6 @@ extern volatile DeviceState CONTROL_State;
 extern Int16U CONTROL_Values_1[VALUES_x_SIZE];
 extern volatile Int16U CONTROL_Values_1_Counter;
 extern volatile Int16U CONTROL_BootLoaderRequest;
-
 
 // Functions
 //
@@ -48,6 +45,5 @@ void CONTROL_NotifyCANFault(ZwCAN_SysFlags Flag);
 // Notify end of test
 void CONTROL_NotifyEndTest(Boolean Result, Int16U FaultReason, Int16U Warning);
 void CONTROL_HandleFanLogic(Boolean IsImpulse);
-
 
 #endif // __CONTROLLER_H
