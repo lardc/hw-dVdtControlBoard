@@ -122,7 +122,7 @@ Boolean CELLMUX_ReadStates()
 }
 // ----------------------------------------
 
-Boolean CELLMUX_SetCellsState(Int16U CellVoltage, Int16U CellVRate, Int16U Fine)
+Boolean CELLMUX_SetCellsState(Int16U CellVoltage, Int16U CellVRate, Int16U Fine, Int16U CellVRateRange)
 {
 	Int16U i, GateV;
 
@@ -142,9 +142,11 @@ Boolean CELLMUX_SetCellsState(Int16U CellVoltage, Int16U CellVRate, Int16U Fine)
 												CELL_REG_DESIRED_VOLTAGE, CellVoltage)) == ERR_NO_ERROR)
 					if((ErrorCodeEx = SCCIM_Write16(&DEVICE_UART_Interface, SCCI_CELL_NODE_ID,
 													CELL_REG_VOLTAGE_FINE_N, Fine)) == ERR_NO_ERROR)
-						if((ErrorCodeEx = SCCIM_Call(&DEVICE_UART_Interface, SCCI_CELL_NODE_ID,
-													 CELL_ACT_APPLY_PARAMS)) == ERR_NO_ERROR)
-						continue;
+						if((ErrorCodeEx = SCCIM_Write16(&DEVICE_UART_Interface, SCCI_CELL_NODE_ID,
+														CELL_REG_RATE_RANGE, CellVRateRange)) == ERR_NO_ERROR)
+							if((ErrorCodeEx = SCCIM_Call(&DEVICE_UART_Interface, SCCI_CELL_NODE_ID,
+														 CELL_ACT_APPLY_PARAMS)) == ERR_NO_ERROR)
+								continue;
 
 			InternalFaultReason = FAULT_LINK_CELL_1 + i;
 
