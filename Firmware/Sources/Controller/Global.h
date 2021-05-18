@@ -36,7 +36,12 @@
 #define TEST_PAUSE_LONG_MS				1000		// Long pause in case of triggered device (in ms)
 #define TEST_PAUSE_SHORT_MS				200			// Short pause between measurements (in ms)
 #define FINE_CORRECTION_DEF				1024
-//
+
+// Voltage rate ranges
+#define VRATE_RANGE_DEF					0			// Default rate range (500 - 2500 V/us)
+#define VRATE_RANGE_LOWER1				1			// Lower range 1
+#define VRATE_RANGE_LOWER2				2			// Lower range 2
+
 #define MEANWELL_SWITCH_DELAY_US		500000L		// (in us)
 #define RELAY_SWITCH_DELAY_US			5000		// (in us)
 #define RELAY_SWITCH_DELAY_L_US			25000		// (in us)

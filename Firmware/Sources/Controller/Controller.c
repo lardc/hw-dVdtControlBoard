@@ -122,7 +122,7 @@ void CONTROL_Update()
 
 Boolean CONTROL_ApplySettings(Int16U VRate, Boolean PerfomRateCorrection)
 {
-	Int16U cellVoltage, cellVRate, KRate;
+	Int16U cellVoltage, cellVRate, KRate, VRateRange = VRATE_RANGE_DEF;
 	
 	/*
 	 * Описание принципа корректировки скорости нарастания:
@@ -148,10 +148,12 @@ Boolean CONTROL_ApplySettings(Int16U VRate, Boolean PerfomRateCorrection)
 			KRate = DataTable[REG_CORR_RATE_BY_RATE];
 		
 		// by rate
+		Int16U VRateMax = DataTable[REG_UNIT_RATE_MAX];
+		Int16U VRateMin = DataTable[REG_UNIT_RATE_MIN];
 		if(CORR_RATE_TUNE_LOW)
-			VRate = ((100 + (((Int32U)(2500 - VRate) * KRate) / (2500 - 500))) * VRate) / 100;
+			VRate = ((100 + (((Int32U)(VRateMax - VRate) * KRate) / (VRateMax - VRateMin))) * VRate) / 100;
 		else
-			VRate = ((100 + (((Int32U)(VRate - 500) * KRate) / (2500 - 500))) * VRate) / 100;
+			VRate = ((100 + (((Int32U)(VRate - VRateMin) * KRate) / (VRateMax - VRateMin))) * VRate) / 100;
 		
 		// by voltage (lower zone)
 		if(DataTable[REG_CORR_RATE_VPOINT] > DataTable[REG_DESIRED_VOLTAGE])
@@ -170,6 +172,12 @@ Boolean CONTROL_ApplySettings(Int16U VRate, Boolean PerfomRateCorrection)
 			+ (Int16S)DataTable[REG_V_OFFSET]) / CELLMUX_CellCount();
 	cellVRate = VRate / CELLMUX_CellCount();
 	
+	// Select rate range
+	if(VRate < DataTable[REG_UNIT_RATE_RANGE_1])
+		VRateRange = VRATE_RANGE_LOWER1;
+	else if(VRate < DataTable[REG_UNIT_RATE_RANGE_2])
+		VRateRange = VRATE_RANGE_LOWER2;
+
 	if(cellVoltage != cellVoltageCopy || cellVRate != cellVRateCopy)
 	{
 		if(CELLMUX_SetCellsState(cellVoltage, cellVRate, FINE_CORRECTION_DEF))
