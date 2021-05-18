@@ -267,11 +267,14 @@ static void CONTROL_StartTest(Int16U VRate, Boolean PerfomRateCorrection)
 }
 // ----------------------------------------
 
-static Boolean CONTROL_ValidateSettings(Int16U Rate)
+static Boolean CONTROL_ValidateSettings(Int16U Rate_x10)
 {
 	Int16U CellVoltage = DataTable[REG_DESIRED_VOLTAGE] / CELLMUX_CellCount();
-	Int16U CellRate = Rate / CELLMUX_CellCount();
+	Int16U CellRate = Rate_x10 / CELLMUX_CellCount();
 	
+	if(Rate_x10 < DataTable[REG_UNIT_RATE_MIN] || Rate_x10 > DataTable[REG_UNIT_RATE_MAX])
+		return FALSE;
+
 	if(CellRate < DataTable[REG_CELL_MIN_RATE] || CellRate > DataTable[REG_CELL_MAX_RATE])
 		return FALSE;
 	
