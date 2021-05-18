@@ -42,10 +42,16 @@ typedef struct __TableItemConstraint
 #define VRATE_CELL_DEF				100
 
 // in mV
-#define GATEV_CELL_MIN				2000#define GATEV_CELL_MAX				5000#define GATEV_CELL_DEF				3000
+#define GATEV_CELL_MIN				2000
+#define GATEV_CELL_MAX				5000
+#define GATEV_CELL_DEF				3000
+
 // in %
-#define RATE_CORR_MIN				0#define RATE_CORR_MAX				50#define RATE_CORR_DEF				0
-#define FAN_DUTY_MAX				100#define FAN_DUTY_DEF				20
+#define RATE_CORR_MIN				0
+#define RATE_CORR_MAX				50
+#define RATE_CORR_DEF				0
+#define FAN_DUTY_MAX				100
+#define FAN_DUTY_DEF				20
 
 // Cell rate ranges (in V/us x10)
 #define CELL_RATE_MIN				200
@@ -62,8 +68,13 @@ typedef struct __TableItemConstraint
 #define UNIT_RATE_R2_DEF			5000
 
 // Cell vaoltage ranges
-#define CELL_V_MIN					20		// in V#define CELL_V_MAX					1000	// in V#define CELL_V_DEF_MAX				900		// in V#define CELL_V_DEF_MIN				50		// in V
-#define FAN_TIME_MIN				10		// in s#define FAN_TIME_MAX				600		// in s#define FAN_TIME_DEF				30		// in s
+#define CELL_V_MIN					20		// in V
+#define CELL_V_MAX					1000	// in V
+#define CELL_V_DEF_MAX				900		// in V
+#define CELL_V_DEF_MIN				50		// in V
+#define FAN_TIME_MIN				10		// in s
+#define FAN_TIME_MAX				600		// in s
+#define FAN_TIME_DEF				30		// in s
 
 // Variables
 extern const TableItemConstraint NVConstraint[DATA_TABLE_NV_SIZE];

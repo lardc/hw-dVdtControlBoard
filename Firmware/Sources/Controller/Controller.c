@@ -42,6 +42,7 @@ static void CONTROL_SwitchToFault(Int16U FaultReason, Int16U ErrorCodeEx);
 static void CONTROL_SwitchToFaultEx();
 static Boolean CONTROL_ApplySettings(Int16U VRate, Boolean PerfomRateCorrection);
 static void CONTROL_StartTest(Int16U VRate, Boolean PerfomRateCorrection);
+void CONTROL_PrepareStart(pInt16U UserError, Int16U Rate_x10, Boolean UseCustomSettings);
 
 // Functions
 //
@@ -331,105 +332,33 @@ static Boolean CONTROL_DispatchAction(Int16U ActionID, pInt16U UserError)
 					else
 						*UserError = ERR_OUT_OF_RANGE;
 				}
-				break;
-			}
-		case ACT_START_TEST_CUSTOM:
-			{
-				if(CONTROL_State == DS_Ready)
-				{
-					if(CONTROL_ValidateSettings(DataTable[REG_VOLTAGE_RATE]))
-					{
-						CONTROL_HandleFanLogic(TRUE);
-						CONTROL_StartTest(DataTable[REG_VOLTAGE_RATE], DataTable[REG_TUNE_CUSTOM_SETTING]);
-					}
-					else
-						*UserError = ERR_OUT_OF_RANGE;
-				}
-				else
-					*UserError = ERR_OPERATION_BLOCKED;
 			}
 			break;
 
+		case ACT_START_TEST_CUSTOM:
+			CONTROL_PrepareStart(UserError, DataTable[REG_VOLTAGE_RATE], DataTable[REG_TUNE_CUSTOM_SETTING]);
+			break;
+
 		case ACT_START_TEST_500:
-			{
-				if(CONTROL_State == DS_Ready)
-				{
-					if(CONTROL_ValidateSettings(500))
-					{
-						CONTROL_HandleFanLogic(TRUE);
-						CONTROL_StartTest(500, TRUE);
-					}
-					else
-						*UserError = ERR_OUT_OF_RANGE;
-				}
-				else
-					*UserError = ERR_OPERATION_BLOCKED;
-			}
+			CONTROL_PrepareStart(UserError, 500 * 10, TRUE);
 			break;
+
 		case ACT_START_TEST_1000:
-			{
-				if(CONTROL_State == DS_Ready)
-				{
-					if(CONTROL_ValidateSettings(1000))
-					{
-						CONTROL_HandleFanLogic(TRUE);
-						CONTROL_StartTest(1000, TRUE);
-					}
-					else
-						*UserError = ERR_OUT_OF_RANGE;
-				}
-				else
-					*UserError = ERR_OPERATION_BLOCKED;
-			}
+			CONTROL_PrepareStart(UserError, 1000 * 10, TRUE);
 			break;
+
 		case ACT_START_TEST_1600:
-			{
-				if(CONTROL_State == DS_Ready)
-				{
-					if(CONTROL_ValidateSettings(1600))
-					{
-						CONTROL_HandleFanLogic(TRUE);
-						CONTROL_StartTest(1600, TRUE);
-					}
-					else
-						*UserError = ERR_OUT_OF_RANGE;
-				}
-				else
-					*UserError = ERR_OPERATION_BLOCKED;
-			}
+			CONTROL_PrepareStart(UserError, 1600 * 10, TRUE);
 			break;
+
 		case ACT_START_TEST_2000:
-			{
-				if(CONTROL_State == DS_Ready)
-				{
-					if(CONTROL_ValidateSettings(2000))
-					{
-						CONTROL_HandleFanLogic(TRUE);
-						CONTROL_StartTest(2000, TRUE);
-					}
-					else
-						*UserError = ERR_OUT_OF_RANGE;
-				}
-				else
-					*UserError = ERR_OPERATION_BLOCKED;
-			}
+			CONTROL_PrepareStart(UserError, 2000 * 10, TRUE);
 			break;
+
 		case ACT_START_TEST_2500:
-			{
-				if(CONTROL_State == DS_Ready)
-				{
-					if(CONTROL_ValidateSettings(2500))
-					{
-						CONTROL_HandleFanLogic(TRUE);
-						CONTROL_StartTest(2500, TRUE);
-					}
-					else
-						*UserError = ERR_OUT_OF_RANGE;
-				}
-				else
-					*UserError = ERR_OPERATION_BLOCKED;
-			}
+			CONTROL_PrepareStart(UserError, 2500 * 10, TRUE);
 			break;
+
 		case ACT_CLR_FAULT:
 			{
 				if(CONTROL_State == DS_Fault)
@@ -455,6 +384,23 @@ static Boolean CONTROL_DispatchAction(Int16U ActionID, pInt16U UserError)
 	}
 	
 	return TRUE;
+}
+// ----------------------------------------
+
+void CONTROL_PrepareStart(pInt16U UserError, Int16U Rate_x10, Boolean UseCustomSettings)
+{
+	if(CONTROL_State == DS_Ready)
+	{
+		if(CONTROL_ValidateSettings(Rate_x10))
+		{
+			CONTROL_HandleFanLogic(TRUE);
+			CONTROL_StartTest(Rate_x10, UseCustomSettings);
+		}
+		else
+			*UserError = ERR_OUT_OF_RANGE;
+	}
+	else
+		*UserError = ERR_OPERATION_BLOCKED;
 }
 // ----------------------------------------
 
