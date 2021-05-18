@@ -59,11 +59,15 @@
 #define REG_CELL_MASK				8	// Cell presence mask
 #define REG_CELL_MIN_VOLTAGE		9	// Cell min voltage (in V)
 #define REG_CELL_MAX_VOLTAGE		10	// Cell max voltage (in V)
-#define REG_CELL_MIN_RATE			11	// Cell min rate (in V/us)
-#define REG_CELL_MAX_RATE			12	// Cell max rate (in V/us)
+#define REG_CELL_MIN_RATE			11	// Cell min rate (in V/us x10)
+#define REG_CELL_MAX_RATE			12	// Cell max rate (in V/us x10)
 #define REG_FAN_OPERATE_PERIOD		13	// Default fan turn on period (in s)
 #define REG_FAN_OPERATE_MIN_TIME	14	// Minimum fan turn on time (in s)
-// 14 -  29
+#define REG_UNIT_RATE_MIN			15	// Unit min rate (in V/us x10)
+#define REG_UNIT_RATE_MAX			16	// Unit max rate (in V/us x10)
+#define REG_UNIT_RATE_RANGE_1		17	// Lower range 1 limit in in (in V/us x10)
+#define REG_UNIT_RATE_RANGE_2		18	// Lower range 2 limit in in (in V/us x10)
+// 19 - 29
 #define REG_CELL1_GATEV1			30	// Gate voltage setpoint 1 for cell 1
 #define REG_CELL1_VRATE1			31	// Voltage rate setpoint 1 for cell 1
 // 32 - 111								// Setpoints for 6 cells (7 per cell)
@@ -72,8 +76,8 @@
 //
 // ----------------------------------------
 //
-#define REG_DESIRED_VOLTAGE			128	// Desired plate voltage
-#define REG_VOLTAGE_RATE			129	// dV/dt rate
+#define REG_DESIRED_VOLTAGE			128	// Desired plate voltage (in V)
+#define REG_VOLTAGE_RATE			129	// dV/dt rate (in V/us x10)
 #define REG_TUNE_CUSTOM_SETTING		130	// Apply voltage rate correction for custom setting
 // 131 - 179
 #define REG_PWD_1					180	// Unlock password location 1
