@@ -18,9 +18,28 @@
 //
 Int16U SP_Generate(Int16U CellIndex, Int16U VRate)
 {
-	Int16U i, result;
-	Int16U BaseDTGateVAddr = REG_CELL1_GATEV1 + CellIndex * SETPOINT_ARRAY_SIZE * 2;
-	Int16U BaseDTVRateAddr = REG_CELL1_VRATE1 + CellIndex * SETPOINT_ARRAY_SIZE * 2;
+	Int16U i, result, GateVStartReg, VRateStartReg;
+	
+	switch(VRate)
+	{
+		case VRATE_RANGE_LOWER1:
+			GateVStartReg = REG_CELL1_R1_GATEV1;
+			VRateStartReg = REG_CELL1_R1_VRATE1;
+			break;
+			
+		case VRATE_RANGE_LOWER2:
+			GateVStartReg = REG_CELL1_R2_GATEV1;
+			VRateStartReg = REG_CELL1_R2_VRATE1;
+			break;
+			
+		default:
+			GateVStartReg = REG_CELL1_GATEV1;
+			VRateStartReg = REG_CELL1_VRATE1;
+			break;
+	}
+	
+	Int16U BaseDTGateVAddr = GateVStartReg + CellIndex * SETPOINT_ARRAY_SIZE * 2;
+	Int16U BaseDTVRateAddr = VRateStartReg + CellIndex * SETPOINT_ARRAY_SIZE * 2;
 	
 	// For incorrect cell
 	if(CELLMUX_CellMask() & (1 << CellIndex) == 0)

@@ -74,6 +74,21 @@
 #define REG_CELL6_GATEV7			111	// Gate voltage setpoint 7 for cell 6
 #define REG_CELL6_VRATE7			112	// Voltage rate setpoint 7 for cell 6
 //
+// Extended NV-registers
+// Range 1
+#define REG_CELL1_R1_GATEV1			320	// Gate voltage setpoint 1 for cell 1
+#define REG_CELL1_R1_VRATE1			321	// Voltage rate setpoint 1 for cell 1
+// 322 - 400							// Setpoints for 6 cells (7 per cell)
+#define REG_CELL6_R1_GATEV7			401	// Gate voltage setpoint 7 for cell 6
+#define REG_CELL6_R1_VRATE7			402	// Voltage rate setpoint 7 for cell 6
+//
+// Range 2
+#define REG_CELL1_R2_GATEV1			500	// Gate voltage setpoint 1 for cell 1
+#define REG_CELL1_R2_VRATE1			501	// Voltage rate setpoint 1 for cell 1
+// 502 - 580							// Setpoints for 6 cells (7 per cell)
+#define REG_CELL6_R2_GATEV7			581	// Gate voltage setpoint 7 for cell 6
+#define REG_CELL6_R2_VRATE7			582	// Voltage rate setpoint 7 for cell 6
+//
 // ----------------------------------------
 //
 #define REG_DESIRED_VOLTAGE			128	// Desired plate voltage (in V)
