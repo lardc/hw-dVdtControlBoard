@@ -142,6 +142,7 @@
 #define REG_CAN_DIAG_REC			224	// CAN REC
 //
 #define REG_DIAG_GENERAL_OUT		225
+#define REG_DIAG_OPT_INTERFACE_ERR	226	// Error code for diagnostic optical interface communication
 //
 #define REG_DIAG_GATEV_CELL1		230	// Cell 1 gate voltage
 #define REG_DIAG_GATEV_CELL2		231	// Cell 2 gate voltage

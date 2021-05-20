@@ -174,7 +174,7 @@ void CELLMUX_ReadCellRegister(Int16U CellIndex, Int16U Register, pInt16U Output)
 	ThreadLocker = TRUE;
 	
 	ZbGPIO_SetActiveCell(CellIndex - 1);
-	SCCIM_Read16(&DEVICE_UART_Interface, SCCI_CELL_NODE_ID, Register, Output);
+	DataTable[REG_DIAG_OPT_INTERFACE_ERR] = SCCIM_Read16(&DEVICE_UART_Interface, SCCI_CELL_NODE_ID, Register, Output);
 	
 	ThreadLocker = FALSE;
 }
@@ -185,7 +185,7 @@ void CELLMUX_WriteCellRegister(Int16U CellIndex, Int16U Register, Int16U Value)
 	ThreadLocker = TRUE;
 	
 	ZbGPIO_SetActiveCell(CellIndex - 1);
-	SCCIM_Write16(&DEVICE_UART_Interface, SCCI_CELL_NODE_ID, Register, Value);
+	DataTable[REG_DIAG_OPT_INTERFACE_ERR] = SCCIM_Write16(&DEVICE_UART_Interface, SCCI_CELL_NODE_ID, Register, Value);
 	
 	ThreadLocker = FALSE;
 }
@@ -196,7 +196,7 @@ void CELLMUX_CallCellAction(Int16U CellIndex, Int16U ActionID)
 	ThreadLocker = TRUE;
 	
 	ZbGPIO_SetActiveCell(CellIndex - 1);
-	SCCIM_Call(&DEVICE_UART_Interface, SCCI_CELL_NODE_ID, ActionID);
+	DataTable[REG_DIAG_OPT_INTERFACE_ERR] = SCCIM_Call(&DEVICE_UART_Interface, SCCI_CELL_NODE_ID, ActionID);
 	
 	ThreadLocker = FALSE;
 }
