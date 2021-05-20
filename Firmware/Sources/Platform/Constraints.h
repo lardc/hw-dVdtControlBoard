@@ -54,7 +54,7 @@ typedef struct __TableItemConstraint
 #define FAN_DUTY_DEF				20
 
 // Cell rate ranges (in V/us x10)
-#define CELL_RATE_MIN				200
+#define CELL_RATE_MIN				20
 #define CELL_RATE_MAX				10000
 #define CELL_RATE_DEF_MAX			5500
 #define CELL_RATE_DEF_MIN			1000
