@@ -4,7 +4,7 @@
 
 // Header
 #include "Setpoint.h"
-//
+
 // Includes
 #include "DeviceObjectDictionary.h"
 #include "DataTable.h"
@@ -14,13 +14,17 @@
 // Definitions
 #define SETPOINT_ARRAY_SIZE		7
 
+// Forward functions
+Int16U SP_GetDistanceToRange(Int16U CellIndex, Int16U VRate, Int16U RangeBaseRateRegister, Boolean RangeIsActive);
+Int16U SP_FindActiveRange(Int16U CellIndex, Int16U VRate);
+
 // Functions
-//
-Int16U SP_Generate(Int16U CellIndex, Int16U VRate)
+Int16U SP_Generate(Int16U CellIndex, Int16U VRate, pInt16U RateRange)
 {
 	Int16U i, result, GateVStartReg, VRateStartReg;
 	
-	switch(VRate)
+	*RateRange = SP_FindActiveRange(CellIndex, VRate);
+	switch(*RateRange)
 	{
 		case VRATE_RANGE_LOWER1:
 			GateVStartReg = REG_CELL1_R1_GATEV1;
@@ -74,4 +78,52 @@ Int16U SP_Generate(Int16U CellIndex, Int16U VRate)
 }
 // ----------------------------------------
 
-// No more.
+Int16U SP_GetDistanceToRange(Int16U CellIndex, Int16U VRate, Int16U RangeBaseRateRegister, Boolean RangeIsActive)
+{
+	if(RangeIsActive)
+	{
+		Int16U RegRateStart = RangeBaseRateRegister + CellIndex * SETPOINT_ARRAY_SIZE * 2;
+		Int16U RegRateEnd = RegRateStart + (SETPOINT_ARRAY_SIZE - 1) * 2;
+
+		Int16U RateStart = DataTable[RegRateStart];
+		Int16U RateEnd = DataTable[RegRateEnd];
+
+		if((RateStart <= VRate) && (VRate <= RateEnd))
+			return 0;
+		else
+		{
+			Int16U DistStart = ABS((Int32S)VRate - RateStart);
+			Int16U DistEnd = ABS((Int32S)VRate - RateEnd);
+
+			return MIN(DistStart, DistEnd);
+		}
+	}
+	else
+		return INT16U_MAX;
+}
+// ----------------------------------------
+
+Int16U SP_FindActiveRange(Int16U CellIndex, Int16U VRate)
+{
+	Int16U DistR1, DistR2, DistDef;
+
+	// Поиск попадания в границы диапазона
+	if((DistR1 = SP_GetDistanceToRange(CellIndex, VRate, REG_CELL1_R1_VRATE1, DataTable[REG_UNIT_USE_RANGE1])) == 0)
+		return VRATE_RANGE_LOWER1;
+
+	if((DistR2 = SP_GetDistanceToRange(CellIndex, VRate, REG_CELL1_R2_VRATE1, DataTable[REG_UNIT_USE_RANGE2])) == 0)
+		return VRATE_RANGE_LOWER2;
+
+	if((DistDef = SP_GetDistanceToRange(CellIndex, VRate, REG_CELL1_VRATE1, TRUE)) == 0)
+		return VRATE_RANGE_DEF;
+
+	// Если значение не попало в диапазон, то определяем самый ближний диапазон
+	Int16U ClosestDist = MIN(MIN(DistR1, DistR2), DistDef);
+	if(ClosestDist == DistR1)
+		return VRATE_RANGE_LOWER1;
+	else if(ClosestDist == DistR2)
+		return VRATE_RANGE_LOWER2;
+	else
+		return VRATE_RANGE_DEF;
+}
+// ----------------------------------------

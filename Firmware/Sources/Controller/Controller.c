@@ -23,7 +23,7 @@
 volatile Int64U CONTROL_TimeCounter = 0;
 volatile DeviceState CONTROL_State = DS_None;
 static volatile Boolean CycleActive = FALSE;
-static Int16U cellVoltageCopy = 0, cellVRateCopy = 0, cellVRateRangeCopy = 0;
+static Int16U cellVoltageCopy = 0, cellVRateCopy = 0;
 //
 #pragma DATA_SECTION(CONTROL_Values_1, "data_mem");
 Int16U CONTROL_Values_1[VALUES_x_SIZE];
@@ -122,7 +122,7 @@ void CONTROL_Update()
 
 Boolean CONTROL_ApplySettings(Int16U VRate, Boolean PerfomRateCorrection)
 {
-	Int16U cellVoltage, cellVRate, KRate, cellVRateRange = VRATE_RANGE_DEF;
+	Int16U cellVoltage, cellVRate, KRate;
 	
 	/*
 	 * Описание принципа корректировки скорости нарастания:
@@ -171,20 +171,13 @@ Boolean CONTROL_ApplySettings(Int16U VRate, Boolean PerfomRateCorrection)
 	cellVoltage = ((Int32U)DataTable[REG_DESIRED_VOLTAGE] * DataTable[REG_V_FINE_N] / DataTable[REG_V_FINE_D]
 			+ (Int16S)DataTable[REG_V_OFFSET]) / CELLMUX_CellCount();
 	cellVRate = VRate / CELLMUX_CellCount();
-	
-	// Select rate range
-	if(VRate < DataTable[REG_UNIT_RATE_RANGE_1])
-		cellVRateRange = VRATE_RANGE_LOWER1;
-	else if(VRate < DataTable[REG_UNIT_RATE_RANGE_2])
-		cellVRateRange = VRATE_RANGE_LOWER2;
 
-	if(cellVoltage != cellVoltageCopy || cellVRate != cellVRateCopy || cellVRateRange != cellVRateRangeCopy)
+	if(cellVoltage != cellVoltageCopy || cellVRate != cellVRateCopy)
 	{
-		if(CELLMUX_SetCellsState(cellVoltage, cellVRate, FINE_CORRECTION_DEF, cellVRateRange))
+		if(CELLMUX_SetCellsState(cellVoltage, cellVRate, FINE_CORRECTION_DEF))
 		{
 			cellVoltageCopy = cellVoltage;
 			cellVRateCopy = cellVRate;
-			cellVRateRangeCopy = cellVRateRange;
 		}
 		else
 			return FALSE;

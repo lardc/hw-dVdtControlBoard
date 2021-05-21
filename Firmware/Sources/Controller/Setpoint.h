@@ -11,6 +11,6 @@
 // Functions
 //
 // Return required gate voltage
-Int16U SP_Generate(Int16U CellIndex, Int16U Rate);
+Int16U SP_Generate(Int16U CellIndex, Int16U VRate, pInt16U RateRange);
 
 #endif // __SETPOINT_H
