@@ -174,7 +174,7 @@ Boolean CONTROL_ApplySettings(Int16U VRate, Boolean PerfomRateCorrection)
 
 	if(cellVoltage != cellVoltageCopy || cellVRate != cellVRateCopy)
 	{
-		if(CELLMUX_SetCellsState(cellVoltage, cellVRate, FINE_CORRECTION_DEF))
+		if(CELLMUX_SetCellsState(cellVoltage, cellVRate))
 		{
 			cellVoltageCopy = cellVoltage;
 			cellVRateCopy = cellVRate;

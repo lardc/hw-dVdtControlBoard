@@ -35,7 +35,6 @@
 #define TEST_PREPARE_TIMEOUT_MS			5000		// (in ms)
 #define TEST_PAUSE_LONG_MS				1000		// Long pause in case of triggered device (in ms)
 #define TEST_PAUSE_SHORT_MS				200			// Short pause between measurements (in ms)
-#define FINE_CORRECTION_DEF				1024
 
 // Voltage rate ranges
 #define VRATE_RANGE_DEF					0			// Default rate range (500 - 2500 V/us)
