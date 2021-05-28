@@ -106,15 +106,18 @@ Int16U SP_GetDistanceToRange(Int16U CellIndex, Int16U VRate, Int16U RangeBaseRat
 Int16U SP_FindActiveRange(Int16U CellIndex, Int16U VRate)
 {
 	Int16U DistR1, DistR2, DistDef;
+	DataTable[REG_DIAG_DIST_R1] = DataTable[REG_DIAG_DIST_R2] = DataTable[REG_DIAG_DIST_DEF] = INT16U_MAX;
 
 	// Поиск попадания в границы диапазона
-	if((DistR1 = SP_GetDistanceToRange(CellIndex, VRate, REG_CELL1_R1_VRATE1, DataTable[REG_UNIT_USE_RANGE1])) == 0)
+	if((DataTable[REG_DIAG_DIST_R1] = DistR1 = SP_GetDistanceToRange(CellIndex, VRate, REG_CELL1_R1_VRATE1,
+			DataTable[REG_UNIT_USE_RANGE1])) == 0)
 		return VRATE_RANGE_LOWER1;
 
-	if((DistR2 = SP_GetDistanceToRange(CellIndex, VRate, REG_CELL1_R2_VRATE1, DataTable[REG_UNIT_USE_RANGE2])) == 0)
+	if((DataTable[REG_DIAG_DIST_R2] = DistR2 = SP_GetDistanceToRange(CellIndex, VRate, REG_CELL1_R2_VRATE1,
+			DataTable[REG_UNIT_USE_RANGE2])) == 0)
 		return VRATE_RANGE_LOWER2;
 
-	if((DistDef = SP_GetDistanceToRange(CellIndex, VRate, REG_CELL1_VRATE1, TRUE)) == 0)
+	if((DataTable[REG_DIAG_DIST_DEF] = DistDef = SP_GetDistanceToRange(CellIndex, VRate, REG_CELL1_VRATE1, TRUE)) == 0)
 		return VRATE_RANGE_DEF;
 
 	// Если значение не попало в диапазон, то определяем самый ближний диапазон

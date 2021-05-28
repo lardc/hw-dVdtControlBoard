@@ -1,4 +1,4 @@
-// -----------------------------------------
+// ----------------------------------------
 // Logic controller
 // ----------------------------------------
 
@@ -150,6 +150,10 @@
 #define REG_DIAG_GATEV_CELL4		233	// Cell 4 gate voltage
 #define REG_DIAG_GATEV_CELL5		234	// Cell 5 gate voltage
 #define REG_DIAG_GATEV_CELL6		235	// Cell 6 gate voltage
+//
+#define REG_DIAG_DIST_R1			240	// Diagnostic distance info for range R1
+#define REG_DIAG_DIST_R2			241	// Diagnostic distance info for range R2
+#define REG_DIAG_DIST_DEF			242	// Diagnostic distance info for default range
 //
 // ----------------------------------------
 //
