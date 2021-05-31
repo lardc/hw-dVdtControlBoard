@@ -21,7 +21,7 @@ Int16U SP_FindActiveRange(Int16U CellIndex, Int16U VRate);
 // Functions
 Int16U SP_Generate(Int16U CellIndex, Int16U VRate, pInt16U RateRange)
 {
-	Int16U i, result, GateVStartReg, VRateStartReg;
+	Int16U i, GateVStartReg, VRateStartReg;
 	
 	*RateRange = SP_FindActiveRange(CellIndex, VRate);
 	switch(*RateRange)
@@ -63,12 +63,12 @@ Int16U SP_Generate(Int16U CellIndex, Int16U VRate, pInt16U RateRange)
 	{
 		if(VRate > DataTable[BaseDTVRateAddr + (i - 1) * 2])
 		{
-			result = DataTable[BaseDTGateVAddr + (i - 1) * 2]
-					+ (DataTable[BaseDTGateVAddr + i * 2] - DataTable[BaseDTGateVAddr + (i - 1) * 2])
-							/ (DataTable[BaseDTVRateAddr + i * 2] - DataTable[BaseDTVRateAddr + (i - 1) * 2])
-							* (VRate - DataTable[BaseDTVRateAddr + (i - 1) * 2]);
+			Int32U Base = DataTable[BaseDTGateVAddr + (i - 1) * 2];
+			Int32U N = DataTable[BaseDTGateVAddr + i * 2] - DataTable[BaseDTGateVAddr + (i - 1) * 2];
+			Int32U D = DataTable[BaseDTVRateAddr + i * 2] - DataTable[BaseDTVRateAddr + (i - 1) * 2];
+			Int32U K = VRate - DataTable[BaseDTVRateAddr + (i - 1) * 2];
 			
-			return result;
+			return Base + N * K / D;
 		}
 		else
 			continue;
