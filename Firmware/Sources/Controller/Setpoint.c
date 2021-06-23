@@ -17,6 +17,7 @@
 // Forward functions
 Int16U SP_GetDistanceToRange(Int16U CellIndex, Int16U VRate, Int16U RangeBaseRateRegister, Boolean RangeIsActive);
 Int16U SP_FindActiveRange(Int16U CellIndex, Int16U VRate);
+Int16U SP_GetRangeXMaxRate(Int16U RangeBaseRateRegister);
 
 // Functions
 Int16U SP_Generate(Int16U CellIndex, Int16U VRate, pInt16U RateRange)
@@ -128,5 +129,29 @@ Int16U SP_FindActiveRange(Int16U CellIndex, Int16U VRate)
 		return VRATE_RANGE_LOWER2;
 	else
 		return VRATE_RANGE_DEF;
+}
+// ----------------------------------------
+
+Int16U SP_GetRangeXMaxRate(Int16U RangeBaseRateRegister)
+{
+	Int32U i, MaxRate = 0;
+
+	for(i = 0; i < MAX_CELLS_COUNT; ++i)
+		if(((1 << i) & CELLMUX_CellMask()) != 0)
+			MaxRate += DataTable[RangeBaseRateRegister + i * 2];
+
+	return MaxRate;
+}
+// ----------------------------------------
+
+Int16U SP_GetRange1MaxRate()
+{
+	return SP_GetRangeXMaxRate(REG_CELL1_R1_VRATE1);
+}
+// ----------------------------------------
+
+Int16U SP_GetRange2MaxRate()
+{
+	return SP_GetRangeXMaxRate(REG_CELL1_R2_VRATE1);
 }
 // ----------------------------------------

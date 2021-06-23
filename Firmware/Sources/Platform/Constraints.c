@@ -32,8 +32,8 @@ const TableItemConstraint NVConstraint[DATA_TABLE_NV_SIZE] =
 										{UNIT_RATE_MIN, UNIT_RATE_MAX, UNIT_RATE_MAX_DEF},						// 16
 										{NO, YES, NO},															// 17
 										{NO, YES, NO},															// 18
-										{0, 0, 0},																// 19
-										{0, 0, 0},																// 20
+										{X_D_DEF1, X_D_DEF3, X_D_DEF2},											// 19
+										{X_D_DEF1, X_D_DEF3, X_D_DEF2},											// 20
 										{0, 0, 0},																// 21
 										{0, 0, 0},																// 22
 										{0, 0, 0},																// 23

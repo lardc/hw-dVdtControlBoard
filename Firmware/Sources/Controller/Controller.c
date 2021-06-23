@@ -17,6 +17,7 @@
 #include "CellMux.h"
 #include "Diagnostics.h"
 #include "Constraints.h"
+#include "Setpoint.h"
 
 // Variables
 //
@@ -138,33 +139,44 @@ Boolean CONTROL_ApplySettings(Int16U VRate, Boolean PerfomRateCorrection)
 	// Perfom rate correction
 	if(PerfomRateCorrection)
 	{
-		// by rate (and full range voltage)
-		if(CORR_RATE_BY_FS_VOLTAGE)
+		if(DataTable[REG_UNIT_USE_RANGE1] && (VRate < SP_GetRange1MaxRate()))
 		{
-			KRate = ((Int32U)DataTable[REG_CORR_RATE_BY_RATE] * (DESIRED_VOLTAGE_MAX - DataTable[REG_DESIRED_VOLTAGE]))
-					/ (DESIRED_VOLTAGE_MAX - DESIRED_VOLTAGE_MIN);
+			VRate = (Int32U)VRate * DataTable[REG_CORR_RANGE1] / 1000;
+		}
+		else if(DataTable[REG_UNIT_USE_RANGE2] && (VRate < SP_GetRange2MaxRate()))
+		{
+			VRate = (Int32U)VRate * DataTable[REG_CORR_RANGE2] / 1000;
 		}
 		else
-			KRate = DataTable[REG_CORR_RATE_BY_RATE];
-		
-		// by rate
-		Int16U VRateMax = DataTable[REG_UNIT_RATE_MAX];
-		Int16U VRateMin = DataTable[REG_UNIT_RATE_MIN];
-		if(CORR_RATE_TUNE_LOW)
-			VRate = ((100 + (((Int32U)(VRateMax - VRate) * KRate) / (VRateMax - VRateMin))) * VRate) / 100;
-		else
-			VRate = ((100 + (((Int32U)(VRate - VRateMin) * KRate) / (VRateMax - VRateMin))) * VRate) / 100;
-		
-		// by voltage (lower zone)
-		if(DataTable[REG_CORR_RATE_VPOINT] > DataTable[REG_DESIRED_VOLTAGE])
 		{
-			VRate = (((((Int32U)(DataTable[REG_CORR_RATE_VPOINT] - DataTable[REG_DESIRED_VOLTAGE])
-					* DataTable[REG_CORR_RATE_BY_VOLTAGE]) / (DataTable[REG_CORR_RATE_VPOINT] - DESIRED_VOLTAGE_MIN))
-					+ 100) * VRate) / 100;
+			// by rate (and full range voltage)
+			if(CORR_RATE_BY_FS_VOLTAGE)
+			{
+				KRate = ((Int32U)DataTable[REG_CORR_RATE_BY_RATE] * (DESIRED_VOLTAGE_MAX - DataTable[REG_DESIRED_VOLTAGE]))
+						/ (DESIRED_VOLTAGE_MAX - DESIRED_VOLTAGE_MIN);
+			}
+			else
+				KRate = DataTable[REG_CORR_RATE_BY_RATE];
+
+			// by rate
+			Int16U VRateMax = DataTable[REG_UNIT_RATE_MAX];
+			Int16U VRateMin = DataTable[REG_UNIT_RATE_MIN];
+			if(CORR_RATE_TUNE_LOW)
+				VRate = ((100 + (((Int32U)(VRateMax - VRate) * KRate) / (VRateMax - VRateMin))) * VRate) / 100;
+			else
+				VRate = ((100 + (((Int32U)(VRate - VRateMin) * KRate) / (VRateMax - VRateMin))) * VRate) / 100;
+
+			// by voltage (lower zone)
+			if(DataTable[REG_CORR_RATE_VPOINT] > DataTable[REG_DESIRED_VOLTAGE])
+			{
+				VRate = (((((Int32U)(DataTable[REG_CORR_RATE_VPOINT] - DataTable[REG_DESIRED_VOLTAGE])
+						* DataTable[REG_CORR_RATE_BY_VOLTAGE]) / (DataTable[REG_CORR_RATE_VPOINT] - DESIRED_VOLTAGE_MIN))
+						+ 100) * VRate) / 100;
+			}
+
+			// global correction
+			VRate = (Int32U)VRate * DataTable[REG_RATE_GLOBAL_K_N] / DataTable[REG_RATE_GLOBAL_K_D];
 		}
-		
-		// global correction
-		VRate = (Int32U)VRate * DataTable[REG_RATE_GLOBAL_K_N] / DataTable[REG_RATE_GLOBAL_K_D];
 	}
 	
 	// Check if settings differ

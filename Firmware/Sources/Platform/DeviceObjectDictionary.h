@@ -67,7 +67,9 @@
 #define REG_UNIT_RATE_MAX			16	// Unit max rate (in V/us x10)
 #define REG_UNIT_USE_RANGE1			17	// Use setpoint data for range 1 (low)
 #define REG_UNIT_USE_RANGE2			18	// Use setpoint data for range 2 (mid)
-// 19 - 29
+#define REG_CORR_RANGE1				19	// Correction coefficient for range 1 x1000
+#define REG_CORR_RANGE2				20	// Correction coefficient for range 2 x1000
+// 21 - 29
 #define REG_CELL1_GATEV1			30	// Gate voltage setpoint 1 for cell 1
 #define REG_CELL1_VRATE1			31	// Voltage rate setpoint 1 for cell 1
 // 32 - 111								// Setpoints for 6 cells (7 per cell)
