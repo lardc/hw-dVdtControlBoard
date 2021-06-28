@@ -113,8 +113,10 @@ static Boolean LOGIC_TestSequence()
 
 	DINT;
 
-	GpioDataRegs.GPASET.bit.GPIO0 = 1;
-	GpioDataRegs.GPASET.bit.GPIO18 = 1;		// RESULT_OUT is used for sync output
+	//GpioDataRegs.GPASET.bit.GPIO0 = 1;
+	//GpioDataRegs.GPASET.bit.GPIO18 = 1;		// RESULT_OUT is used for sync output
+	ZbGPIO_SwitchResultOut(TRUE);
+	ZbGPIO_SwitchStartPulse(TRUE);
 	DELAY_US((DataTable[REG_DESIRED_VOLTAGE] / DataTable[REG_VOLTAGE_RATE]) + PRE_PROBE_TIME_US);
 	result = ZbGPIO_ReadDetector();
 	ZbGPIO_SwitchStartPulse(FALSE);
