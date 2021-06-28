@@ -200,6 +200,7 @@
 // FAULT CODES
 //
 #define FAULT_NONE					0	// No fault
+#define FAULT_EXT_SYNC_ENABLE       600
 #define FAULT_LINK_CELL_1			601	// Link to cell 1 faulted
 #define FAULT_LINK_CELL_2			602	// Link to cell 2 faulted
 #define FAULT_LINK_CELL_3			603	// Link to cell 3 faulted
