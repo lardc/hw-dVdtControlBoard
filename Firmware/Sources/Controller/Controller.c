@@ -408,13 +408,9 @@ static Boolean CONTROL_DispatchAction(Int16U ActionID, pInt16U UserError)
 			break;
 
 		case ACT_START_TEST_CUSTOM:
-		    if (CONTROL_State == DS_Ready)
-		    {
-		        CONTROL_PrepareStart(UserError, DataTable[REG_VOLTAGE_RATE]);
-		        if(!CONTROL_EnableExternalSync(TRUE))
-		            CONTROL_SwitchToFault(FAULT_EXT_SYNC_ENABLE, 0);
-		        break;
-		    }
+		    //CONTROL_PrepareStart(UserError, DataTable[REG_VOLTAGE_RATE], DataTable[REG_TUNE_CUSTOM_SETTING]);
+		    break;
+
 
 		case ACT_START_TEST_500:
 			//CONTROL_PrepareStart(UserError, 500 * 10, TRUE);
