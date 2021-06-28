@@ -43,7 +43,8 @@ static void CONTROL_SwitchToFault(Int16U FaultReason, Int16U ErrorCodeEx);
 static void CONTROL_SwitchToFaultEx();
 static Boolean CONTROL_ApplySettings(Int16U VRate, Boolean PerfomRateCorrection);
 static void CONTROL_StartTest(Int16U VRate, Boolean PerfomRateCorrection);
-void CONTROL_PrepareStart(pInt16U UserError, Int16U Rate_x10, Boolean UseCustomSettings);
+void CONTROL_PrepareStart(pInt16U UserError, Int16U Rate_x10);
+static Boolean CONTROL_EnableExternalSync(Boolean Enable);
 
 // Functions
 //
@@ -145,7 +146,7 @@ Boolean CONTROL_ApplySettings(Int16U VRate, Boolean PerfomRateCorrection)
 		}
 		else if(DataTable[REG_UNIT_USE_RANGE2] && (VRate < SP_GetRange2MaxRate()))
 		{
-			VRate = (Int32U)VRate * DataTable[REG_CORR_RANGE2] / 1000;
+		    VRate = (Int32U)VRate * DataTable[REG_CORR_RANGE2] / 1000;
 		}
 		else
 		{
@@ -299,6 +300,57 @@ static Boolean CONTROL_ValidateSettings(Int16U Rate_x10)
 }
 // ----------------------------------------
 
+static Boolean CONTROL_EnableExternalSync(Boolean Enable)
+{
+    // If sync line already active
+    if (ZbGPIO_ReadSync() && Enable)
+        return FALSE;
+
+    ZwPWM_EnableTZInterruptsGlobal(FALSE);
+
+    // Prepare timer
+    ZwTimer_StopT1();
+    ZwTimer_ReloadT1();
+
+    // Configure pins
+    ZbGPIO_SwitchSyncEn(Enable);
+
+    // Clear registers
+    ZwPWM6_ClearTZ();
+    ZwPWM6_ProcessTZInterrupt();
+
+    ZwPWM_EnableTZInterruptsGlobal(Enable);
+
+    return TRUE;
+}
+// ----------------------------------------
+
+void CONTROL_ExtSyncEvent()
+{
+    ZwTimer_StartT1();
+    ZbGPIO_SwitchLEDExt(TRUE);
+    ZbGPIO_SwitchLED2(TRUE);
+
+   // CONTROL_SetDeviceState(DS_ExtSync);
+
+    CONTROL_SetDeviceState(DS_InProcess);
+
+    LOGIC_BeginTest(CONTROL_TimeCounter);
+        CycleActive = TRUE;
+}
+// ----------------------------------------
+
+void CONTROL_ExtSyncFinish()
+{
+    ZwTimer_StopT1();
+    ZbGPIO_SwitchSyncEn(FALSE);
+    ZbGPIO_SwitchLEDExt(FALSE);
+    ZbGPIO_SwitchLED2(FALSE);
+
+    CONTROL_NotifyEndTest(ZbGPIO_ReadDetector(), FAULT_NONE, WARNING_NONE);
+}
+// ----------------------------------------
+
 static Boolean CONTROL_DispatchAction(Int16U ActionID, pInt16U UserError)
 {
 	switch(ActionID)
@@ -345,6 +397,9 @@ static Boolean CONTROL_DispatchAction(Int16U ActionID, pInt16U UserError)
 					{
 						if(!CONTROL_ApplySettings(DataTable[REG_VOLTAGE_RATE], DataTable[REG_TUNE_CUSTOM_SETTING]))
 							CONTROL_SwitchToFaultEx();
+						 CONTROL_PrepareStart(UserError, DataTable[REG_VOLTAGE_RATE]);
+						 if(!CONTROL_EnableExternalSync(TRUE))
+						     CONTROL_SwitchToFault(FAULT_EXT_SYNC_ENABLE, 0);
 					}
 					else
 						*UserError = ERR_OUT_OF_RANGE;
@@ -353,27 +408,32 @@ static Boolean CONTROL_DispatchAction(Int16U ActionID, pInt16U UserError)
 			break;
 
 		case ACT_START_TEST_CUSTOM:
-			CONTROL_PrepareStart(UserError, DataTable[REG_VOLTAGE_RATE], DataTable[REG_TUNE_CUSTOM_SETTING]);
-			break;
+		    if (CONTROL_State == DS_Ready)
+		    {
+		        CONTROL_PrepareStart(UserError, DataTable[REG_VOLTAGE_RATE]);
+		        if(!CONTROL_EnableExternalSync(TRUE))
+		            CONTROL_SwitchToFault(FAULT_EXT_SYNC_ENABLE, 0);
+		        break;
+		    }
 
 		case ACT_START_TEST_500:
-			CONTROL_PrepareStart(UserError, 500 * 10, TRUE);
+			//CONTROL_PrepareStart(UserError, 500 * 10, TRUE);
 			break;
 
 		case ACT_START_TEST_1000:
-			CONTROL_PrepareStart(UserError, 1000 * 10, TRUE);
+			//CONTROL_PrepareStart(UserError, 1000 * 10, TRUE);
 			break;
 
 		case ACT_START_TEST_1600:
-			CONTROL_PrepareStart(UserError, 1600 * 10, TRUE);
+			//CONTROL_PrepareStart(UserError, 1600 * 10, TRUE);
 			break;
 
 		case ACT_START_TEST_2000:
-			CONTROL_PrepareStart(UserError, 2000 * 10, TRUE);
+			//CONTROL_PrepareStart(UserError, 2000 * 10, TRUE);
 			break;
 
 		case ACT_START_TEST_2500:
-			CONTROL_PrepareStart(UserError, 2500 * 10, TRUE);
+			//CONTROL_PrepareStart(UserError, 2500 * 10, TRUE);
 			break;
 
 		case ACT_CLR_FAULT:
@@ -404,14 +464,15 @@ static Boolean CONTROL_DispatchAction(Int16U ActionID, pInt16U UserError)
 }
 // ----------------------------------------
 
-void CONTROL_PrepareStart(pInt16U UserError, Int16U Rate_x10, Boolean UseCustomSettings)
+//void CONTROL_PrepareStart(pInt16U UserError, Int16U Rate_x10, Boolean UseCustomSettings)
+void CONTROL_PrepareStart(pInt16U UserError, Int16U Rate_x10)
 {
 	if(CONTROL_State == DS_Ready)
 	{
 		if(CONTROL_ValidateSettings(Rate_x10))
 		{
 			CONTROL_HandleFanLogic(TRUE);
-			CONTROL_StartTest(Rate_x10, UseCustomSettings);
+			//CONTROL_StartTest(Rate_x10, UseCustomSettings);
 		}
 		else
 			*UserError = ERR_OUT_OF_RANGE;
