@@ -20,6 +20,7 @@ void InitializeTimers();
 void InitializeCAN();
 void InitializeSCI();
 void InitializeSPI();
+void InitializeSyncInput();
 void InitializeBoard();
 void InitializeController(Boolean GoodClock);
 // -----------------------------------------
@@ -29,10 +30,14 @@ void InitializeController(Boolean GoodClock);
 // -----------------------------------------
 // CPU Timer 0 ISR
 ISRCALL Timer0_ISR();
+// CPU Timer 1 ISR
+ISRCALL Timer1_ISR();
 // CPU Timer 2 ISR
 ISRCALL Timer2_ISR();
 // CAN Line 0 ISR
 ISRCALL CAN0_ISR();
+// SYNC Input ISR (PWM6 TZ)
+ISRCALL TZ6_ISR();
 // ILLEGAL ISR
 ISRCALL IllegalInstruction_ISR();
 // -----------------------------------------
@@ -62,8 +67,10 @@ void main()
 	// Setup ISRs
 	BEGIN_ISR_MAP
 		ADD_ISR(TINT0, Timer0_ISR);
+        ADD_ISR(TINT1_XINT13, Timer1_ISR);
 		ADD_ISR(TINT2, Timer2_ISR);
 		ADD_ISR(ECAN0INTA, CAN0_ISR);
+        ADD_ISR(EPWM6_TZINT, TZ6_ISR);
 	END_ISR_MAP
 
 	// Initialize controller logic
@@ -132,12 +139,35 @@ void InitializeTimers()
 	ZwTimer_SetT0(TIMER0_PERIOD);
 	ZwTimer_EnableInterruptsT0(TRUE);
 
+    ZwTimer_InitT1();
+    ZwTimer_SetT1(PRE_PROBE_TIME_US);
+    ZwTimer_EnableInterruptsT1(TRUE);
+
     ZwTimer_InitT2();
 	ZwTimer_SetT2(TIMER2_PERIOD);
 	ZwTimer_EnableInterruptsT2(TRUE);
 }
 // -----------------------------------------
 
+void InitializeSyncInput()
+{
+    // Disable interrupts
+    ZwPWM_EnableTZInterruptsGlobal(FALSE);
+
+    // TZ GPIO
+    ZwPWM_ConfigTZ6(TRUE, PQ_SysClock);
+
+    // Dummy PWM config
+    ZwPWM6_Init(PWMUp, CPU_FRQ, ZW_PWM_FREQUENCY, FALSE, FALSE, 0, BIT5, TRUE, TRUE, TRUE, FALSE, FALSE);
+
+    // Configure TZ interrupts
+    ZwPWM_ConfigTZIntCBC(FALSE, FALSE, FALSE, FALSE, FALSE, FALSE);
+    ZwPWM_ConfigTZIntOST(FALSE, FALSE, FALSE, FALSE, FALSE, TRUE);
+
+    // Enable interrupts
+    ZwPWM_EnableTZInterrupts(FALSE, FALSE, FALSE, FALSE, FALSE, TRUE);
+}
+// -----------------------------------------
 
 void InitializeSCI()
 {
@@ -187,6 +217,8 @@ void InitializeBoard()
 
 void InitializeController(Boolean GoodClock)
 {
+    InitializeSyncInput();
+
 	// Init controllers and logic
 	CONTROL_Init(!GoodClock);
 }
@@ -199,10 +231,12 @@ void InitializeController(Boolean GoodClock)
 	#pragma CODE_SECTION(Timer0_ISR, "ramfuncs");
 	#pragma CODE_SECTION(Timer2_ISR, "ramfuncs");
 	#pragma CODE_SECTION(CAN0_ISR, "ramfuncs");
+    #pragma CODE_SECTION(TZ6_ISR, "ramfuncs");
 	#pragma CODE_SECTION(IllegalInstruction_ISR, "ramfuncs");
 #endif
 //
-#pragma INTERRUPT(Timer0_ISR, HPI);
+//#pragma INTERRUPT(Timer0_ISR, HPI);
+#pragma INTERRUPT(TZ6_ISR, HPI);
 
 // timer 0 ISR
 ISRCALL Timer0_ISR(void)
@@ -233,6 +267,17 @@ ISRCALL Timer0_ISR(void)
 }
 // -----------------------------------------
 
+// timer 1 ISR
+ISRCALL Timer1_ISR(void)
+{
+    // Stop on-state voltage pulse
+    CONTROL_ExtSyncFinish();
+
+    // no PIE
+    TIMER1_ISR_DONE;
+}
+// -----------------------------------------
+
 // timer 2 ISR
 ISRCALL Timer2_ISR(void)
 {
@@ -257,6 +302,16 @@ ISRCALL CAN0_ISR(void)
 	ZwCANa_DispatchSysEvent();
 	// allow other interrupts from group 9
 	CAN_ISR_DONE;
+}
+// -----------------------------------------
+
+// EPWM6 TZ ISR
+ISRCALL TZ6_ISR(void)
+{
+    CONTROL_ExtSyncEvent();
+
+    // allow other interrupts from group 2
+    PWM_TZ_ISR_DONE;
 }
 // -----------------------------------------
 
