@@ -123,7 +123,7 @@ void CONTROL_Update()
 
 Boolean CONTROL_ApplySettings(Int16U VRate, Boolean PerfomRateCorrection)
 {
-	Int16U cellVoltage, cellVRate, KRate;
+	Int16U totalVoltage, cellVoltage, cellVRate, KRate;
 	
 	/*
 	 * ќписание принципа корректировки скорости нарастани€:
@@ -180,13 +180,25 @@ Boolean CONTROL_ApplySettings(Int16U VRate, Boolean PerfomRateCorrection)
 	}
 	
 	// Check if settings differ
-	cellVoltage = ((Int32U)DataTable[REG_DESIRED_VOLTAGE] * DataTable[REG_V_FINE_N] / DataTable[REG_V_FINE_D]
+	totalVoltage = ((Int32U)DataTable[REG_DESIRED_VOLTAGE] * DataTable[REG_V_FINE_N] / DataTable[REG_V_FINE_D]
 			+ (Int16S)DataTable[REG_V_OFFSET]) / CELLMUX_CellCount();
-	cellVRate = VRate / CELLMUX_CellCount();
+
+	// ”словие активации работы с одиночной €чейкой
+	Boolean SingleCellMode = totalVoltage <= DataTable[REG_SINGLE_CELL_V_LEVEL];
+	if(SingleCellMode)
+	{
+		cellVoltage = totalVoltage;
+		cellVRate = VRate;
+	}
+	else
+	{
+		cellVoltage = totalVoltage / CELLMUX_CellCount();
+		cellVRate = VRate / CELLMUX_CellCount();
+	}
 
 	if(cellVoltage != cellVoltageCopy || cellVRate != cellVRateCopy)
 	{
-		if(CELLMUX_SetCellsState(cellVoltage, cellVRate))
+		if(CELLMUX_SetCellsState(cellVoltage, cellVRate, SingleCellMode))
 		{
 			cellVoltageCopy = cellVoltage;
 			cellVRateCopy = cellVRate;

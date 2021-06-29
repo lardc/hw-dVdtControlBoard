@@ -67,6 +67,16 @@ typedef struct __TableItemConstraint
 #define UNIT_RATE_R1_DEF			500
 #define UNIT_RATE_R2_DEF			5000
 
+// Single cell number
+#define CELL_NUM_MIN				1
+#define CELL_NUM_MAX				6
+#define CELL_NUM_DEF				1
+
+// Single cell voltage limit
+#define SINGLE_CELL_VLIM_MIN		20
+#define SINGLE_CELL_VLIM_MAX		500
+#define SINGLE_CELL_VLIM_DEF		300
+
 // Cell vaoltage ranges
 #define CELL_V_MIN					20		// in V
 #define CELL_V_MAX					1000	// in V

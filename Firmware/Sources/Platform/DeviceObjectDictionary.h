@@ -69,7 +69,9 @@
 #define REG_UNIT_USE_RANGE2			18	// Use setpoint data for range 2 (mid)
 #define REG_CORR_RANGE1				19	// Correction coefficient for range 1 x1000
 #define REG_CORR_RANGE2				20	// Correction coefficient for range 2 x1000
-// 21 - 29
+#define REG_SINGLE_CELL_NUMBER		21	// Single cell number
+#define REG_SINGLE_CELL_V_LEVEL		22	// Maximum voltage for single cell mode (in V)
+// 23 - 29
 #define REG_CELL1_GATEV1			30	// Gate voltage setpoint 1 for cell 1
 #define REG_CELL1_VRATE1			31	// Voltage rate setpoint 1 for cell 1
 // 32 - 111								// Setpoints for 6 cells (7 per cell)
