@@ -134,13 +134,13 @@ Int16U SP_FindActiveRange(Int16U CellIndex, Int16U VRate)
 
 Int16U SP_GetRangeXMaxRate(Int16U RangeBaseRateRegister)
 {
-	Int32U i, MaxRate = 0;
+	Int32U i, MaxRate = INT32U_MAX;
 
 	for(i = 0; i < MAX_CELLS_COUNT; ++i)
 		if(((1 << i) & CELLMUX_CellMask()) != 0)
-			MaxRate += DataTable[RangeBaseRateRegister + i * 2];
+			MaxRate = MIN(MaxRate, DataTable[RangeBaseRateRegister + i * 2]);
 
-	return MaxRate;
+	return MaxRate * CELLMUX_CellCount();
 }
 // ----------------------------------------
 
