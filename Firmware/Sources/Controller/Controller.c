@@ -184,7 +184,7 @@ Boolean CONTROL_ApplySettings(Int16U VRate, Boolean PerfomRateCorrection)
 			+ (Int16S)DataTable[REG_V_OFFSET];
 
 	// ”словие активации работы с одиночной €чейкой
-	Boolean SingleCellMode = totalVoltage <= DataTable[REG_SINGLE_CELL_V_LEVEL];
+	Boolean SingleCellMode = (totalVoltage <= DataTable[REG_SINGLE_CELL_V_LEVEL]);
 	if(SingleCellMode)
 	{
 		cellVoltage = totalVoltage;

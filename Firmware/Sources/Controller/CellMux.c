@@ -136,7 +136,7 @@ Boolean CELLMUX_SetCellsState(Int16U CellVoltage, Int16U CellVRate, Boolean Sing
 			
 			Int16U CellVRateRange;
 			
-			if(SingleCellMode && ((i + 1) == DataTable[REG_SINGLE_CELL_NUMBER]))
+			if(!SingleCellMode || (SingleCellMode && (i + 1 == DataTable[REG_SINGLE_CELL_NUMBER])))
 				GateV = SP_Generate(i, CellVRate, &CellVRateRange);
 			else
 			{
