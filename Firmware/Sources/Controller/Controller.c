@@ -180,8 +180,8 @@ Boolean CONTROL_ApplySettings(Int16U VRate, Boolean PerfomRateCorrection)
 	}
 	
 	// Check if settings differ
-	totalVoltage = ((Int32U)DataTable[REG_DESIRED_VOLTAGE] * DataTable[REG_V_FINE_N] / DataTable[REG_V_FINE_D]
-			+ (Int16S)DataTable[REG_V_OFFSET]) / CELLMUX_CellCount();
+	totalVoltage = (Int32U)DataTable[REG_DESIRED_VOLTAGE] * DataTable[REG_V_FINE_N] / DataTable[REG_V_FINE_D]
+			+ (Int16S)DataTable[REG_V_OFFSET];
 
 	// ”словие активации работы с одиночной €чейкой
 	Boolean SingleCellMode = totalVoltage <= DataTable[REG_SINGLE_CELL_V_LEVEL];
