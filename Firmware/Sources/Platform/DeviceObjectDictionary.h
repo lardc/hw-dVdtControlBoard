@@ -71,12 +71,25 @@
 #define REG_CORR_RANGE2				20	// Correction coefficient for range 2 x1000
 #define REG_SINGLE_CELL_NUMBER		21	// Single cell number
 #define REG_SINGLE_CELL_V_LEVEL		22	// Maximum voltage for single cell mode (in V)
-// 23 - 29
-#define REG_CELL1_GATEV1			30	// Gate voltage setpoint 1 for cell 1
-#define REG_CELL1_VRATE1			31	// Voltage rate setpoint 1 for cell 1
+#define REG_SINGLE_RATE_MAX         23  // Single cell max rate (in V/us x10)
+#define REG_SINGLE_RATE_MIN         24  // Single cell min rate (in V/us x10)
+#define REG_SINGLE_CORR_BY_RATE     25  // Single correction factor based on rate (in %)
+#define REG_SIMGLE_CORR_VPOINT      26  // Single voltage point for correction based on voltage (in V)
+#define REG_SINGLE_CORR_BY_VOLTAGE  27  // Single correction factor based on voltage (in %)
+#define REG_SINGLE_CORR_RANGE1      28  // Single correction coefficient for range 1 x1000
+#define REG_SINGLE_CORR_RANGE2      29  // Single correction coefficient for range 1 x1000
+#define REG_SINGLE_RATE_GLOBAL_K_N  30  // Single global rate correction (N)
+#define REG_SINGLE_RATE_GLOBAL_K_D  31  // Single global rate correction (D)
+#define REG_SINGLE_RATE_OFFSET      32  // Single offset based on voltage
+#define REG_RATE_OFFSET             33  // Offset based on voltage
+#define REG_SINGLE_OFFSET_RANGE2    34  // Single Offset range2
+#define REG_OFFSET_RANGE2           35  // Offset range2
+// 36 - 39
+#define REG_CELL1_GATEV1			40	// Gate voltage setpoint 1 for cell 1
+#define REG_CELL1_VRATE1			41	// Voltage rate setpoint 1 for cell 1
 // 32 - 111								// Setpoints for 6 cells (7 per cell)
-#define REG_CELL6_GATEV7			111	// Gate voltage setpoint 7 for cell 6
-#define REG_CELL6_VRATE7			112	// Voltage rate setpoint 7 for cell 6
+#define REG_CELL6_GATEV7			122	// Gate voltage setpoint 7 for cell 6
+#define REG_CELL6_VRATE7			123	// Voltage rate setpoint 7 for cell 6
 //
 // Extended NV-registers
 // Range 1
