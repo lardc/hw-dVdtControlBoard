@@ -33,26 +33,26 @@ const TableItemConstraint NVConstraint[DATA_TABLE_NV_SIZE] =
 										{NO, YES, NO},															// 17
 										{NO, YES, NO},															// 18
 										{X_D_DEF1, X_D_DEF3, X_D_DEF2},											// 19
-										{X_D_DEF1, X_D_DEF3, X_D_DEF2},											// 20
+										{X_D_DEF1, X_D_DEF3, X_D_DEF2},							                // 20
 										{CELL_NUM_MIN, CELL_NUM_MAX, CELL_NUM_DEF},								// 21
 										{SINGLE_CELL_VLIM_MIN, SINGLE_CELL_VLIM_MAX, SINGLE_CELL_VLIM_DEF},		// 22
-										{0, 0, 0},																// 23
-										{0, 0, 0},																// 24
-										{0, 0, 0},																// 25
-										{0, 0, 0},																// 26
-										{0, 0, 0},																// 27
-										{0, 0, 0},																// 28
-										{0, 0, 0},																// 29
-										{GATEV_CELL_MIN, GATEV_CELL_MAX, GATEV_CELL_DEF},						// 30
-										{VRATE_CELL_MIN, VRATE_CELL_MAX, VRATE_CELL_DEF},						// 31
-										{GATEV_CELL_MIN, GATEV_CELL_MAX, GATEV_CELL_DEF},						// 32
-										{VRATE_CELL_MIN, VRATE_CELL_MAX, VRATE_CELL_DEF},						// 33
-										{GATEV_CELL_MIN, GATEV_CELL_MAX, GATEV_CELL_DEF},						// 34
-										{VRATE_CELL_MIN, VRATE_CELL_MAX, VRATE_CELL_DEF},						// 35
-										{GATEV_CELL_MIN, GATEV_CELL_MAX, GATEV_CELL_DEF},						// 36
-										{VRATE_CELL_MIN, VRATE_CELL_MAX, VRATE_CELL_DEF},						// 37
-										{GATEV_CELL_MIN, GATEV_CELL_MAX, GATEV_CELL_DEF},						// 38
-										{VRATE_CELL_MIN, VRATE_CELL_MAX, VRATE_CELL_DEF},						// 39
+										{UNIT_RATE_MIN, UNIT_RATE_MAX, UNIT_RATE_MAX_DEF},						// 23
+										{UNIT_RATE_MIN, UNIT_RATE_MAX, UNIT_RATE_MIN_DEF},		                // 24
+										{RATE_CORR_MIN, RATE_CORR_MAX, RATE_CORR_DEF},		                    // 25
+										{DESIRED_VOLTAGE_MIN, DESIRED_VOLTAGE_MAX, DESIRED_VOLTAGE_MIN},	    // 26
+										{RATE_CORR_MIN, RATE_CORR_MAX, RATE_CORR_DEF},							// 27
+										{X_D_DEF1, X_D_DEF3, X_D_DEF2},											// 28
+										{X_D_DEF1, X_D_DEF3, X_D_DEF2},											// 29
+										{1, INT16U_MAX, X_D_DEF2},						                        // 30
+										{1, X_D_DEF3, X_D_DEF2},                                      			// 31
+										{0, INT16U_MAX, 0},						                                // 32
+										{0, INT16U_MAX, 0},						                                // 33
+										{0, INT16U_MAX, 0},						                                // 34
+										{0, INT16U_MAX, 0},						                                // 35
+										{0, 0, 0},						                                        // 36
+										{0, 0, 0},						                                        // 37
+										{0, 0, 0},						                                        // 38
+										{0, 0, 0},                                      						// 39
 										{GATEV_CELL_MIN, GATEV_CELL_MAX, GATEV_CELL_DEF},						// 40
 										{VRATE_CELL_MIN, VRATE_CELL_MAX, VRATE_CELL_DEF},						// 41
 										{GATEV_CELL_MIN, GATEV_CELL_MAX, GATEV_CELL_DEF},						// 42
@@ -127,16 +127,16 @@ const TableItemConstraint NVConstraint[DATA_TABLE_NV_SIZE] =
 										{VRATE_CELL_MIN, VRATE_CELL_MAX, VRATE_CELL_DEF},						// 111
 										{GATEV_CELL_MIN, GATEV_CELL_MAX, GATEV_CELL_DEF},						// 112
 										{VRATE_CELL_MIN, VRATE_CELL_MAX, VRATE_CELL_DEF},						// 113
-										{0, 0, 0},																// 114
-										{0, 0, 0},																// 115
-										{0, 0, 0},																// 116
-										{0, 0, 0},																// 117
-										{0, 0, 0},																// 118
-										{0, 0, 0},																// 119
-										{0, 0, 0},																// 120
-										{0, 0, 0},																// 121
-										{0, 0, 0},																// 122
-										{0, 0, 0},																// 123
+										{GATEV_CELL_MIN, GATEV_CELL_MAX, GATEV_CELL_DEF},						// 114
+										{GATEV_CELL_MIN, GATEV_CELL_MAX, GATEV_CELL_DEF},						// 115
+										{GATEV_CELL_MIN, GATEV_CELL_MAX, GATEV_CELL_DEF},						// 116
+										{GATEV_CELL_MIN, GATEV_CELL_MAX, GATEV_CELL_DEF},						// 117
+										{GATEV_CELL_MIN, GATEV_CELL_MAX, GATEV_CELL_DEF},						// 118
+										{GATEV_CELL_MIN, GATEV_CELL_MAX, GATEV_CELL_DEF},						// 119
+										{GATEV_CELL_MIN, GATEV_CELL_MAX, GATEV_CELL_DEF},						// 120
+										{GATEV_CELL_MIN, GATEV_CELL_MAX, GATEV_CELL_DEF},						// 121
+										{GATEV_CELL_MIN, GATEV_CELL_MAX, GATEV_CELL_DEF},						// 122
+										{GATEV_CELL_MIN, GATEV_CELL_MAX, GATEV_CELL_DEF},						// 123
 										{0, 0, 0},																// 124
 										{0, 0, 0},																// 125
 										{0, 0, 0},																// 126
