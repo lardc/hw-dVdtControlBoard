@@ -40,6 +40,8 @@ void CONTROL_DelayedInit();
 void CONTROL_Idle();
 // Main control cycle
 void CONTROL_Update();
+// Enable work mode single cell or all cell
+Boolean Control_EnableWorkMode();
 // Notify that CAN system fault occurs
 void CONTROL_NotifyCANFault(ZwCAN_SysFlags Flag);
 // Notify end of test

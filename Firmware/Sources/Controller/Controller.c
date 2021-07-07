@@ -121,6 +121,20 @@ void CONTROL_Update()
 }
 // ----------------------------------------
 
+Boolean Control_EnableWorkMode()
+{
+    Int16U totalVoltage;
+
+    // Check if settings differ
+     totalVoltage = (Int32U)DataTable[REG_DESIRED_VOLTAGE] * DataTable[REG_V_FINE_N] / DataTable[REG_V_FINE_D]
+                  + (Int16S)DataTable[REG_V_OFFSET];
+
+     // Условие активации работы с одиночной ячейкой
+     Boolean SingleCellMode = (totalVoltage <= DataTable[REG_SINGLE_CELL_V_LEVEL]);
+
+     return SingleCellMode;
+}
+
 Int16U CNTROL_СalculationRate(Int16U MaxRate, Int16U MinRate, Int16U VRate, Int16U RegCorrByRate, Int16U RegCorrRateVpoint, Int16U RegCorrRateByVoltage,
         Int16U RegCorrRange1, Int16U RegCorrRange2, Int16U RegOffsetRange2, Int16U RegRateGlobalKN, Int16U RegRateGlobalKD, Int16U OffsetByVoltage, Boolean EnableTuneLow)
 {
@@ -143,10 +157,12 @@ Int16U CNTROL_СalculationRate(Int16U MaxRate, Int16U MinRate, Int16U VRate, Int1
     if(DataTable[REG_UNIT_USE_RANGE1] && (VRate < SP_GetRange1MaxRate()))
     {
         VRate = (Int32U)VRate * DataTable[RegCorrRange1] /1000;
+
     }
     else if(DataTable[REG_UNIT_USE_RANGE2] && (VRate < SP_GetRange2MaxRate()))
     {
         VRate = (Int32U)VRate * DataTable[RegCorrRange2] /1000 + (Int16S)DataTable[RegOffsetRange2];
+
     }
     else
     {
@@ -198,7 +214,7 @@ Boolean CONTROL_ApplySettings(Int16U VRate, Boolean PerfomRateCorrection)
 	// Perfom rate correction
 	if(PerfomRateCorrection)
 	{
-	    if(SingleCellMode)
+	    if(Control_EnableWorkMode())
 	    {
 	        cellVRate = CNTROL_СalculationRate(REG_SINGLE_RATE_MAX, REG_SINGLE_RATE_MIN, VRate, REG_SINGLE_CORR_BY_RATE, REG_SIMGLE_CORR_VPOINT, REG_SINGLE_CORR_BY_VOLTAGE,
 	                                           REG_SINGLE_CORR_RANGE1, REG_SINGLE_CORR_RANGE2, REG_SINGLE_OFFSET_RANGE2, REG_SINGLE_RATE_GLOBAL_K_N, REG_SINGLE_RATE_GLOBAL_K_D, REG_SINGLE_RATE_OFFSET, FALSE);
@@ -211,7 +227,7 @@ Boolean CONTROL_ApplySettings(Int16U VRate, Boolean PerfomRateCorrection)
 	}
 	
 
-	if(SingleCellMode)
+	if(Control_EnableWorkMode())
 	{
 		cellVoltage = totalVoltage;
 		cellVRate = cellVRate;
