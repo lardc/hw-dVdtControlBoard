@@ -203,14 +203,11 @@ Int16U CNTROL_СalculationRate(Int16U MaxRate, Int16U MinRate, Int16U VRate, Int1
 Boolean CONTROL_ApplySettings(Int16U VRate, Boolean PerfomRateCorrection)
 {
 	Int16U totalVoltage, cellVoltage, cellVRate;
+
+	// Check if settings differ
+	totalVoltage = (Int32U)DataTable[REG_DESIRED_VOLTAGE] * DataTable[REG_V_FINE_N] / DataTable[REG_V_FINE_D]
+	             + (Int16S)DataTable[REG_V_OFFSET];
 	
-    // Check if settings differ
-    totalVoltage = (Int32U)DataTable[REG_DESIRED_VOLTAGE] * DataTable[REG_V_FINE_N] / DataTable[REG_V_FINE_D]
-            + (Int16S)DataTable[REG_V_OFFSET];
-
-    // Условие активации работы с одиночной ячейкой
-    Boolean SingleCellMode = (totalVoltage <= DataTable[REG_SINGLE_CELL_V_LEVEL]);
-
 	// Perfom rate correction
 	if(PerfomRateCorrection)
 	{
@@ -240,7 +237,7 @@ Boolean CONTROL_ApplySettings(Int16U VRate, Boolean PerfomRateCorrection)
 
 	if(cellVoltage != cellVoltageCopy || cellVRate != cellVRateCopy)
 	{
-		if(CELLMUX_SetCellsState(cellVoltage, cellVRate, SingleCellMode))
+		if(CELLMUX_SetCellsState(cellVoltage, cellVRate, Control_EnableWorkMode()))
 		{
 			cellVoltageCopy = cellVoltage;
 			cellVRateCopy = cellVRate;
