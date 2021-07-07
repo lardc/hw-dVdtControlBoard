@@ -10,6 +10,7 @@
 #include "DataTable.h"
 #include "Global.h"
 #include "CellMux.h"
+#include "Controller.h"
 
 // Definitions
 #define SETPOINT_ARRAY_SIZE		7
@@ -138,20 +139,24 @@ Int16U SP_GetRangeXMaxRate(Int16U RangeBaseRateRegister)
 
 	for(i = 0; i < MAX_CELLS_COUNT; ++i)
 		if(((1 << i) & CELLMUX_CellMask()) != 0)
-			MaxRate = MIN(MaxRate, DataTable[RangeBaseRateRegister + i * 2]);
+			MaxRate = MIN(MaxRate, DataTable[RangeBaseRateRegister + i * 14]);
 
-	return MaxRate * CELLMUX_CellCount();
+	return ((Control_EnableWorkMode()) ? MaxRate : (MaxRate * CELLMUX_CellCount()));
 }
 // ----------------------------------------
 
 Int16U SP_GetRange1MaxRate()
 {
-	return SP_GetRangeXMaxRate(REG_CELL1_R1_VRATE1);
+    Int16U RateRegMaxStep = 12;
+
+	return SP_GetRangeXMaxRate(REG_CELL1_R1_VRATE1 + RateRegMaxStep);
 }
 // ----------------------------------------
 
 Int16U SP_GetRange2MaxRate()
 {
-	return SP_GetRangeXMaxRate(REG_CELL1_R2_VRATE1);
+    Int16U RateRegMaxStep = 12;
+
+	return SP_GetRangeXMaxRate(REG_CELL1_R2_VRATE1 + RateRegMaxStep);
 }
 // ----------------------------------------
