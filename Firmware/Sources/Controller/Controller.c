@@ -1,4 +1,4 @@
-// ----------------------------------------
+п»ї// ----------------------------------------
 // Controller logic
 // ----------------------------------------
 
@@ -129,26 +129,26 @@ Boolean Control_EnableWorkMode()
      totalVoltage = (Int32U)DataTable[REG_DESIRED_VOLTAGE] * DataTable[REG_V_FINE_N] / DataTable[REG_V_FINE_D]
                   + (Int16S)DataTable[REG_V_OFFSET];
 
-     // Условие активации работы с одиночной ячейкой
+     // РЈСЃР»РѕРІРёРµ Р°РєС‚РёРІР°С†РёРё СЂР°Р±РѕС‚С‹ СЃ РѕРґРёРЅРѕС‡РЅРѕР№ СЏС‡РµР№РєРѕР№
      Boolean SingleCellMode = (totalVoltage <= DataTable[REG_SINGLE_CELL_V_LEVEL]);
 
      return SingleCellMode;
 }
 
-Int16U CNTROL_СalculationRateXMode(Int16U MaxRate, Int16U MinRate, Int16U VRate, Int16U RegCorrByRate, Int16U RegCorrRateVpoint, Int16U RegCorrRateByVoltage,
+Int16U CNTROL_РЎalculationRateXMode(Int16U MaxRate, Int16U MinRate, Int16U VRate, Int16U RegCorrByRate, Int16U RegCorrRateVpoint, Int16U RegCorrRateByVoltage,
         Int16U RegCorrRange1, Int16U RegCorrRange2, Int16U RegOffsetRange2, Int16U RegRateGlobalKN, Int16U RegRateGlobalKD, Int16U OffsetByVoltage, Boolean EnableTuneLow)
 {
     Int16U  KRate, CalRate;
 
     /*
-     * Описание принципа корректировки скорости нарастания:
-     * 1. Наилучшее отношение ожидаемой и реальной скорости нарастания получается на максимальном напряжении (4500В)
-     * и на средней скорости нарастания (1600В/мкс);
-     * 2. При сохранении значения напряжения и увеличении скорости нарастания возрастает ошибка скорости нарастания.
-     * Максимальная ошибка ~20-30% на максимальной скорости нарастания (2500В/мкс) (или на минимальной - в зависимости от схемы ячеек);
-     * 3. При сохранении значения скорости нарастания и уменьшении напряжения возрастает ошибка скорости нарастания.
-     * Максимальная ошибка ~20-30% на минимальном напряжении (500В), причём эффект наблюдается на напряжениях ниже 1000-1500В;
-     * 4. Т.о. требуется одновременно вносить две корректировки: по напряжению и по скорости нарастания.
+     * РћРїРёСЃР°РЅРёРµ РїСЂРёРЅС†РёРїР° РєРѕСЂСЂРµРєС‚РёСЂРѕРІРєРё СЃРєРѕСЂРѕСЃС‚Рё РЅР°СЂР°СЃС‚Р°РЅРёСЏ:
+     * 1. РќР°РёР»СѓС‡С€РµРµ РѕС‚РЅРѕС€РµРЅРёРµ РѕР¶РёРґР°РµРјРѕР№ Рё СЂРµР°Р»СЊРЅРѕР№ СЃРєРѕСЂРѕСЃС‚Рё РЅР°СЂР°СЃС‚Р°РЅРёСЏ РїРѕР»СѓС‡Р°РµС‚СЃСЏ РЅР° РјР°РєСЃРёРјР°Р»СЊРЅРѕРј РЅР°РїСЂСЏР¶РµРЅРёРё (4500Р’)
+     * Рё РЅР° СЃСЂРµРґРЅРµР№ СЃРєРѕСЂРѕСЃС‚Рё РЅР°СЂР°СЃС‚Р°РЅРёСЏ (1600Р’/РјРєСЃ);
+     * 2. РџСЂРё СЃРѕС…СЂР°РЅРµРЅРёРё Р·РЅР°С‡РµРЅРёСЏ РЅР°РїСЂСЏР¶РµРЅРёСЏ Рё СѓРІРµР»РёС‡РµРЅРёРё СЃРєРѕСЂРѕСЃС‚Рё РЅР°СЂР°СЃС‚Р°РЅРёСЏ РІРѕР·СЂР°СЃС‚Р°РµС‚ РѕС€РёР±РєР° СЃРєРѕСЂРѕСЃС‚Рё РЅР°СЂР°СЃС‚Р°РЅРёСЏ.
+     * РњР°РєСЃРёРјР°Р»СЊРЅР°СЏ РѕС€РёР±РєР° ~20-30% РЅР° РјР°РєСЃРёРјР°Р»СЊРЅРѕР№ СЃРєРѕСЂРѕСЃС‚Рё РЅР°СЂР°СЃС‚Р°РЅРёСЏ (2500Р’/РјРєСЃ) (РёР»Рё РЅР° РјРёРЅРёРјР°Р»СЊРЅРѕР№ - РІ Р·Р°РІРёСЃРёРјРѕСЃС‚Рё РѕС‚ СЃС…РµРјС‹ СЏС‡РµРµРє);
+     * 3. РџСЂРё СЃРѕС…СЂР°РЅРµРЅРёРё Р·РЅР°С‡РµРЅРёСЏ СЃРєРѕСЂРѕСЃС‚Рё РЅР°СЂР°СЃС‚Р°РЅРёСЏ Рё СѓРјРµРЅСЊС€РµРЅРёРё РЅР°РїСЂСЏР¶РµРЅРёСЏ РІРѕР·СЂР°СЃС‚Р°РµС‚ РѕС€РёР±РєР° СЃРєРѕСЂРѕСЃС‚Рё РЅР°СЂР°СЃС‚Р°РЅРёСЏ.
+     * РњР°РєСЃРёРјР°Р»СЊРЅР°СЏ РѕС€РёР±РєР° ~20-30% РЅР° РјРёРЅРёРјР°Р»СЊРЅРѕРј РЅР°РїСЂСЏР¶РµРЅРёРё (500Р’), РїСЂРёС‡С‘Рј СЌС„С„РµРєС‚ РЅР°Р±Р»СЋРґР°РµС‚СЃСЏ РЅР° РЅР°РїСЂСЏР¶РµРЅРёСЏС… РЅРёР¶Рµ 1000-1500Р’;
+     * 4. Рў.Рѕ. С‚СЂРµР±СѓРµС‚СЃСЏ РѕРґРЅРѕРІСЂРµРјРµРЅРЅРѕ РІРЅРѕСЃРёС‚СЊ РґРІРµ РєРѕСЂСЂРµРєС‚РёСЂРѕРІРєРё: РїРѕ РЅР°РїСЂСЏР¶РµРЅРёСЋ Рё РїРѕ СЃРєРѕСЂРѕСЃС‚Рё РЅР°СЂР°СЃС‚Р°РЅРёСЏ.
      */
 
     Int16U VRateMax = DataTable[MaxRate];
@@ -204,15 +204,15 @@ Int16U CNTROL_СalculationRateXMode(Int16U MaxRate, Int16U MinRate, Int16U VRate,
 }
 // ----------------------------------------
 
-Int16U CNTROL_СalculationRateSingleMode(Int16U VRate)
+Int16U CNTROL_РЎalculationRateSingleMode(Int16U VRate)
 {
-    return CNTROL_СalculationRateXMode(REG_SINGLE_RATE_MAX, REG_SINGLE_RATE_MIN, VRate, REG_SINGLE_CORR_BY_RATE, REG_SIMGLE_CORR_VPOINT, REG_SINGLE_CORR_BY_VOLTAGE,
+    return CNTROL_РЎalculationRateXMode(REG_SINGLE_RATE_MAX, REG_SINGLE_RATE_MIN, VRate, REG_SINGLE_CORR_BY_RATE, REG_SIMGLE_CORR_VPOINT, REG_SINGLE_CORR_BY_VOLTAGE,
                                   REG_SINGLE_CORR_RANGE1, REG_SINGLE_CORR_RANGE2, REG_SINGLE_OFFSET_RANGE2, REG_SINGLE_RATE_GLOBAL_K_N, REG_SINGLE_RATE_GLOBAL_K_D, REG_SINGLE_RATE_OFFSET, FALSE);
 }
 
-Int16U CNTROL_СalculationRateFullMode(Int16U VRate)
+Int16U CNTROL_РЎalculationRateFullMode(Int16U VRate)
 {
-    return CNTROL_СalculationRateXMode(REG_UNIT_RATE_MAX, REG_UNIT_RATE_MIN, VRate, REG_CORR_RATE_BY_RATE, REG_CORR_RATE_VPOINT, REG_CORR_RATE_BY_VOLTAGE,
+    return CNTROL_РЎalculationRateXMode(REG_UNIT_RATE_MAX, REG_UNIT_RATE_MIN, VRate, REG_CORR_RATE_BY_RATE, REG_CORR_RATE_VPOINT, REG_CORR_RATE_BY_VOLTAGE,
                                    REG_CORR_RANGE1, REG_CORR_RANGE2, REG_OFFSET_RANGE2, REG_RATE_GLOBAL_K_N, REG_RATE_GLOBAL_K_N, REG_RATE_OFFSET, FALSE);
 }
 
@@ -229,11 +229,11 @@ Boolean CONTROL_ApplySettings(Int16U VRate, Boolean PerfomRateCorrection)
 	{
 	    if(Control_EnableWorkMode())
 	    {
-	        cellVRate = CNTROL_СalculationRateSingleMode(VRate);
+	        cellVRate = CNTROL_РЎalculationRateSingleMode(VRate);
 	    }
 	    else
 	    {
-            cellVRate = CNTROL_СalculationRateFullMode(VRate);
+            cellVRate = CNTROL_РЎalculationRateFullMode(VRate);
 	    }
 	}
 	
