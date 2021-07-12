@@ -139,24 +139,20 @@ Int16U SP_GetRangeXMaxRate(Int16U RangeBaseRateRegister)
 
 	for(i = 0; i < MAX_CELLS_COUNT; ++i)
 		if(((1 << i) & CELLMUX_CellMask()) != 0)
-			MaxRate = MIN(MaxRate, DataTable[RangeBaseRateRegister + i * 14]);
+			MaxRate = MIN(MaxRate, DataTable[RangeBaseRateRegister + i * SETPOINT_ARRAY_SIZE * 2]);
 
-	return ((Control_EnableWorkMode()) ? MaxRate : (MaxRate * CELLMUX_CellCount()));
+	return ((CONTROL_EnableSingleCellMode()) ? MaxRate : (MaxRate * CELLMUX_CellCount()));
 }
 // ----------------------------------------
 
 Int16U SP_GetRange1MaxRate()
 {
-    Int16U RateRegMaxStep = 12;
-
-	return SP_GetRangeXMaxRate(REG_CELL1_R1_VRATE1 + RateRegMaxStep);
+	return SP_GetRangeXMaxRate(REG_CELL1_R1_VRATE1 + ((SETPOINT_ARRAY_SIZE * 2)-2));
 }
 // ----------------------------------------
 
 Int16U SP_GetRange2MaxRate()
 {
-    Int16U RateRegMaxStep = 12;
-
-	return SP_GetRangeXMaxRate(REG_CELL1_R2_VRATE1 + RateRegMaxStep);
+	return SP_GetRangeXMaxRate(REG_CELL1_R2_VRATE1 + ((SETPOINT_ARRAY_SIZE * 2)-2));
 }
 // ----------------------------------------
