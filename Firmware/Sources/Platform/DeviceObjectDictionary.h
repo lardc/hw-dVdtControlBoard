@@ -20,6 +20,8 @@
 #define ACT_START_TEST_1600			103	// Start test 1600V/us
 #define ACT_START_TEST_2000			104	// Start test 2000V/us
 #define ACT_START_TEST_2500			105	// Start test 2500V/us
+#define ACT_ENABLE_EXT_SYNC_START   106 // Enable external sync
+#define ACT_DISABLE_EXT_SYNC_START  107 // Disable external sync
 //
 #define ACT_STOP					109	// Stop test
 //
@@ -129,7 +131,7 @@
 #define REG_WARNING					195	// Warning if present
 #define REG_PROBLEM					196	// Problem if present
 //
-#define REG_TEST_RESULT				198	// Test result
+#define REG_TEST_RESULT				197	// Test result
 #define REG_FAULT_REASON_EX			199 // External fault code
 //
 #define REG_VOLTAGE_OK				200	// Charged summary
