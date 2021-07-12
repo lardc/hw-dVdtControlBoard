@@ -264,6 +264,49 @@ Boolean CONTROL_ApplySettings(Int16U VRate, Boolean PerfomRateCorrection)
 }
 // ----------------------------------------
 
+void CONTROL_EnableExternalSync(Boolean Enable)
+{
+    DataTable[REG_TEST_RESULT] = FALSE;
+    ZwPWM_EnableTZInterruptsGlobal(FALSE);
+
+    // Prepare timer
+    ZwTimer_StopT1();
+    ZwTimer_ReloadT1();
+
+    // Configure pins
+    ZbGPIO_SwitchSyncEn(Enable);
+    ZbGPIO_SwitchLEDExt(TRUE);
+
+    // Clear registers
+    ZwPWM6_ClearTZ();
+    ZwPWM6_ProcessTZInterrupt();
+
+    ZwPWM_EnableTZInterruptsGlobal(Enable);
+}
+// ----------------------------------------
+
+void CONTROL_ExtSyncEvent()
+{
+    ZbGPIO_SwitchLED2(TRUE);
+    CONTROL_SetDeviceState(DS_InProcess);
+    LOGIC_BeginTest(CONTROL_TimeCounter);
+    CycleActive = TRUE;
+
+    ZwTimer_StartT1();
+}
+// ----------------------------------------
+
+void CONTROL_ExtSyncFinish()
+{
+    ZwTimer_StopT1();
+    ZbGPIO_SwitchSyncEn(FALSE);
+    ZbGPIO_SwitchLEDExt(FALSE);
+    ZbGPIO_SwitchLED2(FALSE);
+
+    CONTROL_NotifyEndTest(TRUE, FAULT_NONE, WARNING_NONE);
+}
+
+
 void CONTROL_NotifyEndTest(Boolean Result, Int16U FaultReason, Int16U Warning)
 {
 	DataTable[REG_TEST_RESULT] = Result ? 1 : 0;

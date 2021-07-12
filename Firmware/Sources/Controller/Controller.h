@@ -54,5 +54,11 @@ Int16U CONTROL_СalculationRateXMode(Int16U MaxRate, Int16U MinRate, Int16U VRat
 Int16U CONTROL_СalculationRateSingleMode(Int16U VRate);
 // Full mode rate calculator
 Int16U CONTROL_СalculationRateFullMode(Int16U VRate);
+// Enable external sync
+void CONTROL_EnableExternalSync(Boolean Enable);
+// Start test from external sync
+void CONTROL_ExtSyncEvent();
+// Off external sync
+void CONTROL_ExtSyncFinish();
 
 #endif // __CONTROLLER_H
