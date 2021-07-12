@@ -266,7 +266,7 @@ Boolean CONTROL_ApplySettings(Int16U VRate, Boolean PerfomRateCorrection)
 
 void CONTROL_EnableExternalSync(Boolean Enable)
 {
-    DataTable[REG_TEST_RESULT] = FALSE;
+    DataTable[REG_TEST_RESULT] = TEST_RESULT_NULL;
     ZwPWM_EnableTZInterruptsGlobal(FALSE);
 
     // Prepare timer
@@ -346,6 +346,7 @@ static void CONTROL_FillWPPartDefault()
 	DataTable[REG_DEV_STATE] = DS_None;
 	DataTable[REG_FAULT_REASON] = FAULT_NONE;
 	DataTable[REG_WARNING] = WARNING_NONE;
+	DataTable[REG_TEST_RESULT] = TEST_RESULT_NULL;
 	
 	for(i = REG_VOLTAGE_OK; i <= REG_CELL_STATE_6; ++i)
 		DataTable[i] = 0;
@@ -459,6 +460,21 @@ static Boolean CONTROL_DispatchAction(Int16U ActionID, pInt16U UserError)
 				}
 			}
 			break;
+
+        case ACT_ENABLE_EXT_SYNC_START:
+            {
+                if(CONTROL_State == DS_Ready)
+                {
+                    CONTROL_EnableExternalSync(TRUE);
+                }
+            }
+            break;
+
+        case ACT_DISABLE_EXT_SYNC_START:
+            {
+                CONTROL_EnableExternalSync(FALSE);
+            }
+            break;
 
 		case ACT_START_TEST_CUSTOM:
 			CONTROL_PrepareStart(UserError, DataTable[REG_VOLTAGE_RATE], DataTable[REG_TUNE_CUSTOM_SETTING]);

@@ -54,6 +54,8 @@
 #define CORR_RATE_BY_FS_VOLTAGE			FALSE		// Tune rate by rate depending on full scale voltage
 
 #define INVERT_SYNC						FALSE		// Invert SYNC pin
+
+#define TEST_RESULT_NULL                0           //
 //--------------------------------------------------------
 
 #endif // __GLOBAL_H
