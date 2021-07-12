@@ -121,7 +121,7 @@ void CONTROL_Update()
 }
 // ----------------------------------------
 
-Boolean Control_EnableWorkMode()
+Boolean CONTROL_EnableSingleCellMode()
 {
     Int16U totalVoltage;
 
@@ -135,7 +135,7 @@ Boolean Control_EnableWorkMode()
      return SingleCellMode;
 }
 
-Int16U CNTROL_СalculationRateXMode(Int16U MaxRate, Int16U MinRate, Int16U VRate, Int16U RegCorrByRate, Int16U RegCorrRateVpoint, Int16U RegCorrRateByVoltage,
+Int16U CONTROL_СalculationRateXMode(Int16U MaxRate, Int16U MinRate, Int16U VRate, Int16U RegCorrByRate, Int16U RegCorrRateVpoint, Int16U RegCorrRateByVoltage,
         Int16U RegCorrRange1, Int16U RegCorrRange2, Int16U RegOffsetRange2, Int16U RegRateGlobalKN, Int16U RegRateGlobalKD, Int16U OffsetByVoltage, Boolean EnableTuneLow)
 {
     Int16U  KRate, CalRate;
@@ -204,15 +204,15 @@ Int16U CNTROL_СalculationRateXMode(Int16U MaxRate, Int16U MinRate, Int16U VRate
 }
 // ----------------------------------------
 
-Int16U CNTROL_СalculationRateSingleMode(Int16U VRate)
+Int16U CONTROL_СalculationRateSingleMode(Int16U VRate)
 {
-    return CNTROL_СalculationRateXMode(REG_SINGLE_RATE_MAX, REG_SINGLE_RATE_MIN, VRate, REG_SINGLE_CORR_BY_RATE, REG_SIMGLE_CORR_VPOINT, REG_SINGLE_CORR_BY_VOLTAGE,
+    return CONTROL_СalculationRateXMode(REG_SINGLE_RATE_MAX, REG_SINGLE_RATE_MIN, VRate, REG_SINGLE_CORR_BY_RATE, REG_SIMGLE_CORR_VPOINT, REG_SINGLE_CORR_BY_VOLTAGE,
                                   REG_SINGLE_CORR_RANGE1, REG_SINGLE_CORR_RANGE2, REG_SINGLE_OFFSET_RANGE2, REG_SINGLE_RATE_GLOBAL_K_N, REG_SINGLE_RATE_GLOBAL_K_D, REG_SINGLE_RATE_OFFSET, FALSE);
 }
 
-Int16U CNTROL_СalculationRateFullMode(Int16U VRate)
+Int16U CONTROL_СalculationRateFullMode(Int16U VRate)
 {
-    return CNTROL_СalculationRateXMode(REG_UNIT_RATE_MAX, REG_UNIT_RATE_MIN, VRate, REG_CORR_RATE_BY_RATE, REG_CORR_RATE_VPOINT, REG_CORR_RATE_BY_VOLTAGE,
+    return CONTROL_СalculationRateXMode(REG_UNIT_RATE_MAX, REG_UNIT_RATE_MIN, VRate, REG_CORR_RATE_BY_RATE, REG_CORR_RATE_VPOINT, REG_CORR_RATE_BY_VOLTAGE,
                                    REG_CORR_RANGE1, REG_CORR_RANGE2, REG_OFFSET_RANGE2, REG_RATE_GLOBAL_K_N, REG_RATE_GLOBAL_K_N, REG_RATE_OFFSET, FALSE);
 }
 
@@ -227,18 +227,18 @@ Boolean CONTROL_ApplySettings(Int16U VRate, Boolean PerfomRateCorrection)
 	// Perfom rate correction
 	if(PerfomRateCorrection)
 	{
-	    if(Control_EnableWorkMode())
+	    if(CONTROL_EnableSingleCellMode())
 	    {
-	        cellVRate = CNTROL_СalculationRateSingleMode(VRate);
+	        cellVRate = CONTROL_СalculationRateSingleMode(VRate);
 	    }
 	    else
 	    {
-            cellVRate = CNTROL_СalculationRateFullMode(VRate);
+            cellVRate = CONTROL_СalculationRateFullMode(VRate);
 	    }
 	}
 	
 
-	if(Control_EnableWorkMode())
+	if(CONTROL_EnableSingleCellMode())
 	{
 		cellVoltage = totalVoltage;
 		cellVRate = cellVRate;
@@ -251,7 +251,7 @@ Boolean CONTROL_ApplySettings(Int16U VRate, Boolean PerfomRateCorrection)
 
 	if(cellVoltage != cellVoltageCopy || cellVRate != cellVRateCopy)
 	{
-		if(CELLMUX_SetCellsState(cellVoltage, cellVRate, Control_EnableWorkMode()))
+		if(CELLMUX_SetCellsState(cellVoltage, cellVRate, CONTROL_EnableSingleCellMode()))
 		{
 			cellVoltageCopy = cellVoltage;
 			cellVRateCopy = cellVRate;
