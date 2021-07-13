@@ -1,4 +1,4 @@
-// ----------------------------------------
+п»ї// ----------------------------------------
 // Controller logic
 // ----------------------------------------
 
@@ -121,84 +121,137 @@ void CONTROL_Update()
 }
 // ----------------------------------------
 
+Boolean CONTROL_EnableSingleCellMode()
+{
+    Int16U totalVoltage;
+
+    // Check if settings differ
+     totalVoltage = (Int32U)DataTable[REG_DESIRED_VOLTAGE] * DataTable[REG_V_FINE_N] / DataTable[REG_V_FINE_D]
+                  + (Int16S)DataTable[REG_V_OFFSET] + (Int16U)CSU_VOLTAGE_OFFSET;
+
+     // РЈСЃР»РѕРІРёРµ Р°РєС‚РёРІР°С†РёРё СЂР°Р±РѕС‚С‹ СЃ РѕРґРёРЅРѕС‡РЅРѕР№ СЏС‡РµР№РєРѕР№
+     Boolean SingleCellMode = (totalVoltage <= DataTable[REG_SINGLE_CELL_V_LEVEL]);
+
+     return SingleCellMode;
+}
+
+Int16U CONTROL_РЎalculationRateXMode(Int16U MaxRate, Int16U MinRate, Int16U VRate, Int16U RegCorrByRate, Int16U RegCorrRateVpoint, Int16U RegCorrRateByVoltage,
+        Int16U RegCorrRange1, Int16U RegCorrRange2, Int16U RegOffsetRange2, Int16U RegRateGlobalKN, Int16U RegRateGlobalKD, Int16U OffsetByVoltage, Boolean EnableTuneLow)
+{
+    Int16U  KRate, CalRate;
+
+    /*
+     * РћРїРёСЃР°РЅРёРµ РїСЂРёРЅС†РёРїР° РєРѕСЂСЂРµРєС‚РёСЂРѕРІРєРё СЃРєРѕСЂРѕСЃС‚Рё РЅР°СЂР°СЃС‚Р°РЅРёСЏ:
+     * 1. РќР°РёР»СѓС‡С€РµРµ РѕС‚РЅРѕС€РµРЅРёРµ РѕР¶РёРґР°РµРјРѕР№ Рё СЂРµР°Р»СЊРЅРѕР№ СЃРєРѕСЂРѕСЃС‚Рё РЅР°СЂР°СЃС‚Р°РЅРёСЏ РїРѕР»СѓС‡Р°РµС‚СЃСЏ РЅР° РјР°РєСЃРёРјР°Р»СЊРЅРѕРј РЅР°РїСЂСЏР¶РµРЅРёРё (4500Р’)
+     * Рё РЅР° СЃСЂРµРґРЅРµР№ СЃРєРѕСЂРѕСЃС‚Рё РЅР°СЂР°СЃС‚Р°РЅРёСЏ (1600Р’/РјРєСЃ);
+     * 2. РџСЂРё СЃРѕС…СЂР°РЅРµРЅРёРё Р·РЅР°С‡РµРЅРёСЏ РЅР°РїСЂСЏР¶РµРЅРёСЏ Рё СѓРІРµР»РёС‡РµРЅРёРё СЃРєРѕСЂРѕСЃС‚Рё РЅР°СЂР°СЃС‚Р°РЅРёСЏ РІРѕР·СЂР°СЃС‚Р°РµС‚ РѕС€РёР±РєР° СЃРєРѕСЂРѕСЃС‚Рё РЅР°СЂР°СЃС‚Р°РЅРёСЏ.
+     * РњР°РєСЃРёРјР°Р»СЊРЅР°СЏ РѕС€РёР±РєР° ~20-30% РЅР° РјР°РєСЃРёРјР°Р»СЊРЅРѕР№ СЃРєРѕСЂРѕСЃС‚Рё РЅР°СЂР°СЃС‚Р°РЅРёСЏ (2500Р’/РјРєСЃ) (РёР»Рё РЅР° РјРёРЅРёРјР°Р»СЊРЅРѕР№ - РІ Р·Р°РІРёСЃРёРјРѕСЃС‚Рё РѕС‚ СЃС…РµРјС‹ СЏС‡РµРµРє);
+     * 3. РџСЂРё СЃРѕС…СЂР°РЅРµРЅРёРё Р·РЅР°С‡РµРЅРёСЏ СЃРєРѕСЂРѕСЃС‚Рё РЅР°СЂР°СЃС‚Р°РЅРёСЏ Рё СѓРјРµРЅСЊС€РµРЅРёРё РЅР°РїСЂСЏР¶РµРЅРёСЏ РІРѕР·СЂР°СЃС‚Р°РµС‚ РѕС€РёР±РєР° СЃРєРѕСЂРѕСЃС‚Рё РЅР°СЂР°СЃС‚Р°РЅРёСЏ.
+     * РњР°РєСЃРёРјР°Р»СЊРЅР°СЏ РѕС€РёР±РєР° ~20-30% РЅР° РјРёРЅРёРјР°Р»СЊРЅРѕРј РЅР°РїСЂСЏР¶РµРЅРёРё (500Р’), РїСЂРёС‡С‘Рј СЌС„С„РµРєС‚ РЅР°Р±Р»СЋРґР°РµС‚СЃСЏ РЅР° РЅР°РїСЂСЏР¶РµРЅРёСЏС… РЅРёР¶Рµ 1000-1500Р’;
+     * 4. Рў.Рѕ. С‚СЂРµР±СѓРµС‚СЃСЏ РѕРґРЅРѕРІСЂРµРјРµРЅРЅРѕ РІРЅРѕСЃРёС‚СЊ РґРІРµ РєРѕСЂСЂРµРєС‚РёСЂРѕРІРєРё: РїРѕ РЅР°РїСЂСЏР¶РµРЅРёСЋ Рё РїРѕ СЃРєРѕСЂРѕСЃС‚Рё РЅР°СЂР°СЃС‚Р°РЅРёСЏ.
+     */
+
+    Int16U VRateMax = DataTable[MaxRate];
+    Int16U VRateMin = DataTable[MinRate];
+
+    if(DataTable[REG_UNIT_USE_RANGE1] && (VRate < SP_GetRange1MaxRate()))
+    {
+        VRate = (Int32U)VRate * DataTable[RegCorrRange1] /1000;
+
+    }
+    else if(DataTable[REG_UNIT_USE_RANGE2] && (VRate < SP_GetRange2MaxRate()))
+    {
+        if(DataTable[RegCorrRateVpoint] > DataTable[REG_DESIRED_VOLTAGE])
+        {
+            VRate = (((((Int32U)(DataTable[RegCorrRateVpoint] - DataTable[REG_DESIRED_VOLTAGE])
+                    * DataTable[RegCorrRange2]) / (DataTable[RegCorrRateVpoint] - DESIRED_VOLTAGE_MIN))
+                    + 100) * VRate) / 100 + (Int16S)DataTable[RegOffsetRange2];
+        }
+    }
+    else
+    {
+        // by rate (and full range voltage)
+        if(CORR_RATE_BY_FS_VOLTAGE)
+        {
+            KRate = ((Int32U)DataTable[RegCorrByRate] * (DESIRED_VOLTAGE_MAX - DataTable[REG_DESIRED_VOLTAGE]))
+                    / (DESIRED_VOLTAGE_MAX - DESIRED_VOLTAGE_MIN);
+        }
+        else
+            KRate = DataTable[RegCorrByRate];
+
+        // by rate
+        if(EnableTuneLow)
+            VRate = ((100 + (((Int32U)(VRateMax - VRate) * KRate) / (VRateMax - VRateMin))) * VRate) / 100;
+        else
+            VRate = ((100 + (((Int32U)(VRate - VRateMin) * KRate) / (VRateMax - VRateMin))) * VRate) / 100;
+
+        // by voltage (lower zone)
+        if(DataTable[RegCorrRateVpoint] > DataTable[REG_DESIRED_VOLTAGE])
+        {
+            VRate = (((((Int32U)(DataTable[RegCorrRateVpoint] - DataTable[REG_DESIRED_VOLTAGE])
+                    * DataTable[RegCorrRateByVoltage]) / (DataTable[RegCorrRateVpoint] - DESIRED_VOLTAGE_MIN))
+                    + 100) * VRate) / 100 + (Int16S)DataTable[OffsetByVoltage];
+        }
+
+        // global correction
+        VRate = (Int32U)VRate * DataTable[RegRateGlobalKN] / DataTable[RegRateGlobalKD];
+
+    }
+
+    CalRate = VRate;
+
+    return CalRate;
+}
+// ----------------------------------------
+
+Int16U CONTROL_РЎalculationRateSingleMode(Int16U VRate)
+{
+    return CONTROL_РЎalculationRateXMode(REG_SINGLE_RATE_MAX, REG_SINGLE_RATE_MIN, VRate, REG_SINGLE_CORR_BY_RATE, REG_SIMGLE_CORR_VPOINT, REG_SINGLE_CORR_BY_VOLTAGE,
+                                  REG_SINGLE_CORR_RANGE1, REG_SINGLE_CORR_RANGE2, REG_SINGLE_OFFSET_RANGE2, REG_SINGLE_RATE_GLOBAL_K_N, REG_SINGLE_RATE_GLOBAL_K_D, REG_SINGLE_RATE_OFFSET, FALSE);
+}
+
+Int16U CONTROL_РЎalculationRateFullMode(Int16U VRate)
+{
+    return CONTROL_РЎalculationRateXMode(REG_UNIT_RATE_MAX, REG_UNIT_RATE_MIN, VRate, REG_CORR_RATE_BY_RATE, REG_CORR_RATE_VPOINT, REG_CORR_RATE_BY_VOLTAGE,
+                                   REG_CORR_RANGE1, REG_CORR_RANGE2, REG_OFFSET_RANGE2, REG_RATE_GLOBAL_K_N, REG_RATE_GLOBAL_K_N, REG_RATE_OFFSET, FALSE);
+}
+
 Boolean CONTROL_ApplySettings(Int16U VRate, Boolean PerfomRateCorrection)
 {
-	Int16U totalVoltage, cellVoltage, cellVRate, KRate;
-	
-	/*
-	 * Описание принципа корректировки скорости нарастания:
-	 * 1. Наилучшее отношение ожидаемой и реальной скорости нарастания получается на максимальном напряжении (4500В)
-	 * и на средней скорости нарастания (1600В/мкс);
-	 * 2. При сохранении значения напряжения и увеличении скорости нарастания возрастает ошибка скорости нарастания.
-	 * Максимальная ошибка ~20-30% на максимальной скорости нарастания (2500В/мкс) (или на минимальной - в зависимости от схемы ячеек);
-	 * 3. При сохранении значения скорости нарастания и уменьшении напряжения возрастает ошибка скорости нарастания.
-	 * Максимальная ошибка ~20-30% на минимальном напряжении (500В), причём эффект наблюдается на напряжениях ниже 1000-1500В;
-	 * 4. Т.о. требуется одновременно вносить две корректировки: по напряжению и по скорости нарастания.
-	 */
+	Int16U totalVoltage, cellVoltage, cellVRate;
 
+	// Check if settings differ
+	totalVoltage = (Int32U)DataTable[REG_DESIRED_VOLTAGE] * DataTable[REG_V_FINE_N] / DataTable[REG_V_FINE_D]
+	             + (Int16S)DataTable[REG_V_OFFSET] + (Int16U)CSU_VOLTAGE_OFFSET;
+	
 	// Perfom rate correction
 	if(PerfomRateCorrection)
 	{
-		if(DataTable[REG_UNIT_USE_RANGE1] && (VRate < SP_GetRange1MaxRate()))
-		{
-			VRate = (Int32U)VRate * DataTable[REG_CORR_RANGE1] / 1000;
-		}
-		else if(DataTable[REG_UNIT_USE_RANGE2] && (VRate < SP_GetRange2MaxRate()))
-		{
-			VRate = (Int32U)VRate * DataTable[REG_CORR_RANGE2] / 1000;
-		}
-		else
-		{
-			// by rate (and full range voltage)
-			if(CORR_RATE_BY_FS_VOLTAGE)
-			{
-				KRate = ((Int32U)DataTable[REG_CORR_RATE_BY_RATE] * (DESIRED_VOLTAGE_MAX - DataTable[REG_DESIRED_VOLTAGE]))
-						/ (DESIRED_VOLTAGE_MAX - DESIRED_VOLTAGE_MIN);
-			}
-			else
-				KRate = DataTable[REG_CORR_RATE_BY_RATE];
-
-			// by rate
-			Int16U VRateMax = DataTable[REG_UNIT_RATE_MAX];
-			Int16U VRateMin = DataTable[REG_UNIT_RATE_MIN];
-			if(CORR_RATE_TUNE_LOW)
-				VRate = ((100 + (((Int32U)(VRateMax - VRate) * KRate) / (VRateMax - VRateMin))) * VRate) / 100;
-			else
-				VRate = ((100 + (((Int32U)(VRate - VRateMin) * KRate) / (VRateMax - VRateMin))) * VRate) / 100;
-
-			// by voltage (lower zone)
-			if(DataTable[REG_CORR_RATE_VPOINT] > DataTable[REG_DESIRED_VOLTAGE])
-			{
-				VRate = (((((Int32U)(DataTable[REG_CORR_RATE_VPOINT] - DataTable[REG_DESIRED_VOLTAGE])
-						* DataTable[REG_CORR_RATE_BY_VOLTAGE]) / (DataTable[REG_CORR_RATE_VPOINT] - DESIRED_VOLTAGE_MIN))
-						+ 100) * VRate) / 100;
-			}
-
-			// global correction
-			VRate = (Int32U)VRate * DataTable[REG_RATE_GLOBAL_K_N] / DataTable[REG_RATE_GLOBAL_K_D];
-		}
+	    if(CONTROL_EnableSingleCellMode())
+	    {
+	        cellVRate = CONTROL_РЎalculationRateSingleMode(VRate);
+	    }
+	    else
+	    {
+            cellVRate = CONTROL_РЎalculationRateFullMode(VRate);
+	    }
 	}
 	
-	// Check if settings differ
-	totalVoltage = (Int32U)DataTable[REG_DESIRED_VOLTAGE] * DataTable[REG_V_FINE_N] / DataTable[REG_V_FINE_D]
-			+ (Int16S)DataTable[REG_V_OFFSET];
 
-	// Условие активации работы с одиночной ячейкой
-	Boolean SingleCellMode = (totalVoltage <= DataTable[REG_SINGLE_CELL_V_LEVEL]);
-	if(SingleCellMode)
+	if(CONTROL_EnableSingleCellMode())
 	{
 		cellVoltage = totalVoltage;
-		cellVRate = VRate;
+		cellVRate = cellVRate;
 	}
 	else
 	{
 		cellVoltage = totalVoltage / CELLMUX_CellCount();
-		cellVRate = VRate / CELLMUX_CellCount();
+		cellVRate = cellVRate / CELLMUX_CellCount();
 	}
 
 	if(cellVoltage != cellVoltageCopy || cellVRate != cellVRateCopy)
 	{
-		if(CELLMUX_SetCellsState(cellVoltage, cellVRate, SingleCellMode))
+		if(CELLMUX_SetCellsState(cellVoltage, cellVRate, CONTROL_EnableSingleCellMode()))
 		{
 			cellVoltageCopy = cellVoltage;
 			cellVRateCopy = cellVRate;
@@ -210,6 +263,49 @@ Boolean CONTROL_ApplySettings(Int16U VRate, Boolean PerfomRateCorrection)
 	return TRUE;
 }
 // ----------------------------------------
+
+void CONTROL_EnableExternalSync(Boolean Enable)
+{
+    DataTable[REG_TEST_RESULT] = TEST_RESULT_NULL;
+    ZwPWM_EnableTZInterruptsGlobal(FALSE);
+
+    // Prepare timer
+    ZwTimer_StopT1();
+    ZwTimer_ReloadT1();
+
+    // Configure pins
+    ZbGPIO_SwitchSyncEn(Enable);
+    ZbGPIO_SwitchLEDExt(TRUE);
+
+    // Clear registers
+    ZwPWM6_ClearTZ();
+    ZwPWM6_ProcessTZInterrupt();
+
+    ZwPWM_EnableTZInterruptsGlobal(Enable);
+}
+// ----------------------------------------
+
+void CONTROL_ExtSyncEvent()
+{
+    ZbGPIO_SwitchLED2(TRUE);
+    CONTROL_SetDeviceState(DS_InProcess);
+    LOGIC_BeginTest(CONTROL_TimeCounter);
+    CycleActive = TRUE;
+
+    ZwTimer_StartT1();
+}
+// ----------------------------------------
+
+void CONTROL_ExtSyncFinish()
+{
+    ZwTimer_StopT1();
+    ZbGPIO_SwitchSyncEn(FALSE);
+    ZbGPIO_SwitchLEDExt(FALSE);
+    ZbGPIO_SwitchLED2(FALSE);
+
+    CONTROL_NotifyEndTest(TRUE, FAULT_NONE, WARNING_NONE);
+}
+
 
 void CONTROL_NotifyEndTest(Boolean Result, Int16U FaultReason, Int16U Warning)
 {
@@ -250,6 +346,7 @@ static void CONTROL_FillWPPartDefault()
 	DataTable[REG_DEV_STATE] = DS_None;
 	DataTable[REG_FAULT_REASON] = FAULT_NONE;
 	DataTable[REG_WARNING] = WARNING_NONE;
+	DataTable[REG_TEST_RESULT] = TEST_RESULT_NULL;
 	
 	for(i = REG_VOLTAGE_OK; i <= REG_CELL_STATE_6; ++i)
 		DataTable[i] = 0;
@@ -363,6 +460,21 @@ static Boolean CONTROL_DispatchAction(Int16U ActionID, pInt16U UserError)
 				}
 			}
 			break;
+
+        case ACT_ENABLE_EXT_SYNC_START:
+            {
+                if(CONTROL_State == DS_Ready)
+                {
+                    CONTROL_EnableExternalSync(TRUE);
+                }
+            }
+            break;
+
+        case ACT_DISABLE_EXT_SYNC_START:
+            {
+                CONTROL_EnableExternalSync(FALSE);
+            }
+            break;
 
 		case ACT_START_TEST_CUSTOM:
 			CONTROL_PrepareStart(UserError, DataTable[REG_VOLTAGE_RATE], DataTable[REG_TUNE_CUSTOM_SETTING]);

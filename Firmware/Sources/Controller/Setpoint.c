@@ -1,4 +1,4 @@
-// ----------------------------------------
+п»ї// ----------------------------------------
 // Gate voltage setpoint generator
 // ----------------------------------------
 
@@ -10,6 +10,7 @@
 #include "DataTable.h"
 #include "Global.h"
 #include "CellMux.h"
+#include "Controller.h"
 
 // Definitions
 #define SETPOINT_ARRAY_SIZE		7
@@ -109,7 +110,7 @@ Int16U SP_FindActiveRange(Int16U CellIndex, Int16U VRate)
 	Int16U DistR1, DistR2, DistDef;
 	DataTable[REG_DIAG_DIST_R1] = DataTable[REG_DIAG_DIST_R2] = DataTable[REG_DIAG_DIST_DEF] = INT16U_MAX;
 
-	// Поиск попадания в границы диапазона
+	// РџРѕРёСЃРє РїРѕРїР°РґР°РЅРёСЏ РІ РіСЂР°РЅРёС†С‹ РґРёР°РїР°Р·РѕРЅР°
 	if((DataTable[REG_DIAG_DIST_R1] = DistR1 = SP_GetDistanceToRange(CellIndex, VRate, REG_CELL1_R1_VRATE1,
 			DataTable[REG_UNIT_USE_RANGE1])) == 0)
 		return VRATE_RANGE_LOWER1;
@@ -121,7 +122,7 @@ Int16U SP_FindActiveRange(Int16U CellIndex, Int16U VRate)
 	if((DataTable[REG_DIAG_DIST_DEF] = DistDef = SP_GetDistanceToRange(CellIndex, VRate, REG_CELL1_VRATE1, TRUE)) == 0)
 		return VRATE_RANGE_DEF;
 
-	// Если значение не попало в диапазон, то определяем самый ближний диапазон
+	// Р•СЃР»Рё Р·РЅР°С‡РµРЅРёРµ РЅРµ РїРѕРїР°Р»Рѕ РІ РґРёР°РїР°Р·РѕРЅ, С‚Рѕ РѕРїСЂРµРґРµР»СЏРµРј СЃР°РјС‹Р№ Р±Р»РёР¶РЅРёР№ РґРёР°РїР°Р·РѕРЅ
 	Int16U ClosestDist = MIN(MIN(DistR1, DistR2), DistDef);
 	if(ClosestDist == DistR1)
 		return VRATE_RANGE_LOWER1;
@@ -138,20 +139,20 @@ Int16U SP_GetRangeXMaxRate(Int16U RangeBaseRateRegister)
 
 	for(i = 0; i < MAX_CELLS_COUNT; ++i)
 		if(((1 << i) & CELLMUX_CellMask()) != 0)
-			MaxRate = MIN(MaxRate, DataTable[RangeBaseRateRegister + i * 2]);
+			MaxRate = MIN(MaxRate, DataTable[RangeBaseRateRegister + i * SETPOINT_ARRAY_SIZE * 2]);
 
-	return MaxRate * CELLMUX_CellCount();
+	return ((CONTROL_EnableSingleCellMode()) ? MaxRate : (MaxRate * CELLMUX_CellCount()));
 }
 // ----------------------------------------
 
 Int16U SP_GetRange1MaxRate()
 {
-	return SP_GetRangeXMaxRate(REG_CELL1_R1_VRATE1);
+	return SP_GetRangeXMaxRate(REG_CELL1_R1_VRATE1 + ((SETPOINT_ARRAY_SIZE * 2)-2));
 }
 // ----------------------------------------
 
 Int16U SP_GetRange2MaxRate()
 {
-	return SP_GetRangeXMaxRate(REG_CELL1_R2_VRATE1);
+	return SP_GetRangeXMaxRate(REG_CELL1_R2_VRATE1 + ((SETPOINT_ARRAY_SIZE * 2)-2));
 }
 // ----------------------------------------
