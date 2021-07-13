@@ -46,8 +46,8 @@
 #define RELAY_SWITCH_DELAY_L_US			25000		// (in us)
 #define INFO_UPDATE_DELAY_US			500			// (in us)
 //
-#define PRE_PROBE_TIME_US				200			// (in us)
-#define PRE_PROBE_TIME_DIAG_US			50			// (in us)
+#define PRE_PROBE_TIME_US				350			// (in us)
+#define PRE_PROBE_TIME_DIAG_US			350			// (in us)
 
 // Correction
 #define CORR_RATE_TUNE_LOW				TRUE		// Pull-up rate at lower rates
@@ -56,6 +56,9 @@
 #define INVERT_SYNC						FALSE		// Invert SYNC pin
 
 #define TEST_RESULT_NULL                0           //
+
+#define CSU_VOLTAGE_OFFSET              100           // Voltage offset for CSU
+
 //--------------------------------------------------------
 
 #endif // __GLOBAL_H
