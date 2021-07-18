@@ -11,11 +11,14 @@
 #include "DataTable.h"
 #include "CellMux.h"
 #include "Setpoint.h"
+#include "ZbGPIO.h"
 
 // Functions
 //
 Boolean DIAG_DispatchCommand(Int16U Command)
 {
+    Boolean EnableRelay;
+
 	switch(Command)
 	{
 		case ACT_DIAG_SWITCH_ON:
@@ -60,9 +63,8 @@ Boolean DIAG_DispatchCommand(Int16U Command)
 			ZbGPIO_RelayLine(FALSE);
 			break;
 		case ACT_DIAG_PULSE_LED:
-			ZbGPIO_SwitchLEDExt(TRUE);
-			DELAY_US(100000);
-			ZbGPIO_SwitchLEDExt(FALSE);
+		    EnableRelay = (DataTable[REG_DBG_DATA] == 1) ? TRUE : FALSE;
+			ZbGPIO_SwitchLEDExt(EnableRelay);
 			break;
 		case ACT_DIAG_PULSE_SYNC:
 			ZbGPIO_SwitchResultOut(TRUE);
@@ -79,6 +81,9 @@ Boolean DIAG_DispatchCommand(Int16U Command)
 		case ACT_DIAG_CALL_CELL:
 			CELLMUX_CallCellAction(DataTable[REG_DIAG_TEST_CELL_ID], DataTable[REG_DIAG_TEST_PARAM_1]);
 			break;
+		case ACT_DIAG_READ_REALT:
+		    DataTable[REG_TEST_RESULT] = ZbGPIO_ReadDetectorPin() ? TEST_RESULT_OK : TEST_RESULT_FAIL;
+		    break;
 		case ACT_DIAG_GENERATE_SETP:
 			{
 				Int16U i, RatePerCell = DataTable[REG_VOLTAGE_RATE] / CELLMUX_CellCount(), dummy;
