@@ -14,7 +14,8 @@ typedef enum __LogicState
 {
 	LS_None			= 0,
 	LS_Measure		= 1,
-	LS_Pause		= 2
+	LS_Pause		= 2,
+    LS_Apply        = 3
 } LogicState;
 
 
@@ -22,6 +23,8 @@ typedef enum __LogicState
 //
 // Execute test
 void LOGIC_BeginTest(Int64U TimerTicks);
+// Apply parameters only
+void LOGIC_ApplyParameters(Int64U TimerTicks);
 // Process
 void LOGIC_Update(Int64U TimerTicks);
 // Reset process

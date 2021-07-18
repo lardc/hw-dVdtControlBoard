@@ -9,6 +9,7 @@
 #include "SysConfig.h"
 //
 #include "ZbBoard.h"
+#include "ZbGPIO.h"
 #include "DeviceObjectDictionary.h"
 #include "DataTable.h"
 #include "CellMux.h"
@@ -38,6 +39,13 @@ void LOGIC_BeginTest(Int64U TimerTicks)
 }
 // ----------------------------------------
 
+void LOGIC_ApplyParameters(Int64U TimerTicks)
+{
+    Timeout = TimerTicks + TEST_APPLY_FIXED_MS;
+    LOGIC_State = LS_Apply;
+}
+// ----------------------------------------
+
 #ifdef BOOT_FROM_FLASH
 	#pragma CODE_SECTION(LOGIC_Update, "ramfuncs");
 #endif
@@ -46,18 +54,23 @@ void LOGIC_Update(Int64U TimerTicks)
 	static Int16U i, targetCell;
 	static Boolean result, voltageOK;
 
+
+	if(LOGIC_State != LS_None)
+	{
+	    voltageOK = TRUE;
+
+	    for(i = 0; i < MAX_CELLS_COUNT; ++i)
+	        if (((1 << i) & CELLMUX_CellMask()) != 0)
+	            if(!(voltageOK &= DataTable[REG_VOLTAGE_OK_1 + i] ? TRUE : FALSE))
+	                targetCell = i;
+
+            DataTable[REG_VOLTAGE_OK] = voltageOK ? 1 : 0;
+	}
+
 	switch (LOGIC_State)
 	{
 		case LS_Measure:
 			{
-				voltageOK = TRUE;
-
-				for(i = 0; i < MAX_CELLS_COUNT; ++i)
-					if (((1 << i) & CELLMUX_CellMask()) != 0)
-						if(!(voltageOK &= DataTable[REG_VOLTAGE_OK_1 + i] ? TRUE : FALSE))
-							targetCell = i;
-				DataTable[REG_VOLTAGE_OK] = voltageOK ? 1 : 0;
-
 				if(voltageOK)
 				{
 					result = LOGIC_TestSequence();
@@ -80,6 +93,19 @@ void LOGIC_Update(Int64U TimerTicks)
 				LOGIC_Reset();
 			}
 			break;
+
+        case LS_Apply:
+            if (voltageOK)
+            {
+                CONTROL_NotifyEndTest(FALSE, FAULT_NONE, WARNING_NONE);
+                LOGIC_Reset();
+            }
+            else if (TimerTicks > Timeout + TEST_PREPARE_TIMEOUT_MS)
+            {
+                CONTROL_NotifyEndTest(FALSE, FAULT_NOT_READY_1 + targetCell, WARNING_NONE);
+                LOGIC_Reset();
+            }
+            break;
 
 		default:
 			break;
@@ -116,7 +142,7 @@ static Boolean LOGIC_TestSequence()
 	GpioDataRegs.GPASET.bit.GPIO0 = 1;
 	GpioDataRegs.GPASET.bit.GPIO18 = 1;		// RESULT_OUT is used for sync output
 	DELAY_US((DataTable[REG_DESIRED_VOLTAGE] / DataTable[REG_VOLTAGE_RATE]) + PRE_PROBE_TIME_US);
-	result = ZbGPIO_ReadDetector();
+	result = ZbGPIO_ReadDetectorPin();
 	ZbGPIO_SwitchStartPulse(FALSE);
 	ZbGPIO_SwitchResultOut(FALSE);			// RESULT_OUT is used for sync output
 
