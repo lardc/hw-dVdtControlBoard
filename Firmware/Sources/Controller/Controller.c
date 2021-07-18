@@ -9,6 +9,7 @@
 #include "SysConfig.h"
 //
 #include "ZbBoard.h"
+#include "ZbGPIO.h"
 #include "DeviceObjectDictionary.h"
 #include "DataTable.h"
 #include "SCCISlave.h"
@@ -42,8 +43,8 @@ static Boolean CONTROL_DispatchAction(Int16U ActionID, pInt16U UserError);
 static void CONTROL_SwitchToFault(Int16U FaultReason, Int16U ErrorCodeEx);
 static void CONTROL_SwitchToFaultEx();
 static Boolean CONTROL_ApplySettings(Int16U VRate, Boolean PerfomRateCorrection);
-static void CONTROL_StartTest(Int16U VRate, Boolean PerfomRateCorrection);
-void CONTROL_PrepareStart(pInt16U UserError, Int16U Rate_x10, Boolean UseCustomSettings);
+static void CONTROL_StartTest(Int16U VRate, Boolean PerfomRateCorrection, Boolean StartTest);
+void CONTROL_PrepareStart(pInt16U UserError, Int16U Rate_x10, Boolean UseCustomSettings, Boolean StartTest);
 
 // Functions
 //
@@ -275,7 +276,8 @@ void CONTROL_EnableExternalSync(Boolean Enable)
 
     // Configure pins
     ZbGPIO_SwitchSyncEn(Enable);
-    ZbGPIO_SwitchLEDExt(TRUE);
+    ZbGPIO_SwitchLED2(Enable);
+    ZbGPIO_SwitchLEDExt(Enable);
 
     // Clear registers
     ZwPWM6_ClearTZ();
@@ -287,10 +289,7 @@ void CONTROL_EnableExternalSync(Boolean Enable)
 
 void CONTROL_ExtSyncEvent()
 {
-    ZbGPIO_SwitchLED2(TRUE);
     CONTROL_SetDeviceState(DS_InProcess);
-    LOGIC_BeginTest(CONTROL_TimeCounter);
-    CycleActive = TRUE;
 
     ZwTimer_StartT1();
 }
@@ -303,13 +302,13 @@ void CONTROL_ExtSyncFinish()
     ZbGPIO_SwitchLEDExt(FALSE);
     ZbGPIO_SwitchLED2(FALSE);
 
-    CONTROL_NotifyEndTest(TRUE, FAULT_NONE, WARNING_NONE);
+    CONTROL_NotifyEndTest(ZbGPIO_ReadDetectorPin(), FAULT_NONE, WARNING_NONE);
 }
 
 
 void CONTROL_NotifyEndTest(Boolean Result, Int16U FaultReason, Int16U Warning)
 {
-	DataTable[REG_TEST_RESULT] = Result ? 1 : 0;
+	DataTable[REG_TEST_RESULT] = Result ? TEST_RESULT_OK : TEST_RESULT_FAIL;
 	DataTable[REG_WARNING] = Warning;
 	
 	if(FaultReason != FAULT_NONE)
@@ -373,19 +372,29 @@ static void CONTROL_SwitchToFaultEx()
 }
 // ----------------------------------------
 
-static void CONTROL_StartTest(Int16U VRate, Boolean PerfomRateCorrection)
+static void CONTROL_StartTest(Int16U VRate, Boolean PerfomRateCorrection, Boolean StartTest)
 {
-	ZbGPIO_SwitchLEDExt(TRUE);
-	ZbGPIO_SwitchLED2(TRUE);
+	ZbGPIO_SwitchLEDExt(StartTest);
+	ZbGPIO_SwitchLED2(StartTest);
+	DataTable[REG_TEST_RESULT] = TEST_RESULT_NULL;
 	
 	if(!CONTROL_ApplySettings(VRate, PerfomRateCorrection))
 	{
 		CONTROL_SwitchToFaultEx();
 		return;
 	}
-	
+
 	CONTROL_SetDeviceState(DS_InProcess);
-	LOGIC_BeginTest(CONTROL_TimeCounter);
+
+	if (StartTest)
+	{
+	    LOGIC_BeginTest(CONTROL_TimeCounter);
+	}
+	else
+	{
+	    LOGIC_ApplyParameters(CONTROL_TimeCounter);
+	}
+
 	CycleActive = TRUE;
 }
 // ----------------------------------------
@@ -450,13 +459,7 @@ static Boolean CONTROL_DispatchAction(Int16U ActionID, pInt16U UserError)
 			{
 				if(CONTROL_State == DS_Ready)
 				{
-					if(CONTROL_ValidateSettings(DataTable[REG_VOLTAGE_RATE]))
-					{
-						if(!CONTROL_ApplySettings(DataTable[REG_VOLTAGE_RATE], DataTable[REG_TUNE_CUSTOM_SETTING]))
-							CONTROL_SwitchToFaultEx();
-					}
-					else
-						*UserError = ERR_OUT_OF_RANGE;
+				    CONTROL_PrepareStart(UserError, DataTable[REG_VOLTAGE_RATE], DataTable[REG_TUNE_CUSTOM_SETTING], FALSE);
 				}
 			}
 			break;
@@ -477,27 +480,27 @@ static Boolean CONTROL_DispatchAction(Int16U ActionID, pInt16U UserError)
             break;
 
 		case ACT_START_TEST_CUSTOM:
-			CONTROL_PrepareStart(UserError, DataTable[REG_VOLTAGE_RATE], DataTable[REG_TUNE_CUSTOM_SETTING]);
+			CONTROL_PrepareStart(UserError, DataTable[REG_VOLTAGE_RATE], DataTable[REG_TUNE_CUSTOM_SETTING], TRUE);
 			break;
 
 		case ACT_START_TEST_500:
-			CONTROL_PrepareStart(UserError, 500 * 10, TRUE);
+			CONTROL_PrepareStart(UserError, 500 * 10, TRUE, TRUE);
 			break;
 
 		case ACT_START_TEST_1000:
-			CONTROL_PrepareStart(UserError, 1000 * 10, TRUE);
+			CONTROL_PrepareStart(UserError, 1000 * 10, TRUE, TRUE);
 			break;
 
 		case ACT_START_TEST_1600:
-			CONTROL_PrepareStart(UserError, 1600 * 10, TRUE);
+			CONTROL_PrepareStart(UserError, 1600 * 10, TRUE, TRUE);
 			break;
 
 		case ACT_START_TEST_2000:
-			CONTROL_PrepareStart(UserError, 2000 * 10, TRUE);
+			CONTROL_PrepareStart(UserError, 2000 * 10, TRUE, TRUE);
 			break;
 
 		case ACT_START_TEST_2500:
-			CONTROL_PrepareStart(UserError, 2500 * 10, TRUE);
+			CONTROL_PrepareStart(UserError, 2500 * 10, TRUE, TRUE);
 			break;
 
 		case ACT_CLR_FAULT:
@@ -528,14 +531,14 @@ static Boolean CONTROL_DispatchAction(Int16U ActionID, pInt16U UserError)
 }
 // ----------------------------------------
 
-void CONTROL_PrepareStart(pInt16U UserError, Int16U Rate_x10, Boolean UseCustomSettings)
+void CONTROL_PrepareStart(pInt16U UserError, Int16U Rate_x10, Boolean UseCustomSettings, Boolean StartTest)
 {
 	if(CONTROL_State == DS_Ready)
 	{
 		if(CONTROL_ValidateSettings(Rate_x10))
 		{
 			CONTROL_HandleFanLogic(TRUE);
-			CONTROL_StartTest(Rate_x10, UseCustomSettings);
+			CONTROL_StartTest(Rate_x10, UseCustomSettings, StartTest);
 		}
 		else
 			*UserError = ERR_OUT_OF_RANGE;
