@@ -49,9 +49,9 @@ const TableItemConstraint NVConstraint[DATA_TABLE_NV_SIZE] =
 										{0, INT16U_MAX, 0},						                                // 33
 										{0, INT16U_MAX, 0},						                                // 34
 										{0, INT16U_MAX, 0},						                                // 35
-										{0, 0, 0},						                                        // 36
-										{0, 0, 0},						                                        // 37
-										{0, 0, 0},						                                        // 38
+										{X_D_DEF1, X_D_DEF3, X_D_DEF2},						                    // 36
+										{X_D_DEF1, X_D_DEF3, X_D_DEF2},						                    // 37
+										{0, INT16U_MAX, 0},						                                // 38
 										{0, 0, 0},                                      						// 39
 										{GATEV_CELL_MIN, GATEV_CELL_MAX, GATEV_CELL_DEF},						// 40
 										{VRATE_CELL_MIN, VRATE_CELL_MAX, VRATE_CELL_DEF},						// 41

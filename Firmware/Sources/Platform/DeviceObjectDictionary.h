@@ -33,6 +33,7 @@
 #define ACT_DIAG_PULSE_SWITCH		115
 #define ACT_DIAG_PULSE_LED			116
 #define ACT_DIAG_PULSE_SYNC			117
+#define ACT_DIAG_READ_REALT         118
 // 118
 #define ACT_DIAG_GENERATE_SETP		119
 #define ACT_DIAG_READ_CELL_REG		120
@@ -86,7 +87,10 @@
 #define REG_RATE_OFFSET             33  // Offset based on voltage
 #define REG_SINGLE_OFFSET_RANGE2    34  // Single Offset range2 based on voltage
 #define REG_OFFSET_RANGE2           35  // Offset range2 based on voltage
-// 36 - 39
+#define REG_SINGLE_CORR_N_RANGE2    36  //
+#define REG_CORR_N_RANGE2           37  //
+#define REG_DBG_DATA                38  //
+// 38 - 39
 #define REG_CELL1_GATEV1			40	// Gate voltage setpoint 1 for cell 1
 #define REG_CELL1_VRATE1			41	// Voltage rate setpoint 1 for cell 1
 // 32 - 111								// Setpoints for 6 cells (7 per cell)
