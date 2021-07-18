@@ -35,6 +35,8 @@ void ZbGPIO_SetActiveCell(Int16U CellNumber);
 void ZbGPIO_RelayLine(Boolean Out);
 // Switch fan
 void ZbGPIO_SwitchFAN(Boolean Set);
+//Read detector pin
+Boolean ZbGPIO_ReadDetectorPin();
 
 // Inline functions
 //
@@ -45,7 +47,7 @@ Boolean inline ZbGPIO_ReadSync()
 //
 Boolean inline ZbGPIO_ReadDetector()
 {
-	return !ZwGPIO_ReadPin(PIN_DETECTOR);
+	return ZwGPIO_ReadPin(!PIN_DETECTOR);
 }
 //
 void inline ZbGPIO_SwitchStartPulse(Boolean Set)

@@ -135,4 +135,9 @@ void ZbGPIO_SetActiveCell(Int16U CellNumber)
 }
 // ----------------------------------------
 
+Boolean ZbGPIO_ReadDetectorPin()
+{
+    return (!ZwGPIO_ReadPin(PIN_DETECTOR));
+}
+
 // No more.
