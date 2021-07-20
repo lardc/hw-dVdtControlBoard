@@ -87,9 +87,10 @@
 #define REG_RATE_OFFSET             33  // Offset based on voltage
 #define REG_SINGLE_OFFSET_RANGE2    34  // Single Offset range2 based on voltage
 #define REG_OFFSET_RANGE2           35  // Offset range2 based on voltage
-#define REG_SINGLE_CORR_N_RANGE2    36  //
-#define REG_CORR_N_RANGE2           37  //
-#define REG_DBG_DATA                38  //
+#define REG_SINGLE_CORR_N_RANGE2    36  // Prop for range 2 single
+#define REG_CORR_N_RANGE2           37  // Prop for range 2
+#define REG_DBG_DATA                38  // debug data
+#define REG_CSU_V_OFFSET            39  // CSU Voltage Offset V
 // 38 - 39
 #define REG_CELL1_GATEV1			40	// Gate voltage setpoint 1 for cell 1
 #define REG_CELL1_VRATE1			41	// Voltage rate setpoint 1 for cell 1

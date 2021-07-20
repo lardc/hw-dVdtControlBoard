@@ -52,7 +52,7 @@ const TableItemConstraint NVConstraint[DATA_TABLE_NV_SIZE] =
 										{X_D_DEF1, X_D_DEF3, X_D_DEF2},						                    // 36
 										{X_D_DEF1, X_D_DEF3, X_D_DEF2},						                    // 37
 										{0, INT16U_MAX, 0},						                                // 38
-										{0, 0, 0},                                      						// 39
+										{0, INT16U_MAX, 0},                                      				// 39
 										{GATEV_CELL_MIN, GATEV_CELL_MAX, GATEV_CELL_DEF},						// 40
 										{VRATE_CELL_MIN, VRATE_CELL_MAX, VRATE_CELL_DEF},						// 41
 										{GATEV_CELL_MIN, GATEV_CELL_MAX, GATEV_CELL_DEF},						// 42
