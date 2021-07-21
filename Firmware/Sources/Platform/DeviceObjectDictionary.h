@@ -77,7 +77,7 @@
 #define REG_SINGLE_RATE_MAX         23  // Single cell max rate (in V/us x10)
 #define REG_SINGLE_RATE_MIN         24  // Single cell min rate (in V/us x10)
 #define REG_SINGLE_CORR_BY_RATE     25  // Single correction factor based on rate (in %)
-#define REG_SIMGLE_CORR_VPOINT      26  // Single voltage point for correction based on voltage (in V)
+#define REG_SINGLE_CORR_VPOINT      26  // Single voltage point for correction based on voltage (in V)
 #define REG_SINGLE_CORR_BY_VOLTAGE  27  // Single correction factor based on voltage (in %)
 #define REG_SINGLE_CORR_RANGE1      28  // Single correction coefficient for range 1 x1000
 #define REG_SINGLE_CORR_RANGE2      29  // Single correction coefficient for range 2 based on voltage
