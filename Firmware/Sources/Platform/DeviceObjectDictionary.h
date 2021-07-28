@@ -20,6 +20,7 @@
 #define ACT_START_TEST_1600			103	// Start test 1600V/us
 #define ACT_START_TEST_2000			104	// Start test 2000V/us
 #define ACT_START_TEST_2500			105	// Start test 2500V/us
+#define ACT_START_TEST_200			106	// Start test 200V/us
 //
 #define ACT_STOP					109	// Stop test
 //
@@ -207,6 +208,5 @@
 #define ERR_DEVICE_NOT_READY		3	// Device isn't ready to switch state
 #define ERR_WRONG_PWD				4	// Wrong password - unlock failed
 #define ERR_OUT_OF_RANGE			5	// Configured value is out of range
-
 
 #endif // __DEV_OBJ_DIC_H

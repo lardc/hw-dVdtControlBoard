@@ -355,7 +355,22 @@ static Boolean CONTROL_DispatchAction(Int16U ActionID, pInt16U UserError)
 					*UserError = ERR_OPERATION_BLOCKED;
 			}
 			break;
-
+		case ACT_START_TEST_200:
+			{
+				if(CONTROL_State == DS_Ready)
+				{
+					if (CONTROL_ValidateSettings(200))
+					{
+						CONTROL_HandleFanLogic(TRUE);
+						CONTROL_StartTest(200, TRUE);
+					}
+					else
+						*UserError = ERR_OUT_OF_RANGE;
+				}
+				else
+					*UserError = ERR_OPERATION_BLOCKED;
+			}
+			break;
 		case ACT_START_TEST_500:
 			{
 				if(CONTROL_State == DS_Ready)
