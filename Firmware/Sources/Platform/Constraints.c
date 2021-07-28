@@ -20,7 +20,7 @@ const TableItemConstraint NVConstraint[DATA_TABLE_NV_SIZE] =
                                     		   {DESIRED_VOLTAGE_MIN, DESIRED_VOLTAGE_MAX, DESIRED_VOLTAGE_MIN},			// 4
 											   {RATE_CORR_MIN, RATE_CORR_MAX, RATE_CORR_DEF},							// 5
 											   {0, INT16U_MAX, X_D_DEF2},												// 6
-											   {1, X_D_DEF3, X_D_DEF2},													// 7
+											   {0, INT16U_MAX, X_D_DEF2},												// 7
                                     		   {0, 0x3F, 0},															// 8
                                     		   {CELL_V_MIN, CELL_V_MAX, CELL_V_DEF_MIN},								// 9
                                     		   {CELL_V_MIN, CELL_V_MAX, CELL_V_DEF_MAX},								// 10
@@ -29,17 +29,17 @@ const TableItemConstraint NVConstraint[DATA_TABLE_NV_SIZE] =
 											   {FAN_TIME_MIN, FAN_TIME_MAX, FAN_TIME_DEF},								// 13
 											   {FAN_TIME_MIN, FAN_TIME_MAX, FAN_TIME_DEF},								// 14
 											   {0, INT16U_MAX, 0},														// 15
-											   {0, 0, 0},																// 16
-											   {0, 0, 0},																// 17
-											   {0, 0, 0},																// 18
-											   {0, 0, 0},																// 19
-											   {0, 0, 0},																// 20
+											   {0, VOLTAGE_RATE_MAX, 0},												// 16
+											   {1, INT16U_MAX, X_D_DEF1},												// 17
+											   {0, INT16U_MAX, 1},														// 18
+											   {0, VOLTAGE_RATE_MAX, 0},												// 19
+											   {0, RATE_CORR_MAX, 0},													// 20
 											   {0, 0, 0},																// 21
-											   {0, 0, 0},																// 22
-											   {0, 0, 0},																// 23
-											   {0, 0, 0},																// 24
-											   {0, 0, 0},																// 25
-											   {0, 0, 0},																// 26
+											   {0, VOLTAGE_RATE_MAX, 1350},												// 22
+											   {0, INT16U_MAX, X_D_DEF2},												// 23
+											   {0, INT16U_MAX, X_D_DEF2},												// 24
+											   {0, INT16U_MAX, 0},														// 25
+											   {RATE_CORR_MIN, RATE_CORR_MAX, RATE_CORR_DEF},							// 26
 											   {0, 0, 0},																// 27
 											   {0, 0, 0},																// 28
 											   {0, 0, 0},																// 29

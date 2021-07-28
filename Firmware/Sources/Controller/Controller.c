@@ -124,50 +124,110 @@ void CONTROL_Update()
 
 Boolean CONTROL_ApplySettings(Int16U VRate, Boolean PerfomRateCorrection)
 {
-	Int16U cellVoltage, cellVRate, KRate;
+	Int16U cellVoltage, cellVRate, KRate, SetRate;
 
 	/*
 	 * Описание принципа корректировки скорости нарастания:
-	 * 1. Наилучшее отношение ожидаемой и реальной скорости нарастания получается на максимальном напряжении (4500В)
-	 * и на средней скорости нарастания (1600В/мкс);
-	 * 2. При сохранении значения напряжения и увеличении скорости нарастания возрастает ошибка скорости нарастания.
-	 * Максимальная ошибка ~20-30% на максимальной скорости нарастания (2500В/мкс) (или на минимальной - в зависимости от схемы ячеек);
-	 * 3. При сохранении значения скорости нарастания и уменьшении напряжения возрастает ошибка скорости нарастания.
-	 * Максимальная ошибка ~20-30% на минимальном напряжении (500В), причём эффект наблюдается на напряжениях ниже 1000-1500В;
-	 * 4. Т.о. требуется одновременно вносить две корректировки: по напряжению и по скорости нарастания.
+	 * 1) Ячейки калибруются при напряжении 150 В, для получения всех скорстей с одной ячейки
+	 * 2) Диапазон разделен на 2 - по напряженияю - регистр REG_VOLTAGE_RANGE_POINT - 1500 В
+	 * т.к. до него невозможно ее выполнить в автоматическом режимя в связи с искажением формы исигнала и ошибкой измерения
+	 * и делается в ручныом режиме (по сркипту)
+	 * 3) Внутри диапазона есть еще разделение на диапазон по скорости REG_RATE_RANGE_DVPOINT - влияет только пропорциональный коэффициент
+	 * 4) Далее выравнивается загиб малых скоростей CORR_RATE_TUNE_LOW
+	 * 5) увеличиваются  скорости на малых амплитудах KRateUpOnLowVoltage - чем меньше значение, тем больше корректировка
+	 * 6) Увеличивается скорость 2500 при малой амплитуде REG_K2
 	 */
 
 	// Perfom rate correction
 	if (PerfomRateCorrection)
 	{
-		// by rate (and full range voltage)
-		if (CORR_RATE_BY_FS_VOLTAGE)
+		SetRate = VRate;
+		Int16U KRateUpOnLowVoltage = DataTable[REG_K1];
+		Int32U A, B, C, D, E;
+
+		// By voltage range
+		if(DataTable[REG_DESIRED_VOLTAGE] < DataTable[REG_VOLTAGE_RANGE_POINT])
 		{
-			KRate = ((Int32U)DataTable[REG_CORR_RATE_BY_RATE] * (DESIRED_VOLTAGE_MAX - DataTable[REG_DESIRED_VOLTAGE])) /
-					(DESIRED_VOLTAGE_MAX - DESIRED_VOLTAGE_MIN);
+			// Low voltage range
+			// By rate (and full range voltage)
+			if(CORR_RATE_BY_FS_VOLTAGE)
+				KRate = ((Int32U)DataTable[REG_CORR_RATE_BY_RATE_LV] * (DESIRED_VOLTAGE_MAX - DataTable[REG_DESIRED_VOLTAGE])) /
+						(DESIRED_VOLTAGE_MAX - DESIRED_VOLTAGE_MIN);
+			else
+				KRate = DataTable[REG_CORR_RATE_BY_RATE_LV];
+
+			// By everything rate
+			if(CORR_RATE_TUNE_LOW)
+				VRate = ((100 + (((Int32U)(VOLTAGE_RATE_MAX - VRate) * KRate) / (VOLTAGE_RATE_MAX - VOLTAGE_RATE_MIN))) * VRate) / 100;
+			else
+				VRate = ((100 + (((Int32U)(VRate - VOLTAGE_RATE_MIN) * KRate) / (VOLTAGE_RATE_MAX - VOLTAGE_RATE_MIN))) * VRate) / 100;
+
+			// Увеличение скорости на малых амплитудах
+			A = DESIRED_VOLTAGE_MIN - 1;
+			B = DataTable[REG_DESIRED_VOLTAGE];
+			C = DataTable[REG_VOLTAGE_RANGE_POINT] - 1;
+			D = (B - A) * KRateUpOnLowVoltage;
+			E = C - A;
+			VRate = (Int16U)((VRate * (100 + (E / D))) / 100);
+
+			// Увеличенеи скорости на малых амплитудах и низкой скорости (поднимает скорость при 2500 на 200 В/мкс)
+			if((SetRate > 1600) && (DataTable[REG_DESIRED_VOLTAGE] < 800))
+			{
+				D = (B - A) * (KRateUpOnLowVoltage / DataTable[REG_K2]);
+				VRate = (Int16U)((VRate * (100 + (E / D))) / 100);
+			}
+
+			// Range proportional correction
+			if(SetRate > DataTable[REG_RATE_RANGE_DVPOINT])
+				VRate = (Int32U)VRate * DataTable[REG_RH_K_LV] / 1000;
+			else
+				VRate = (Int32U)VRate * DataTable[REG_RL_K_LV] / 1000;
+
+			// Rate offset correction
+			VRate = (Int32U)((Int16S)VRate + (Int16S)DataTable[REG_RATE_OFFSET_LV]);
 		}
 		else
-			KRate = DataTable[REG_CORR_RATE_BY_RATE];
-
-		// by rate
-		if (CORR_RATE_TUNE_LOW)
-			VRate = ((100 + (((Int32U)(2500 - VRate) * KRate) / (2500 - 500))) * VRate) / 100;
-		else
-			VRate = ((100 + (((Int32U)(VRate - 500) * KRate) / (2500 - 500))) * VRate) / 100;
-
-		// by voltage (lower zone)
-		if (DataTable[REG_CORR_RATE_VPOINT] > DataTable[REG_DESIRED_VOLTAGE])
 		{
-			VRate = (((((Int32U)(DataTable[REG_CORR_RATE_VPOINT] - DataTable[REG_DESIRED_VOLTAGE]) *
-					DataTable[REG_CORR_RATE_BY_VOLTAGE]) /
-					(DataTable[REG_CORR_RATE_VPOINT] - DESIRED_VOLTAGE_MIN)) + 100) * VRate) / 100;
+			// High voltage range
+			// By rate (and full range voltage)
+			if(CORR_RATE_BY_FS_VOLTAGE)
+				KRate = ((Int32U)DataTable[REG_CORR_RATE_BY_RATE_HV] * (DESIRED_VOLTAGE_MAX - DataTable[REG_DESIRED_VOLTAGE])) /
+						(DESIRED_VOLTAGE_MAX - DESIRED_VOLTAGE_MIN);
+
+			else
+				KRate = DataTable[REG_CORR_RATE_BY_RATE_HV];
+
+			// By everything rate
+			if(CORR_RATE_TUNE_LOW)
+				VRate = ((100 + (((Int32U)(VOLTAGE_RATE_MAX - VRate) * KRate) / (VOLTAGE_RATE_MAX - VOLTAGE_RATE_MIN))) * VRate) / 100;
+			else
+				VRate = ((100 + (((Int32U)(VRate - VOLTAGE_RATE_MIN) * KRate) / (VOLTAGE_RATE_MAX - VOLTAGE_RATE_MIN))) * VRate) / 100;
+
+			// Смещение скоростей на малых амплитудах
+			if (DataTable[REG_CORR_RATE_VPOINT] > DataTable[REG_DESIRED_VOLTAGE])
+			{
+				VRate = (((((Int32U)(DataTable[REG_CORR_RATE_VPOINT] - DataTable[REG_DESIRED_VOLTAGE]) *
+						DataTable[REG_CORR_RATE_BY_VOLTAGE]) /
+						(DataTable[REG_CORR_RATE_VPOINT] - DESIRED_VOLTAGE_MIN)) + 100) * VRate) / 100;
+			}
+
+			// Увеличение скорости на высоких амплитудах для низкой скорости
+			if(SetRate < DataTable[REG_RATE_POINT_AT_LOW_RATE])
+			{
+				VRate = (((((Int32U)(DataTable[REG_DESIRED_VOLTAGE] - DataTable[REG_VOLTAGE_RANGE_POINT]) *
+						DataTable[REG_CORR_LOWRATE_MAXVOLT]) /
+						(DESIRED_VOLTAGE_MAX - DataTable[REG_VOLTAGE_RANGE_POINT])) + 100) * VRate) / 100;
+			}
+
+			// Range proportional correction
+			if(SetRate > DataTable[REG_RATE_RANGE_DVPOINT])
+				VRate = (Int32U)VRate * DataTable[REG_RH_K_HV] / 1000;
+			else
+				VRate = (Int32U)VRate * DataTable[REG_RL_K_HV] / 1000;
+
+			// Rate offset correction
+			VRate = (Int32U)((Int16S)VRate + (Int16S)DataTable[REG_RATE_OFFSET_HV]);
 		}
-
-		// global correction
-		VRate = (Int32U)VRate * DataTable[REG_RATE_GLOBAL_K_N] / DataTable[REG_RATE_GLOBAL_K_D];
-
-		// rate offset correction
-		VRate = (Int32U)((Int16S)VRate + (Int16S)DataTable[REG_RATE_OFFSET]);
 	}
 
 	// Check if settings differ
@@ -355,22 +415,7 @@ static Boolean CONTROL_DispatchAction(Int16U ActionID, pInt16U UserError)
 					*UserError = ERR_OPERATION_BLOCKED;
 			}
 			break;
-		case ACT_START_TEST_200:
-			{
-				if(CONTROL_State == DS_Ready)
-				{
-					if (CONTROL_ValidateSettings(200))
-					{
-						CONTROL_HandleFanLogic(TRUE);
-						CONTROL_StartTest(200, TRUE);
-					}
-					else
-						*UserError = ERR_OUT_OF_RANGE;
-				}
-				else
-					*UserError = ERR_OPERATION_BLOCKED;
-			}
-			break;
+
 		case ACT_START_TEST_500:
 			{
 				if(CONTROL_State == DS_Ready)
@@ -443,6 +488,22 @@ static Boolean CONTROL_DispatchAction(Int16U ActionID, pInt16U UserError)
 					{
 						CONTROL_HandleFanLogic(TRUE);
 						CONTROL_StartTest(2500, TRUE);
+					}
+					else
+						*UserError = ERR_OUT_OF_RANGE;
+				}
+				else
+					*UserError = ERR_OPERATION_BLOCKED;
+			}
+			break;
+		case ACT_START_TEST_200:
+			{
+				if(CONTROL_State == DS_Ready)
+				{
+					if (CONTROL_ValidateSettings(200))
+					{
+						CONTROL_HandleFanLogic(TRUE);
+						CONTROL_StartTest(200, TRUE);
 					}
 					else
 						*UserError = ERR_OUT_OF_RANGE;
