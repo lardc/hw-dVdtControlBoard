@@ -37,32 +37,8 @@ void ZbGPIO_RelayLine(Boolean Out);
 void ZbGPIO_SwitchFAN(Boolean Set);
 //Read detector pin
 Boolean ZbGPIO_ReadDetectorPin();
+//Enable internal sync
+void ZbGPIO_SwitchStartPulse(Boolean Set);
 
-// Inline functions
-//
-Boolean inline ZbGPIO_ReadSync()
-{
-	return ZwGPIO_ReadPin(PIN_SYNC_IN);
-}
-//
-Boolean inline ZbGPIO_ReadDetector()
-{
-	return ZwGPIO_ReadPin(!PIN_DETECTOR);
-}
-//
-void inline ZbGPIO_SwitchStartPulse(Boolean Set)
-{
-	ZwGPIO_WritePin(PIN_START_PULSE, Set);
-}
-//
-void inline ZbGPIO_SwitchDebugPin(Boolean Set)
-{
-	ZwGPIO_WritePin(PIN_DEBUG, Set);
-}
-//
-void inline ZbGPIO_ToggleDebugPin()
-{
-	ZwGPIO_TogglePin(PIN_DEBUG);
-}
 
 #endif // __ZBGPIO_H

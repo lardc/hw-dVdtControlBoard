@@ -139,5 +139,13 @@ Boolean ZbGPIO_ReadDetectorPin()
 {
     return (!ZwGPIO_ReadPin(PIN_DETECTOR));
 }
+// ----------------------------------------
+
+void ZbGPIO_SwitchStartPulse(Boolean Set)
+{
+    ZwGPIO_WritePin(PIN_START_PULSE, Set);
+}
+// ----------------------------------------
+
 
 // No more.
