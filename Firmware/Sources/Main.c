@@ -254,6 +254,7 @@ ISRCALL Timer0_ISR(void)
     }
 
     CONTROL_HandleFanLogic(FALSE);
+    CONTROL_HandleExtLed(FALSE);
 
     ++LedCounter;
     if(LedCounter == DBG_COUNTER_PERIOD)
