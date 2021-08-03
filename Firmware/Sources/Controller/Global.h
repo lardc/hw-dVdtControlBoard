@@ -47,8 +47,8 @@
 #define RELAY_SWITCH_DELAY_L_US			25000		// (in us)
 #define INFO_UPDATE_DELAY_US			500			// (in us)
 //
-#define PRE_PROBE_TIME_US				200			// (in us)
-#define PRE_PROBE_TIME_DIAG_US			200			// (in us)
+#define PRE_PROBE_TIME_US				250			// (in us)
+#define PRE_PROBE_TIME_DIAG_US			250			// (in us)
 
 // Correction
 #define CORR_RATE_TUNE_LOW				TRUE		// Pull-up rate at lower rates
@@ -60,7 +60,9 @@
 #define TEST_RESULT_OK                  1           //
 #define TEST_RESULT_FAIL                2           //
 
-#define CSU_VOLTAGE_OFFSET              100           // Voltage offset for CSU
+#define CSU_VOLTAGE_OFFSET              100         // Voltage offset for CSU
+
+#define EXT_LED_SWITCH_ON_TIME          500         // (in ms)
 
 //--------------------------------------------------------
 
