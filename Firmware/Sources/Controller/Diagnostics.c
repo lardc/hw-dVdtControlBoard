@@ -35,7 +35,7 @@ Boolean DIAG_DispatchCommand(Int16U Command)
 			break;
 		case ACT_DIAG_PULSE_START:
 			{
-				ZbGPIO_SwitchLEDExt(TRUE);
+				ZbGPIO_SwitchOutRelay(TRUE);
 
 				ZbGPIO_RelayLine(TRUE);
 				DELAY_US(RELAY_SWITCH_DELAY_L_US);
@@ -54,7 +54,7 @@ Boolean DIAG_DispatchCommand(Int16U Command)
 				ZbGPIO_RelayLine(FALSE);
 				DELAY_US(RELAY_SWITCH_DELAY_US);
 
-				ZbGPIO_SwitchLEDExt(FALSE);
+				ZbGPIO_SwitchOutRelay(FALSE);
 			}
 			break;
 		case ACT_DIAG_PULSE_SWITCH:
@@ -64,7 +64,7 @@ Boolean DIAG_DispatchCommand(Int16U Command)
 			break;
 		case ACT_DIAG_PULSE_LED:
 		    EnableRelay = (DataTable[REG_DBG_DATA] == 1) ? TRUE : FALSE;
-			ZbGPIO_SwitchLEDExt(EnableRelay);
+		    ZbGPIO_SwitchOutRelay(EnableRelay);
 			break;
 		case ACT_DIAG_PULSE_SYNC:
 			ZbGPIO_SwitchResultOut(TRUE);
