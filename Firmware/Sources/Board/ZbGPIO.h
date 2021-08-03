@@ -18,7 +18,9 @@ void ZbGPIO_SwitchLED1(Boolean Set);
 // Switch LED 2
 void ZbGPIO_SwitchLED2(Boolean Set);
 // External LED
-void ZbGPIO_SwitchLEDExt(Boolean Set);
+void ZbGPIO_SwitchExtLed(Boolean Set);
+// Out Relay
+void ZbGPIO_SwitchOutRelay(Boolean Set);
 // Toggle LED 1
 void ZbGPIO_ToggleLED1();
 // Toggle LED 2

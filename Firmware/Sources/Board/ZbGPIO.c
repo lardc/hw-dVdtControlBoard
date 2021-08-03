@@ -82,9 +82,15 @@ void ZbGPIO_SwitchLED2(Boolean Set)
 }
 // ----------------------------------------
 
-void ZbGPIO_SwitchLEDExt(Boolean Set)
+void ZbGPIO_SwitchOutRelay(Boolean Set)
 {
     ZwGPIO_WritePin(PIN_OPT_V7V8, Set);
+}
+// ----------------------------------------
+
+void ZbGPIO_SwitchExtLed(Boolean Set)
+{
+    ZwGPIO_WritePin(PIN_OPT_V5V6, Set);
 }
 // ----------------------------------------
 
