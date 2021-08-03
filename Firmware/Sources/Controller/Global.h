@@ -31,11 +31,11 @@
 // Miscellaneous
 #define MAX_CELLS_COUNT					6			// maximum cells 6
 #define SCCI_CELL_NODE_ID				0			// cells have NodeID 0
-#define	SCCI_TIMEOUT_TICKS_MS			600			// (in ms)
+#define	SCCI_TIMEOUT_TICKS_MS			500			// (in ms)
 #define TEST_APPLY_FIXED_MS             9000         // Apply parameters fixed delay (in ms)
-#define TEST_PREPARE_TIMEOUT_MS			9000		// (in ms)
-#define TEST_PAUSE_LONG_MS				1500		// Long pause in case of triggered device (in ms)
-#define TEST_PAUSE_SHORT_MS				600			// Short pause between measurements (in ms)
+#define TEST_PREPARE_TIMEOUT_MS			5000		// (in ms)
+#define TEST_PAUSE_LONG_MS				1000		// Long pause in case of triggered device (in ms)
+#define TEST_PAUSE_SHORT_MS				500			// Short pause between measurements (in ms)
 
 // Voltage rate ranges
 #define VRATE_RANGE_DEF					0			// Default rate range (500 - 2500 V/us)
