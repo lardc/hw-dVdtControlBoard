@@ -122,16 +122,24 @@ void CONTROL_Update()
 }
 // ----------------------------------------
 
+Int16U CONTROL_CalOutVoltage()
+{
+    Int16U Voltage;
+
+    Voltage = (Int32U)DataTable[REG_DESIRED_VOLTAGE] * DataTable[REG_V_FINE_N] / DataTable[REG_V_FINE_D]
+              + (Int16S)DataTable[REG_V_OFFSET] + (Int16S)DataTable[REG_CSU_V_OFFSET];
+
+    return Voltage;
+}
+
 Boolean CONTROL_EnableSingleCellMode()
 {
-    Int16U totalVoltage;
+    Int16U Voltage;
 
-    // Check if settings differ
-     totalVoltage = (Int32U)DataTable[REG_DESIRED_VOLTAGE] * DataTable[REG_V_FINE_N] / DataTable[REG_V_FINE_D]
-                  + (Int16S)DataTable[REG_V_OFFSET] + (Int16S)DataTable[REG_CSU_V_OFFSET];
+     Voltage = CONTROL_CalOutVoltage();
 
      // Условие активации работы с одиночной ячейкой
-     Boolean SingleCellMode = (totalVoltage <= DataTable[REG_SINGLE_CELL_V_LEVEL]);
+     Boolean SingleCellMode = (Voltage <= DataTable[REG_SINGLE_CELL_V_LEVEL]);
 
      return SingleCellMode;
 }
@@ -219,11 +227,9 @@ Int16U CONTROL_СalculationRateFullMode(Int16U VRate)
 
 Boolean CONTROL_ApplySettings(Int16U VRate, Boolean PerfomRateCorrection)
 {
-	Int16U totalVoltage, cellVoltage, cellVRate;
+	Int16U Voltage, cellVoltage, cellVRate;
 
-	// Check if settings differ
-	totalVoltage = (Int32U)DataTable[REG_DESIRED_VOLTAGE] * DataTable[REG_V_FINE_N] / DataTable[REG_V_FINE_D]
-	             + (Int16S)DataTable[REG_V_OFFSET] + (Int16S)DataTable[REG_CSU_V_OFFSET];
+	Voltage = CONTROL_CalOutVoltage();
 	
 	// Perfom rate correction
 	if(PerfomRateCorrection)
@@ -241,12 +247,12 @@ Boolean CONTROL_ApplySettings(Int16U VRate, Boolean PerfomRateCorrection)
 
 	if(CONTROL_EnableSingleCellMode())
 	{
-		cellVoltage = totalVoltage;
+		cellVoltage = Voltage;
 		cellVRate = cellVRate;
 	}
 	else
 	{
-		cellVoltage = totalVoltage / CELLMUX_CellCount();
+		cellVoltage = Voltage / CELLMUX_CellCount();
 		cellVRate = cellVRate / CELLMUX_CellCount();
 	}
 
@@ -401,7 +407,8 @@ static void CONTROL_StartTest(Int16U VRate, Boolean PerfomRateCorrection, Boolea
 
 static Boolean CONTROL_ValidateSettings(Int16U Rate_x10)
 {
-	Int16U CellVoltage = DataTable[REG_DESIRED_VOLTAGE] / CELLMUX_CellCount();
+    Int16U Voltage = CONTROL_CalOutVoltage();
+	Int16U CellVoltage = Voltage / CELLMUX_CellCount();
 	Int16U CellRate = Rate_x10 / CELLMUX_CellCount();
 	
 	if(Rate_x10 < DataTable[REG_UNIT_RATE_MIN] || Rate_x10 > DataTable[REG_UNIT_RATE_MAX])

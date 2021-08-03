@@ -60,5 +60,7 @@ void CONTROL_EnableExternalSync(Boolean Enable);
 void CONTROL_ExtSyncEvent();
 // Off external sync
 void CONTROL_ExtSyncFinish();
+// Out voltage calculator
+Int16U CONTROL_CalOutVoltage();
 
 #endif // __CONTROLLER_H
