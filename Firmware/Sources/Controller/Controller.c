@@ -280,10 +280,15 @@ void CONTROL_EnableExternalSync(Boolean Enable)
     ZwTimer_StopT1();
     ZwTimer_ReloadT1();
 
+    // FAN Logic
+    CONTROL_HandleFanLogic(TRUE);
+    // Ext LED Logic
+    CONTROL_HandleExtLed(TRUE);
+
     // Configure pins
     ZbGPIO_SwitchSyncEn(Enable);
     ZbGPIO_SwitchLED2(Enable);
-    ZbGPIO_SwitchLEDExt(Enable);
+    ZbGPIO_SwitchOutRelay(Enable);
 
     // Clear registers
     ZwPWM6_ClearTZ();
@@ -296,7 +301,7 @@ void CONTROL_EnableExternalSync(Boolean Enable)
 void CONTROL_ExtSyncEvent()
 {
     CONTROL_SetDeviceState(DS_InProcess);
-
+    ZbGPIO_SwitchResultOut(TRUE);
     ZwTimer_StartT1();
 }
 // ----------------------------------------
@@ -304,8 +309,9 @@ void CONTROL_ExtSyncEvent()
 void CONTROL_ExtSyncFinish()
 {
     ZwTimer_StopT1();
+    ZbGPIO_SwitchResultOut(FALSE);
     ZbGPIO_SwitchSyncEn(FALSE);
-    ZbGPIO_SwitchLEDExt(FALSE);
+    ZbGPIO_SwitchOutRelay(FALSE);
     ZbGPIO_SwitchLED2(FALSE);
 
     CONTROL_NotifyEndTest(ZbGPIO_ReadDetectorPin(), FAULT_NONE, WARNING_NONE);
@@ -380,8 +386,9 @@ static void CONTROL_SwitchToFaultEx()
 
 static void CONTROL_StartTest(Int16U VRate, Boolean PerfomRateCorrection, Boolean StartTest)
 {
-	ZbGPIO_SwitchLEDExt(StartTest);
+	ZbGPIO_SwitchOutRelay(StartTest);
 	ZbGPIO_SwitchLED2(StartTest);
+
 	DataTable[REG_TEST_RESULT] = TEST_RESULT_NULL;
 	
 	if(!CONTROL_ApplySettings(VRate, PerfomRateCorrection))
@@ -544,7 +551,8 @@ void CONTROL_PrepareStart(pInt16U UserError, Int16U Rate_x10, Boolean UseCustomS
 	{
 		if(CONTROL_ValidateSettings(Rate_x10))
 		{
-			CONTROL_HandleFanLogic(TRUE);
+			CONTROL_HandleFanLogic(StartTest);
+			CONTROL_HandleExtLed(StartTest);
 			CONTROL_StartTest(Rate_x10, UseCustomSettings, StartTest);
 		}
 		else
@@ -578,5 +586,22 @@ void CONTROL_HandleFanLogic(Boolean IsImpulse)
 		FanOnTimeout = 0;
 		ZbGPIO_SwitchFAN(FALSE);
 	}
+}
+// ----------------------------------------
+
+void CONTROL_HandleExtLed(Boolean IsImpulse)
+{
+    static Int64U ExtLedTimeout = 0;
+
+    if(IsImpulse)
+    {
+        ZbGPIO_SwitchExtLed(TRUE);
+        ExtLedTimeout = CONTROL_TimeCounter + EXT_LED_SWITCH_ON_TIME;
+    }
+    else
+    {
+        if(CONTROL_TimeCounter >= ExtLedTimeout)
+            ZbGPIO_SwitchExtLed(FALSE);
+    }
 }
 // ----------------------------------------

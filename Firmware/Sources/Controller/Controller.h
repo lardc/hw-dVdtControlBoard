@@ -62,5 +62,7 @@ void CONTROL_ExtSyncEvent();
 void CONTROL_ExtSyncFinish();
 // Out voltage calculator
 Int16U CONTROL_CalOutVoltage();
+//Ext LED
+void CONTROL_HandleExtLed(Boolean IsImpulse);
 
 #endif // __CONTROLLER_H
