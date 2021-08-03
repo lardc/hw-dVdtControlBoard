@@ -117,7 +117,7 @@ void LOGIC_Reset()
 {
 	LOGIC_State = LS_None;
 	ZbGPIO_SwitchLED2(FALSE);
-	ZbGPIO_SwitchLEDExt(FALSE);
+	ZbGPIO_SwitchOutRelay(FALSE);
 }
 // ----------------------------------------
 
@@ -134,9 +134,6 @@ static Boolean LOGIC_TestSequence()
 {
 	Boolean result;
 
-	ZbGPIO_RelayLine(TRUE);
-	DELAY_US(RELAY_SWITCH_DELAY_L_US);
-
 	DINT;
 
 	ZbGPIO_SwitchStartPulse(TRUE);
@@ -145,7 +142,7 @@ static Boolean LOGIC_TestSequence()
 	DELAY_US((DataTable[REG_DESIRED_VOLTAGE] / DataTable[REG_VOLTAGE_RATE]) + PRE_PROBE_TIME_US);
 
 	ZbGPIO_SwitchStartPulse(FALSE);
-	ZbGPIO_SwitchLEDExt(FALSE);
+	ZbGPIO_SwitchOutRelay(FALSE);
 	ZbGPIO_SwitchLED2(FALSE);
 
 	result = ZbGPIO_ReadDetectorPin();
@@ -154,7 +151,6 @@ static Boolean LOGIC_TestSequence()
 
 	EINT;
 
-	ZbGPIO_RelayLine(FALSE);
 	DELAY_US(RELAY_SWITCH_DELAY_US);
 
 	return result;
