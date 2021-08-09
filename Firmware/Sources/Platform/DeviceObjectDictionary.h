@@ -71,7 +71,7 @@
 #define REG_UNIT_USE_RANGE1			17	// Use setpoint data for range 1 (low)
 #define REG_UNIT_USE_RANGE2			18	// Use setpoint data for range 2 (mid)
 #define REG_CORR_RANGE1				19	// Correction coefficient for range 1 x1000
-#define REG_CORR_RANGE2				20	// Correction coefficient for range 2 based on voltage
+#define REG_CORR_RANGE2				20	// Correction coefficient for range 2 x1000
 #define REG_SINGLE_CELL_NUMBER		21	// Single cell number
 #define REG_SINGLE_CELL_V_LEVEL		22	// Maximum voltage for single cell mode (in V)
 #define REG_SINGLE_RATE_MAX         23  // Single cell max rate (in V/us x10)
@@ -88,7 +88,7 @@
 #define REG_SINGLE_OFFSET_RANGE2    34  // Single Offset range2 based on voltage
 #define REG_OFFSET_RANGE2           35  // Offset range2 based on voltage
 #define REG_SINGLE_CORR_N_RANGE2    36  // Prop for range 2 single
-#define REG_CORR_N_RANGE2           37  // Prop for range 2
+#define REG_DUO_CELL_V_LEVEL        37  // Prop for range 2
 #define REG_DBG_DATA                38  // debug data
 #define REG_CSU_V_OFFSET            39  // CSU Voltage Offset V
 // 38 - 39
