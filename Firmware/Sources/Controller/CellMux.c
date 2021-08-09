@@ -123,7 +123,7 @@ Boolean CELLMUX_ReadStates()
 }
 // ----------------------------------------
 
-Boolean CELLMUX_SetCellsState(Int16U CellVoltage, Int16U CellVRate, Boolean SingleCellMode)
+Boolean CELLMUX_SetCellsState(Int16U CellVoltage, Int16U CellVRate, Boolean SingleCellMode, Boolean DuoCellMode)
 {
 	Int16U i, GateV;
 	
@@ -136,8 +136,11 @@ Boolean CELLMUX_SetCellsState(Int16U CellVoltage, Int16U CellVRate, Boolean Sing
 			
 			Int16U CellVRateRange;
 			
-			if(!SingleCellMode || (SingleCellMode && (i + 1 == DataTable[REG_SINGLE_CELL_NUMBER])))
+			if((!SingleCellMode && !DuoCellMode) || ((SingleCellMode || DuoCellMode) && (i + 1 == DataTable[REG_SINGLE_CELL_NUMBER])) ||
+			        (DuoCellMode && (i + 1 == (DataTable[REG_SINGLE_CELL_NUMBER] - 1))))
+			{
 				GateV = SP_Generate(i, CellVRate, &CellVRateRange);
+			}
 			else
 			{
 				GateV = 0;

@@ -136,12 +136,25 @@ Boolean CONTROL_EnableSingleCellMode()
 {
     Int16U Voltage;
 
-     Voltage = CONTROL_CalOutVoltage();
+     Voltage = (Int32U)DataTable[REG_DESIRED_VOLTAGE];
 
      // Условие активации работы с одиночной ячейкой
      Boolean SingleCellMode = (Voltage <= DataTable[REG_SINGLE_CELL_V_LEVEL]);
 
      return SingleCellMode;
+}
+
+Boolean CONTROL_EnableDuoCellMode()
+{
+    Int16U Voltage;
+
+     Voltage = (Int32U)DataTable[REG_DESIRED_VOLTAGE];
+
+     // Условие активации работы с двумя ячейками
+     Boolean DuoCellMode = ((Voltage > DataTable[REG_SINGLE_CELL_V_LEVEL]) && (Voltage <= DataTable[REG_DUO_CELL_V_LEVEL])
+             && (DataTable[REG_VOLTAGE_RATE] > 6600));
+
+     return DuoCellMode;
 }
 
 Int16U CONTROL_СalculationRateXMode(Int16U MaxRate, Int16U MinRate, Int16U VRate, Int16U RegCorrByRate, Int16U RegCorrRateVpoint, Int16U RegCorrRateByVoltage,
@@ -170,12 +183,7 @@ Int16U CONTROL_СalculationRateXMode(Int16U MaxRate, Int16U MinRate, Int16U VRat
     }
     else if(DataTable[REG_UNIT_USE_RANGE2] && (VRate < SP_GetRange2MaxRate()))
     {
-        if(DataTable[RegCorrRateVpoint] > DataTable[REG_DESIRED_VOLTAGE])
-        {
-            VRate = (((((Int32U)(DataTable[RegCorrRateVpoint] - DataTable[REG_DESIRED_VOLTAGE])
-                    * DataTable[RegCorrRange2]) / (DataTable[RegCorrRateVpoint] - DESIRED_VOLTAGE_MIN))
-                    + 100) * VRate) / 100 + (Int16S)DataTable[RegOffsetRange2];
-        }
+        VRate = (Int32U)VRate * DataTable[RegCorrRange2] /1000 + (Int16S)DataTable[RegOffsetRange2];
     }
     else
     {
@@ -249,16 +257,27 @@ Boolean CONTROL_ApplySettings(Int16U VRate, Boolean PerfomRateCorrection)
 	{
 		cellVoltage = Voltage;
 		cellVRate = cellVRate;
+
+		DataTable[REG_DBG_DATA] = 1;
+	}
+	else if (CONTROL_EnableDuoCellMode())
+	{
+        cellVoltage = Voltage / 2;
+        cellVRate = cellVRate / 2;
+
+        DataTable[REG_DBG_DATA] = 2;
 	}
 	else
 	{
 		cellVoltage = Voltage / CELLMUX_CellCount();
 		cellVRate = cellVRate / CELLMUX_CellCount();
+
+		DataTable[REG_DBG_DATA] = 3;
 	}
 
 	if(cellVoltage != cellVoltageCopy || cellVRate != cellVRateCopy)
 	{
-		if(CELLMUX_SetCellsState(cellVoltage, cellVRate, CONTROL_EnableSingleCellMode()))
+		if(CELLMUX_SetCellsState(cellVoltage, cellVRate, CONTROL_EnableSingleCellMode(), CONTROL_EnableDuoCellMode()))
 		{
 			cellVoltageCopy = cellVoltage;
 			cellVRateCopy = cellVRate;
