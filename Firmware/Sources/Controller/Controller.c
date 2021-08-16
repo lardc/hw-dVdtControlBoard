@@ -122,18 +122,39 @@ void CONTROL_Update()
 }
 // ----------------------------------------
 
+Int16U CONTROL_CalOutVoltage()
+{
+    Int16U Voltage;
+
+    Voltage = (Int32U)DataTable[REG_DESIRED_VOLTAGE] * DataTable[REG_V_FINE_N] / DataTable[REG_V_FINE_D]
+              + (Int16S)DataTable[REG_V_OFFSET] + (Int16S)DataTable[REG_CSU_V_OFFSET];
+
+    return Voltage;
+}
+
 Boolean CONTROL_EnableSingleCellMode()
 {
-    Int16U totalVoltage;
+    Int16U Voltage;
 
-    // Check if settings differ
-     totalVoltage = (Int32U)DataTable[REG_DESIRED_VOLTAGE] * DataTable[REG_V_FINE_N] / DataTable[REG_V_FINE_D]
-                  + (Int16S)DataTable[REG_V_OFFSET] + (Int16S)DataTable[REG_CSU_V_OFFSET];
+     Voltage = (Int32U)DataTable[REG_DESIRED_VOLTAGE];
 
      // Условие активации работы с одиночной ячейкой
-     Boolean SingleCellMode = (totalVoltage <= DataTable[REG_SINGLE_CELL_V_LEVEL]);
+     Boolean SingleCellMode = (Voltage <= DataTable[REG_SINGLE_CELL_V_LEVEL]);
 
      return SingleCellMode;
+}
+
+Boolean CONTROL_EnableDuoCellMode()
+{
+    Int16U Voltage;
+
+     Voltage = (Int32U)DataTable[REG_DESIRED_VOLTAGE];
+
+     // Условие активации работы с двумя ячейками
+     Boolean DuoCellMode = ((Voltage > DataTable[REG_SINGLE_CELL_V_LEVEL]) && (Voltage <= DataTable[REG_DUO_CELL_V_LEVEL])
+             && (DataTable[REG_VOLTAGE_RATE] > 6600));
+
+     return DuoCellMode;
 }
 
 Int16U CONTROL_СalculationRateXMode(Int16U MaxRate, Int16U MinRate, Int16U VRate, Int16U RegCorrByRate, Int16U RegCorrRateVpoint, Int16U RegCorrRateByVoltage,
@@ -162,12 +183,7 @@ Int16U CONTROL_СalculationRateXMode(Int16U MaxRate, Int16U MinRate, Int16U VRat
     }
     else if(DataTable[REG_UNIT_USE_RANGE2] && (VRate < SP_GetRange2MaxRate()))
     {
-        if(DataTable[RegCorrRateVpoint] > DataTable[REG_DESIRED_VOLTAGE])
-        {
-            VRate = (((((Int32U)(DataTable[RegCorrRateVpoint] - DataTable[REG_DESIRED_VOLTAGE])
-                    * DataTable[RegCorrRange2]) / (DataTable[RegCorrRateVpoint] - DESIRED_VOLTAGE_MIN))
-                    + 100) * VRate) / 100 + (Int16S)DataTable[RegOffsetRange2];
-        }
+        VRate = (Int32U)VRate * DataTable[RegCorrRange2] /1000 + (Int16S)DataTable[RegOffsetRange2];
     }
     else
     {
@@ -219,11 +235,9 @@ Int16U CONTROL_СalculationRateFullMode(Int16U VRate)
 
 Boolean CONTROL_ApplySettings(Int16U VRate, Boolean PerfomRateCorrection)
 {
-	Int16U totalVoltage, cellVoltage, cellVRate;
+	Int16U Voltage, cellVoltage, cellVRate;
 
-	// Check if settings differ
-	totalVoltage = (Int32U)DataTable[REG_DESIRED_VOLTAGE] * DataTable[REG_V_FINE_N] / DataTable[REG_V_FINE_D]
-	             + (Int16S)DataTable[REG_V_OFFSET] + (Int16S)DataTable[REG_CSU_V_OFFSET];
+	Voltage = CONTROL_CalOutVoltage();
 	
 	// Perfom rate correction
 	if(PerfomRateCorrection)
@@ -241,18 +255,29 @@ Boolean CONTROL_ApplySettings(Int16U VRate, Boolean PerfomRateCorrection)
 
 	if(CONTROL_EnableSingleCellMode())
 	{
-		cellVoltage = totalVoltage;
+		cellVoltage = Voltage;
 		cellVRate = cellVRate;
+
+		DataTable[REG_DBG_DATA] = 1;
+	}
+	else if (CONTROL_EnableDuoCellMode())
+	{
+        cellVoltage = Voltage / 2;
+        cellVRate = cellVRate / 2;
+
+        DataTable[REG_DBG_DATA] = 2;
 	}
 	else
 	{
-		cellVoltage = totalVoltage / CELLMUX_CellCount();
+		cellVoltage = Voltage / CELLMUX_CellCount();
 		cellVRate = cellVRate / CELLMUX_CellCount();
+
+		DataTable[REG_DBG_DATA] = 3;
 	}
 
 	if(cellVoltage != cellVoltageCopy || cellVRate != cellVRateCopy)
 	{
-		if(CELLMUX_SetCellsState(cellVoltage, cellVRate, CONTROL_EnableSingleCellMode()))
+		if(CELLMUX_SetCellsState(cellVoltage, cellVRate, CONTROL_EnableSingleCellMode(), CONTROL_EnableDuoCellMode()))
 		{
 			cellVoltageCopy = cellVoltage;
 			cellVRateCopy = cellVRate;
@@ -274,10 +299,15 @@ void CONTROL_EnableExternalSync(Boolean Enable)
     ZwTimer_StopT1();
     ZwTimer_ReloadT1();
 
+    // FAN Logic
+    CONTROL_HandleFanLogic(TRUE);
+    // Ext LED Logic
+    CONTROL_HandleExtLed(TRUE);
+
     // Configure pins
     ZbGPIO_SwitchSyncEn(Enable);
     ZbGPIO_SwitchLED2(Enable);
-    ZbGPIO_SwitchLEDExt(Enable);
+    ZbGPIO_SwitchOutRelay(Enable);
 
     // Clear registers
     ZwPWM6_ClearTZ();
@@ -290,7 +320,7 @@ void CONTROL_EnableExternalSync(Boolean Enable)
 void CONTROL_ExtSyncEvent()
 {
     CONTROL_SetDeviceState(DS_InProcess);
-
+    ZbGPIO_SwitchResultOut(TRUE);
     ZwTimer_StartT1();
 }
 // ----------------------------------------
@@ -298,8 +328,9 @@ void CONTROL_ExtSyncEvent()
 void CONTROL_ExtSyncFinish()
 {
     ZwTimer_StopT1();
+    ZbGPIO_SwitchResultOut(FALSE);
     ZbGPIO_SwitchSyncEn(FALSE);
-    ZbGPIO_SwitchLEDExt(FALSE);
+    ZbGPIO_SwitchOutRelay(FALSE);
     ZbGPIO_SwitchLED2(FALSE);
 
     CONTROL_NotifyEndTest(ZbGPIO_ReadDetectorPin(), FAULT_NONE, WARNING_NONE);
@@ -374,8 +405,9 @@ static void CONTROL_SwitchToFaultEx()
 
 static void CONTROL_StartTest(Int16U VRate, Boolean PerfomRateCorrection, Boolean StartTest)
 {
-	ZbGPIO_SwitchLEDExt(StartTest);
+	ZbGPIO_SwitchOutRelay(StartTest);
 	ZbGPIO_SwitchLED2(StartTest);
+
 	DataTable[REG_TEST_RESULT] = TEST_RESULT_NULL;
 	
 	if(!CONTROL_ApplySettings(VRate, PerfomRateCorrection))
@@ -401,7 +433,8 @@ static void CONTROL_StartTest(Int16U VRate, Boolean PerfomRateCorrection, Boolea
 
 static Boolean CONTROL_ValidateSettings(Int16U Rate_x10)
 {
-	Int16U CellVoltage = DataTable[REG_DESIRED_VOLTAGE] / CELLMUX_CellCount();
+    Int16U Voltage = CONTROL_CalOutVoltage();
+	Int16U CellVoltage = Voltage / CELLMUX_CellCount();
 	Int16U CellRate = Rate_x10 / CELLMUX_CellCount();
 	
 	if(Rate_x10 < DataTable[REG_UNIT_RATE_MIN] || Rate_x10 > DataTable[REG_UNIT_RATE_MAX])
@@ -537,7 +570,8 @@ void CONTROL_PrepareStart(pInt16U UserError, Int16U Rate_x10, Boolean UseCustomS
 	{
 		if(CONTROL_ValidateSettings(Rate_x10))
 		{
-			CONTROL_HandleFanLogic(TRUE);
+			CONTROL_HandleFanLogic(StartTest);
+			CONTROL_HandleExtLed(StartTest);
 			CONTROL_StartTest(Rate_x10, UseCustomSettings, StartTest);
 		}
 		else
@@ -571,5 +605,22 @@ void CONTROL_HandleFanLogic(Boolean IsImpulse)
 		FanOnTimeout = 0;
 		ZbGPIO_SwitchFAN(FALSE);
 	}
+}
+// ----------------------------------------
+
+void CONTROL_HandleExtLed(Boolean IsImpulse)
+{
+    static Int64U ExtLedTimeout = 0;
+
+    if(IsImpulse)
+    {
+        ZbGPIO_SwitchExtLed(TRUE);
+        ExtLedTimeout = CONTROL_TimeCounter + EXT_LED_SWITCH_ON_TIME;
+    }
+    else
+    {
+        if(CONTROL_TimeCounter >= ExtLedTimeout)
+            ZbGPIO_SwitchExtLed(FALSE);
+    }
 }
 // ----------------------------------------

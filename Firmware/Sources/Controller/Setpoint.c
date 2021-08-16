@@ -141,7 +141,17 @@ Int16U SP_GetRangeXMaxRate(Int16U RangeBaseRateRegister)
 		if(((1 << i) & CELLMUX_CellMask()) != 0)
 			MaxRate = MIN(MaxRate, DataTable[RangeBaseRateRegister + i * SETPOINT_ARRAY_SIZE * 2]);
 
-	return ((CONTROL_EnableSingleCellMode()) ? MaxRate : (MaxRate * CELLMUX_CellCount()));
+
+	if(CONTROL_EnableSingleCellMode())
+	{
+	    MaxRate = MaxRate * CELLMUX_CellCount();
+	}
+	else if (CONTROL_EnableDuoCellMode())
+	{
+	    MaxRate = MaxRate * 2;
+	}
+
+	return MaxRate;
 }
 // ----------------------------------------
 

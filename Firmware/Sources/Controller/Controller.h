@@ -40,8 +40,10 @@ void CONTROL_DelayedInit();
 void CONTROL_Idle();
 // Main control cycle
 void CONTROL_Update();
-// Enable work mode single cell or all cell
+// Enable work mode single cell
 Boolean CONTROL_EnableSingleCellMode();
+// Enable work mode duo cell
+Boolean CONTROL_EnableDuoCellMode();
 // Notify that CAN system fault occurs
 void CONTROL_NotifyCANFault(ZwCAN_SysFlags Flag);
 // Notify end of test
@@ -60,5 +62,9 @@ void CONTROL_EnableExternalSync(Boolean Enable);
 void CONTROL_ExtSyncEvent();
 // Off external sync
 void CONTROL_ExtSyncFinish();
+// Out voltage calculator
+Int16U CONTROL_CalOutVoltage();
+//Ext LED
+void CONTROL_HandleExtLed(Boolean IsImpulse);
 
 #endif // __CONTROLLER_H

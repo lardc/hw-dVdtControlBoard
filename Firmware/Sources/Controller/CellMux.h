@@ -23,7 +23,7 @@ Boolean CELLMUX_SetCellPowerState(Boolean Enable);
 // Read state of cells
 Boolean CELLMUX_ReadStates();
 // Apply settings to cells
-Boolean CELLMUX_SetCellsState(Int16U CellVoltage, Int16U CellVRate, Boolean SingleCellMode);
+Boolean CELLMUX_SetCellsState(Int16U CellVoltage, Int16U CellVRate, Boolean SingleCellMode, Boolean DuoCellMode);
 // Get fault information
 Int16U CELLMUX_GetFaultReason(pInt16U pErrorCodeEx);
 // Read cell register

@@ -100,7 +100,7 @@ void LOGIC_Update(Int64U TimerTicks)
                 CONTROL_NotifyEndTest(FALSE, FAULT_NONE, WARNING_NONE);
                 LOGIC_Reset();
             }
-            else if (TimerTicks > Timeout + TEST_PREPARE_TIMEOUT_MS)
+            else if (TimerTicks > Timeout + TEST_APPLY_FIXED_MS)
             {
                 CONTROL_NotifyEndTest(FALSE, FAULT_NOT_READY_1 + targetCell, WARNING_NONE);
                 LOGIC_Reset();
@@ -117,7 +117,7 @@ void LOGIC_Reset()
 {
 	LOGIC_State = LS_None;
 	ZbGPIO_SwitchLED2(FALSE);
-	ZbGPIO_SwitchLEDExt(FALSE);
+	ZbGPIO_SwitchOutRelay(FALSE);
 }
 // ----------------------------------------
 
@@ -134,21 +134,23 @@ static Boolean LOGIC_TestSequence()
 {
 	Boolean result;
 
-	ZbGPIO_RelayLine(TRUE);
-	DELAY_US(RELAY_SWITCH_DELAY_L_US);
-
 	DINT;
 
-	GpioDataRegs.GPASET.bit.GPIO0 = 1;
-	GpioDataRegs.GPASET.bit.GPIO18 = 1;		// RESULT_OUT is used for sync output
+	ZbGPIO_SwitchStartPulse(TRUE);
+	ZbGPIO_SwitchResultOut(TRUE);
+
 	DELAY_US((DataTable[REG_DESIRED_VOLTAGE] / DataTable[REG_VOLTAGE_RATE]) + PRE_PROBE_TIME_US);
-	result = ZbGPIO_ReadDetectorPin();
+
 	ZbGPIO_SwitchStartPulse(FALSE);
+	ZbGPIO_SwitchOutRelay(FALSE);
+	ZbGPIO_SwitchLED2(FALSE);
+
+	result = ZbGPIO_ReadDetectorPin();
+
 	ZbGPIO_SwitchResultOut(FALSE);			// RESULT_OUT is used for sync output
 
 	EINT;
 
-	ZbGPIO_RelayLine(FALSE);
 	DELAY_US(RELAY_SWITCH_DELAY_US);
 
 	return result;
