@@ -301,8 +301,6 @@ void CONTROL_EnableExternalSync(Boolean Enable)
 
     // FAN Logic
     CONTROL_HandleFanLogic(TRUE);
-    // Ext LED Logic
-    CONTROL_HandleExtLed(TRUE);
 
     // Configure pins
     ZbGPIO_SwitchSyncEn(Enable);
@@ -320,6 +318,7 @@ void CONTROL_EnableExternalSync(Boolean Enable)
 void CONTROL_ExtSyncEvent()
 {
     CONTROL_SetDeviceState(DS_InProcess);
+    CONTROL_HandleExtLed(TRUE);
     ZbGPIO_SwitchResultOut(TRUE);
     ZwTimer_StartT1();
 }
@@ -405,6 +404,7 @@ static void CONTROL_SwitchToFaultEx()
 
 static void CONTROL_StartTest(Int16U VRate, Boolean PerfomRateCorrection, Boolean StartTest)
 {
+	CONTROL_HandleExtLed(StartTest);
 	ZbGPIO_SwitchOutRelay(StartTest);
 	ZbGPIO_SwitchLED2(StartTest);
 
@@ -571,7 +571,6 @@ void CONTROL_PrepareStart(pInt16U UserError, Int16U Rate_x10, Boolean UseCustomS
 		if(CONTROL_ValidateSettings(Rate_x10))
 		{
 			CONTROL_HandleFanLogic(StartTest);
-			CONTROL_HandleExtLed(StartTest);
 			CONTROL_StartTest(Rate_x10, UseCustomSettings, StartTest);
 		}
 		else
