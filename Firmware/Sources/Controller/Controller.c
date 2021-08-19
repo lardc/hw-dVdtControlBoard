@@ -152,7 +152,7 @@ Boolean CONTROL_EnableDuoCellMode()
 
      // Условие активации работы с двумя ячейками
      Boolean DuoCellMode = ((Voltage > DataTable[REG_SINGLE_CELL_V_LEVEL]) && (Voltage <= DataTable[REG_DUO_CELL_V_LEVEL])
-             && (DataTable[REG_VOLTAGE_RATE] > 6600));
+             && (DataTable[REG_VOLTAGE_RATE] > MIN_RATE_FOR_DUO_MODE));
 
      return DuoCellMode;
 }

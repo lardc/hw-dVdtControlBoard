@@ -64,6 +64,8 @@
 
 #define EXT_LED_SWITCH_ON_TIME          500         // (in ms)
 
+#define MIN_RATE_FOR_DUO_MODE           6600        // (В/мкс)*10
+
 //--------------------------------------------------------
 
 #endif // __GLOBAL_H
