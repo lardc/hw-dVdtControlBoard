@@ -327,12 +327,14 @@ void CONTROL_ExtSyncEvent()
 void CONTROL_ExtSyncFinish()
 {
     ZwTimer_StopT1();
+    Boolean PinState = ZbGPIO_ReadDetectorPin();
+
     ZbGPIO_SwitchResultOut(FALSE);
     ZbGPIO_SwitchSyncEn(FALSE);
     ZbGPIO_SwitchOutRelay(FALSE);
     ZbGPIO_SwitchLED2(FALSE);
 
-    CONTROL_NotifyEndTest(ZbGPIO_ReadDetectorPin(), FAULT_NONE, WARNING_NONE);
+    CONTROL_NotifyEndTest(PinState, FAULT_NONE, WARNING_NONE);
 }
 
 
