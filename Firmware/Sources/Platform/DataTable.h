@@ -1,4 +1,4 @@
-// -----------------------------------------
+﻿// ----------------------------------------
 // Device data table
 // ----------------------------------------
 
@@ -8,16 +8,17 @@
 // Include
 #include "stdinc.h"
 
-
 // Constants
 //
-#define DATA_TABLE_SIZE			300
-#define DATA_TABLE_NV_SIZE		128
+#define DATA_TABLE_NV_SIZE			128
+#define DATA_TABLE_SIZE				320
+#define DATA_TABLE_SIZE_PLUS_EXT	512
+#define DATA_TABLE_NV_EXT_SIZE		(DATA_TABLE_SIZE_PLUS_EXT - DATA_TABLE_SIZE)
 //
-#define DATA_TABLE_NV_START 	0
-#define DATA_TABLE_WR_START		128
-#define DATA_TABLE_WP_START		192
-#define DATA_TABLE_FWINF_START	256
+#define DATA_TABLE_NV_START 		0
+#define DATA_TABLE_WR_START			128
+#define DATA_TABLE_WP_START			192
+#define DATA_TABLE_FWINF_START		256
 
 /*
  * DATA TABLE START 				------------- 0
@@ -31,10 +32,12 @@
  *		END OF READ-ONLY AREA		------------- 255
  * 		START OF READ-ONLY FW INFO AREA	--------- 256
  * 			[VOLATILE R-O AREA]
- * 		END OF READ-ONLY FW INFO AREA	--------- 300
- * DATA TABLE END 					------------- [300]
+ * 		END OF READ-ONLY FW INFO AREA	--------- 319
+ * 		START OF EXT NV-AREA		------------- 320
+ * 			[EXT NV-AREA]
+ *		END OF EXT NV-AREA			------------- 511
+ * DATA TABLE END 					------------- [512]
  */
-
 
 // Types
 //
@@ -48,11 +51,9 @@ typedef struct __EPROMServiceConfig
 	FUNC_EPROM_ReadValues ReadService;
 } EPROMServiceConfig, *pERPOMServiceConfig;
 
-
 // Variables
 //
-extern volatile Int16U DataTable[DATA_TABLE_SIZE];
-
+extern volatile Int16U DataTable[DATA_TABLE_SIZE_PLUS_EXT];
 
 // Functions
 //

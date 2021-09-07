@@ -1,4 +1,4 @@
-// ----------------------------------------
+﻿// ----------------------------------------
 // Board-specific GPIO functions
 // ----------------------------------------
 
@@ -18,7 +18,9 @@ void ZbGPIO_SwitchLED1(Boolean Set);
 // Switch LED 2
 void ZbGPIO_SwitchLED2(Boolean Set);
 // External LED
-void ZbGPIO_SwitchLEDExt(Boolean Set);
+void ZbGPIO_SwitchExtLed(Boolean Set);
+// Out Relay
+void ZbGPIO_SwitchOutRelay(Boolean Set);
 // Toggle LED 1
 void ZbGPIO_ToggleLED1();
 // Toggle LED 2
@@ -35,32 +37,10 @@ void ZbGPIO_SetActiveCell(Int16U CellNumber);
 void ZbGPIO_RelayLine(Boolean Out);
 // Switch fan
 void ZbGPIO_SwitchFAN(Boolean Set);
+//Read detector pin
+Boolean ZbGPIO_ReadDetectorPin();
+//Enable internal sync
+void ZbGPIO_SwitchStartPulse(Boolean Set);
 
-// Inline functions
-//
-Boolean inline ZbGPIO_ReadSync()
-{
-	return ZwGPIO_ReadPin(PIN_SYNC_IN);
-}
-//
-Boolean inline ZbGPIO_ReadDetector()
-{
-	return !ZwGPIO_ReadPin(PIN_DETECTOR);
-}
-//
-void inline ZbGPIO_SwitchStartPulse(Boolean Set)
-{
-	ZwGPIO_WritePin(PIN_START_PULSE, Set);
-}
-//
-void inline ZbGPIO_SwitchDebugPin(Boolean Set)
-{
-	ZwGPIO_WritePin(PIN_DEBUG, Set);
-}
-//
-void inline ZbGPIO_ToggleDebugPin()
-{
-	ZwGPIO_TogglePin(PIN_DEBUG);
-}
 
 #endif // __ZBGPIO_H

@@ -1,4 +1,4 @@
-// -----------------------------------------
+﻿// ----------------------------------------
 // Constraints for tunable parameters
 // ----------------------------------------
 
@@ -20,59 +20,79 @@ typedef struct __TableItemConstraint
 	Int16U Default;
 } TableItemConstraint;
 
-
 // Restrictions
-//
 #define X_D_DEF0					10
 #define X_D_DEF1					100
 #define X_D_DEF2					1000
 #define X_D_DEF3					10000
-//
-#define DESIRED_VOLTAGE_MIN			50		// in V
-#define DESIRED_VOLTAGE_MAX			4500	// in V
-#define DESIRED_VOLTAGE_DEF			500		// in V
-//
-// Global voltage rate constraints
-#define VOLTAGE_RATE_MIN			50		// in V/us
-#define VOLTAGE_RATE_MAX			3000	// in V/us
-#define VOLTAGE_RATE_DEF			500		// in V/us
-//
-// Voltage rate setpoint constraints
-#define VRATE_CELL_MIN				5		// in V/us
-#define VRATE_CELL_MAX				2000	// in V/us
-#define VRATE_CELL_DEF				10		// in V/us
-//
-#define GATEV_CELL_MIN				2000	// in mV
-#define GATEV_CELL_MAX				5000	// in mV
-#define GATEV_CELL_DEF				3000	// in mV
-//
-#define RATE_CORR_MIN				0		// in %
-#define RATE_CORR_MAX				50		// in %
-#define RATE_CORR_DEF				0		// in %
 
-#define FAN_DUTY_MAX				100		// in %
-#define FAN_DUTY_DEF				20		// in %
+// in V
+#define DESIRED_VOLTAGE_MIN			100
+#define DESIRED_VOLTAGE_MAX			2500
+#define DESIRED_VOLTAGE_DEF			500
 
-// Cell rate ranges
-#define CELL_RATE_MIN				20		// in V/us
-#define CELL_RATE_MAX				1000	// in V/us
-#define CELL_RATE_DEF_MAX			550		// in V/us
-#define CELL_RATE_DEF_MIN			100		// in V/us
+// Global voltage rate constraints rates (in V/us x10)
+#define VOLTAGE_RATE_MIN			10
+#define VOLTAGE_RATE_MAX			30000
+#define VOLTAGE_RATE_DEF			5000
+
+// Voltage rate setpoint constraints (in V/us x10)
+#define VRATE_CELL_MIN				10
+#define VRATE_CELL_MAX				20000
+#define VRATE_CELL_DEF				100
+
+// in mV
+#define GATEV_CELL_MIN				1000
+#define GATEV_CELL_MAX				5000
+#define GATEV_CELL_DEF				3000
+
+// in %
+#define RATE_CORR_MIN				0
+#define RATE_CORR_MAX				50
+#define RATE_CORR_DEF				0
+#define FAN_DUTY_MAX				100
+#define FAN_DUTY_DEF				20
+
+// Cell rate ranges (in V/us x10)
+#define CELL_RATE_MIN				20
+#define CELL_RATE_MAX				10000
+#define CELL_RATE_DEF_MAX			5500
+#define CELL_RATE_DEF_MIN			1000
+
+// Unit rates (in V/us x10)
+#define UNIT_RATE_MIN				10
+#define UNIT_RATE_MAX				50000
+#define UNIT_RATE_MIN_DEF			5000
+#define UNIT_RATE_MAX_DEF			25000
+#define UNIT_RATE_R1_DEF			500
+#define UNIT_RATE_R2_DEF			5000
+
+// Single cell number
+#define CELL_NUM_MIN				1
+#define CELL_NUM_MAX				6
+#define CELL_NUM_DEF				1
+
+// Single cell voltage limit
+#define SINGLE_CELL_VLIM_MIN		20
+#define SINGLE_CELL_VLIM_MAX		500
+#define SINGLE_CELL_VLIM_DEF		300
+
+//Duo cell voltage limit
+#define DUO_CELL_VLIM_MIN           300
+#define DUO_CELL_VLIM_MAX           600
+#define DUO_CELL_VLIM_DEF           300
 
 // Cell vaoltage ranges
 #define CELL_V_MIN					20		// in V
 #define CELL_V_MAX					1000	// in V
 #define CELL_V_DEF_MAX				900		// in V
 #define CELL_V_DEF_MIN				50		// in V
-
 #define FAN_TIME_MIN				10		// in s
 #define FAN_TIME_MAX				600		// in s
 #define FAN_TIME_DEF				30		// in s
 
 // Variables
-//
 extern const TableItemConstraint NVConstraint[DATA_TABLE_NV_SIZE];
 extern const TableItemConstraint VConstraint[DATA_TABLE_WP_START - DATA_TABLE_WR_START];
-
 
 #endif // __CONSTRAINTS_H

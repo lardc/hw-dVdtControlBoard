@@ -1,4 +1,4 @@
-// -----------------------------------------
+﻿// ----------------------------------------
 // Logic controller
 // ----------------------------------------
 
@@ -20,6 +20,8 @@
 #define ACT_START_TEST_1600			103	// Start test 1600V/us
 #define ACT_START_TEST_2000			104	// Start test 2000V/us
 #define ACT_START_TEST_2500			105	// Start test 2500V/us
+#define ACT_ENABLE_EXT_SYNC_START   106 // Enable external sync
+#define ACT_DISABLE_EXT_SYNC_START  107 // Disable external sync
 //
 #define ACT_STOP					109	// Stop test
 //
@@ -31,6 +33,7 @@
 #define ACT_DIAG_PULSE_SWITCH		115
 #define ACT_DIAG_PULSE_LED			116
 #define ACT_DIAG_PULSE_SYNC			117
+#define ACT_DIAG_READ_REALT         118
 // 118
 #define ACT_DIAG_GENERATE_SETP		119
 #define ACT_DIAG_READ_CELL_REG		120
@@ -59,21 +62,61 @@
 #define REG_CELL_MASK				8	// Cell presence mask
 #define REG_CELL_MIN_VOLTAGE		9	// Cell min voltage (in V)
 #define REG_CELL_MAX_VOLTAGE		10	// Cell max voltage (in V)
-#define REG_CELL_MIN_RATE			11	// Cell min rate (in V/us)
-#define REG_CELL_MAX_RATE			12	// Cell max rate (in V/us)
+#define REG_CELL_MIN_RATE			11	// Cell min rate (in V/us x10)
+#define REG_CELL_MAX_RATE			12	// Cell max rate (in V/us x10)
 #define REG_FAN_OPERATE_PERIOD		13	// Default fan turn on period (in s)
 #define REG_FAN_OPERATE_MIN_TIME	14	// Minimum fan turn on time (in s)
-// 14 -  29
-#define REG_CELL1_GATEV1			30	// Gate voltage setpoint 1 for cell 1
-#define REG_CELL1_VRATE1			31	// Voltage rate setpoint 1 for cell 1
+#define REG_UNIT_RATE_MIN			15	// Unit min rate (in V/us x10)
+#define REG_UNIT_RATE_MAX			16	// Unit max rate (in V/us x10)
+#define REG_UNIT_USE_RANGE1			17	// Use setpoint data for range 1 (low)
+#define REG_UNIT_USE_RANGE2			18	// Use setpoint data for range 2 (mid)
+#define REG_CORR_RANGE1				19	// Correction coefficient for range 1 x1000
+#define REG_CORR_RANGE2				20	// Correction coefficient for range 2 x1000
+#define REG_SINGLE_CELL_NUMBER		21	// Single cell number
+#define REG_SINGLE_CELL_V_LEVEL		22	// Maximum voltage for single cell mode (in V)
+#define REG_SINGLE_RATE_MAX         23  // Single cell max rate (in V/us x10)
+#define REG_SINGLE_RATE_MIN         24  // Single cell min rate (in V/us x10)
+#define REG_SINGLE_CORR_BY_RATE     25  // Single correction factor based on rate (in %)
+#define REG_SINGLE_CORR_VPOINT      26  // Single voltage point for correction based on voltage (in V)
+#define REG_SINGLE_CORR_BY_VOLTAGE  27  // Single correction factor based on voltage (in %)
+#define REG_SINGLE_CORR_RANGE1      28  // Single correction coefficient for range 1 x1000
+#define REG_SINGLE_CORR_RANGE2      29  // Single correction coefficient for range 2 based on voltage
+#define REG_SINGLE_RATE_GLOBAL_K_N  30  // Single global rate correction (N)
+#define REG_SINGLE_RATE_GLOBAL_K_D  31  // Single global rate correction (D)
+#define REG_SINGLE_RATE_OFFSET      32  // Single offset based on voltage
+#define REG_RATE_OFFSET             33  // Offset based on voltage
+#define REG_SINGLE_OFFSET_RANGE2    34  // Single Offset range2 based on voltage
+#define REG_OFFSET_RANGE2           35  // Offset range2 based on voltage
+#define REG_SINGLE_CORR_N_RANGE2    36  // Prop for range 2 single
+#define REG_DUO_CELL_V_LEVEL        37  // Prop for range 2
+#define REG_DBG_DATA                38  // debug data
+#define REG_CSU_V_OFFSET            39  // CSU Voltage Offset V
+// 38 - 39
+#define REG_CELL1_GATEV1			40	// Gate voltage setpoint 1 for cell 1
+#define REG_CELL1_VRATE1			41	// Voltage rate setpoint 1 for cell 1
 // 32 - 111								// Setpoints for 6 cells (7 per cell)
-#define REG_CELL6_GATEV7			111	// Gate voltage setpoint 7 for cell 6
-#define REG_CELL6_VRATE7			112	// Voltage rate setpoint 7 for cell 6
+#define REG_CELL6_GATEV7			122	// Gate voltage setpoint 7 for cell 6
+#define REG_CELL6_VRATE7			123	// Voltage rate setpoint 7 for cell 6
+//
+// Extended NV-registers
+// Range 1
+#define REG_CELL1_R1_GATEV1			320	// Gate voltage setpoint 1 for cell 1
+#define REG_CELL1_R1_VRATE1			321	// Voltage rate setpoint 1 for cell 1
+// 322 - 400							// Setpoints for 6 cells (7 per cell)
+#define REG_CELL6_R1_GATEV7			401	// Gate voltage setpoint 7 for cell 6
+#define REG_CELL6_R1_VRATE7			402	// Voltage rate setpoint 7 for cell 6
+//
+// Range 2
+#define REG_CELL1_R2_GATEV1			410	// Gate voltage setpoint 1 for cell 1
+#define REG_CELL1_R2_VRATE1			411	// Voltage rate setpoint 1 for cell 1
+// 412 - 490							// Setpoints for 6 cells (7 per cell)
+#define REG_CELL6_R2_GATEV7			491	// Gate voltage setpoint 7 for cell 6
+#define REG_CELL6_R2_VRATE7			492	// Voltage rate setpoint 7 for cell 6
 //
 // ----------------------------------------
 //
-#define REG_DESIRED_VOLTAGE			128	// Desired plate voltage
-#define REG_VOLTAGE_RATE			129	// dV/dt rate
+#define REG_DESIRED_VOLTAGE			128	// Desired plate voltage (in V)
+#define REG_VOLTAGE_RATE			129	// dV/dt rate (in V/us x10)
 #define REG_TUNE_CUSTOM_SETTING		130	// Apply voltage rate correction for custom setting
 // 131 - 179
 #define REG_PWD_1					180	// Unlock password location 1
@@ -93,7 +136,7 @@
 #define REG_WARNING					195	// Warning if present
 #define REG_PROBLEM					196	// Problem if present
 //
-#define REG_TEST_RESULT				198	// Test result
+#define REG_TEST_RESULT				197	// Test result
 #define REG_FAULT_REASON_EX			199 // External fault code
 //
 #define REG_VOLTAGE_OK				200	// Charged summary
@@ -123,6 +166,7 @@
 #define REG_CAN_DIAG_REC			224	// CAN REC
 //
 #define REG_DIAG_GENERAL_OUT		225
+#define REG_DIAG_OPT_INTERFACE_ERR	226	// Error code for diagnostic optical interface communication
 //
 #define REG_DIAG_GATEV_CELL1		230	// Cell 1 gate voltage
 #define REG_DIAG_GATEV_CELL2		231	// Cell 2 gate voltage
@@ -130,6 +174,10 @@
 #define REG_DIAG_GATEV_CELL4		233	// Cell 4 gate voltage
 #define REG_DIAG_GATEV_CELL5		234	// Cell 5 gate voltage
 #define REG_DIAG_GATEV_CELL6		235	// Cell 6 gate voltage
+//
+#define REG_DIAG_DIST_R1			240	// Diagnostic distance info for range R1
+#define REG_DIAG_DIST_R2			241	// Diagnostic distance info for range R2
+#define REG_DIAG_DIST_DEF			242	// Diagnostic distance info for default range
 //
 // ----------------------------------------
 //
@@ -154,6 +202,7 @@
 #define CELL_REG_DESIRED_VOLTAGE	1	// Desired cell voltage
 #define CELL_REG_DESIRED_GATE_V		2   // Desired gate voltage
 #define	CELL_REG_VOLTAGE_FINE_N		3	// Voltage coefficient N (D = 1024)
+#define	CELL_REG_RATE_RANGE			4	// Rate range selector
 //
 #define CELL_REG_DEV_STATE			10	// Device state
 //

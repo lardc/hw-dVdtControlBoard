@@ -1,4 +1,4 @@
-// -----------------------------------------
+﻿// -----------------------------------------
 // dVdt diagnostics routines
 // ----------------------------------------
 
@@ -11,11 +11,14 @@
 #include "DataTable.h"
 #include "CellMux.h"
 #include "Setpoint.h"
+#include "ZbGPIO.h"
 
 // Functions
 //
 Boolean DIAG_DispatchCommand(Int16U Command)
 {
+    Boolean EnableRelay;
+
 	switch(Command)
 	{
 		case ACT_DIAG_SWITCH_ON:
@@ -32,7 +35,7 @@ Boolean DIAG_DispatchCommand(Int16U Command)
 			break;
 		case ACT_DIAG_PULSE_START:
 			{
-				ZbGPIO_SwitchLEDExt(TRUE);
+				ZbGPIO_SwitchOutRelay(TRUE);
 
 				ZbGPIO_RelayLine(TRUE);
 				DELAY_US(RELAY_SWITCH_DELAY_L_US);
@@ -51,7 +54,7 @@ Boolean DIAG_DispatchCommand(Int16U Command)
 				ZbGPIO_RelayLine(FALSE);
 				DELAY_US(RELAY_SWITCH_DELAY_US);
 
-				ZbGPIO_SwitchLEDExt(FALSE);
+				ZbGPIO_SwitchOutRelay(FALSE);
 			}
 			break;
 		case ACT_DIAG_PULSE_SWITCH:
@@ -60,9 +63,8 @@ Boolean DIAG_DispatchCommand(Int16U Command)
 			ZbGPIO_RelayLine(FALSE);
 			break;
 		case ACT_DIAG_PULSE_LED:
-			ZbGPIO_SwitchLEDExt(TRUE);
-			DELAY_US(100000);
-			ZbGPIO_SwitchLEDExt(FALSE);
+		    EnableRelay = (DataTable[REG_DBG_DATA] == 1) ? TRUE : FALSE;
+		    ZbGPIO_SwitchOutRelay(EnableRelay);
 			break;
 		case ACT_DIAG_PULSE_SYNC:
 			ZbGPIO_SwitchResultOut(TRUE);
@@ -79,12 +81,15 @@ Boolean DIAG_DispatchCommand(Int16U Command)
 		case ACT_DIAG_CALL_CELL:
 			CELLMUX_CallCellAction(DataTable[REG_DIAG_TEST_CELL_ID], DataTable[REG_DIAG_TEST_PARAM_1]);
 			break;
+		case ACT_DIAG_READ_REALT:
+		    DataTable[REG_TEST_RESULT] = ZbGPIO_ReadDetectorPin() ? TEST_RESULT_OK : TEST_RESULT_FAIL;
+		    break;
 		case ACT_DIAG_GENERATE_SETP:
 			{
-				Int16U i, RatePerCell = DataTable[REG_VOLTAGE_RATE] / CELLMUX_CellCount();
+				Int16U i, RatePerCell = DataTable[REG_VOLTAGE_RATE] / CELLMUX_CellCount(), dummy;
 				for (i = 0; i < MAX_CELLS_COUNT; i++)
 					if (CELLMUX_CellMask() & (1 << i))
-						DataTable[REG_DIAG_GATEV_CELL1 + i] = SP_Generate(i, RatePerCell);
+						DataTable[REG_DIAG_GATEV_CELL1 + i] = SP_Generate(i, RatePerCell, &dummy);
 			}
 			break;
 		default:
