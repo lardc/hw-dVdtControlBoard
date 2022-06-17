@@ -1,4 +1,4 @@
-// -----------------------------------------
+ï»¿// -----------------------------------------
 // dVdt cell commutator
 // ----------------------------------------
 
@@ -136,7 +136,7 @@ Boolean CELLMUX_SetCellsState(Int16U CellVoltage, Int16U CellVRate, Int16U Fine)
 
 			GateV = SP_Generate(i, CellVRate);
 
-			// Ïðîâåðêà ïðåâûøåíèÿ âûõîäíîãî íàïðÿæåíèÿ ÖÀÏ
+			// ÐŸÑ€Ð¾Ð²ÐµÑ€ÐºÐ° Ð¿Ñ€ÐµÐ²Ñ‹ÑˆÐµÐ½Ð¸Ñ Ð²Ñ‹Ñ…Ð¾Ð´Ð½Ð¾Ð³Ð¾ Ð½Ð°Ð¿Ñ€ÑÐ¶ÐµÐ½Ð¸Ñ Ð¦ÐÐŸ
 			if(GateV > GATE_VOLTAGE_MAX)
 				GateV = GATE_VOLTAGE_MAX;
 
