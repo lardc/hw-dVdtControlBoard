@@ -69,6 +69,9 @@ Boolean DIAG_DispatchCommand(Int16U Command)
 			DELAY_US(100000);
 			ZbGPIO_SwitchResultOut(FALSE);
 			break;
+		case ACT_DIAG_DETECTOR:
+			DataTable[REG_DIAG_DETECTOR] =  ZbGPIO_ReadDetector();
+			break;
 		case ACT_DIAG_READ_CELL_REG:
 			DataTable[REG_DIAG_GENERAL_OUT] = 0;
 			CELLMUX_ReadCellRegister(DataTable[REG_DIAG_TEST_CELL_ID], DataTable[REG_DIAG_TEST_PARAM_1], (pInt16U)&DataTable[REG_DIAG_GENERAL_OUT]);
