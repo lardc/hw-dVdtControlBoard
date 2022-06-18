@@ -1,4 +1,4 @@
-// ----------------------------------------
+п»ї// ----------------------------------------
 // Gate voltage setpoint generator
 // ----------------------------------------
 
@@ -109,7 +109,7 @@ Int16U SP_FindActiveRange(Int16U CellIndex, Int16U VRate)
 	Int16U DistR1, DistR2, DistDef;
 	DataTable[REG_DIAG_DIST_R1] = DataTable[REG_DIAG_DIST_R2] = DataTable[REG_DIAG_DIST_DEF] = INT16U_MAX;
 
-	// Поиск попадания в границы диапазона
+	// РџРѕРёСЃРє РїРѕРїР°РґР°РЅРёСЏ РІ РіСЂР°РЅРёС†С‹ РґРёР°РїР°Р·РѕРЅР°
 	if((DataTable[REG_DIAG_DIST_R1] = DistR1 = SP_GetDistanceToRange(CellIndex, VRate, REG_CELL1_R1_VRATE1,
 			DataTable[REG_UNIT_USE_RANGE1])) == 0)
 		return VRATE_RANGE_LOWER1;
@@ -121,7 +121,7 @@ Int16U SP_FindActiveRange(Int16U CellIndex, Int16U VRate)
 	if((DataTable[REG_DIAG_DIST_DEF] = DistDef = SP_GetDistanceToRange(CellIndex, VRate, REG_CELL1_VRATE1, TRUE)) == 0)
 		return VRATE_RANGE_DEF;
 
-	// Если значение не попало в диапазон, то определяем самый ближний диапазон
+	// Р•СЃР»Рё Р·РЅР°С‡РµРЅРёРµ РЅРµ РїРѕРїР°Р»Рѕ РІ РґРёР°РїР°Р·РѕРЅ, С‚Рѕ РѕРїСЂРµРґРµР»СЏРµРј СЃР°РјС‹Р№ Р±Р»РёР¶РЅРёР№ РґРёР°РїР°Р·РѕРЅ
 	Int16U ClosestDist = MIN(MIN(DistR1, DistR2), DistDef);
 	if(ClosestDist == DistR1)
 		return VRATE_RANGE_LOWER1;

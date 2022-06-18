@@ -1,4 +1,4 @@
-// ----------------------------------------
+﻿// ----------------------------------------
 // Driver for EEPROM via SPI
 // ----------------------------------------
 
@@ -10,7 +10,8 @@
 // Constants
 //
 #define EPROM_DATA_BUFFER_SIZE	16
-#define EPROM_DATA_SEGMENT		4		// 4 * 2 + (3) < 16 - SPI FIFO max depth#define MEM_CL					8
+#define EPROM_DATA_SEGMENT		4		// 4 * 2 + (3) < 16 - SPI FIFO max depth
+#define MEM_CL					8
 #define EPROM_WRITE_DELAY_US	5000
 //
 // EPROM commands
