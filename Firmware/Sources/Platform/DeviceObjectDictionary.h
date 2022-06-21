@@ -31,7 +31,8 @@
 #define ACT_DIAG_PULSE_SWITCH		115
 #define ACT_DIAG_PULSE_LED			116
 #define ACT_DIAG_PULSE_SYNC			117
-// 118
+#define ACT_DIAG_DETECTOR			118
+
 #define ACT_DIAG_GENERATE_SETP		119
 #define ACT_DIAG_READ_CELL_REG		120
 #define ACT_DIAG_WRITE_CELL_REG		121
@@ -152,6 +153,7 @@
 #define REG_DIAG_GATEV_CELL4		233	// Cell 4 gate voltage
 #define REG_DIAG_GATEV_CELL5		234	// Cell 5 gate voltage
 #define REG_DIAG_GATEV_CELL6		235	// Cell 6 gate voltage
+#define REG_DIAG_DETECTOR			236	// Состояние детектора
 //
 #define REG_DIAG_DIST_R1			240	// Diagnostic distance info for range R1
 #define REG_DIAG_DIST_R2			241	// Diagnostic distance info for range R2

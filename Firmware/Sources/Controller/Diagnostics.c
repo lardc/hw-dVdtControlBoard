@@ -69,6 +69,17 @@ Boolean DIAG_DispatchCommand(Int16U Command)
 			DELAY_US(100000);
 			ZbGPIO_SwitchResultOut(FALSE);
 			break;
+		case ACT_DIAG_DETECTOR:
+			DataTable[REG_DIAG_DETECTOR] =  ZbGPIO_ReadDetector();
+			break;
+		case ACT_DIAG_GENERATE_SETP:
+			{
+				Int16U i, RatePerCell = DataTable[REG_VOLTAGE_RATE] / CELLMUX_CellCount(), dummy;
+				for (i = 0; i < MAX_CELLS_COUNT; i++)
+					if (CELLMUX_CellMask() & (1 << i))
+						DataTable[REG_DIAG_GATEV_CELL1 + i] = SP_Generate(i, RatePerCell, &dummy);
+			}
+			break;
 		case ACT_DIAG_READ_CELL_REG:
 			DataTable[REG_DIAG_GENERAL_OUT] = 0;
 			CELLMUX_ReadCellRegister(DataTable[REG_DIAG_TEST_CELL_ID], DataTable[REG_DIAG_TEST_PARAM_1], (pInt16U)&DataTable[REG_DIAG_GENERAL_OUT]);
@@ -78,14 +89,6 @@ Boolean DIAG_DispatchCommand(Int16U Command)
 			break;
 		case ACT_DIAG_CALL_CELL:
 			CELLMUX_CallCellAction(DataTable[REG_DIAG_TEST_CELL_ID], DataTable[REG_DIAG_TEST_PARAM_1]);
-			break;
-		case ACT_DIAG_GENERATE_SETP:
-			{
-				Int16U i, RatePerCell = DataTable[REG_VOLTAGE_RATE] / CELLMUX_CellCount(), dummy;
-				for (i = 0; i < MAX_CELLS_COUNT; i++)
-					if (CELLMUX_CellMask() & (1 << i))
-						DataTable[REG_DIAG_GATEV_CELL1 + i] = SP_Generate(i, RatePerCell, &dummy);
-			}
 			break;
 		default:
 			return FALSE;
