@@ -31,12 +31,13 @@
 #define ACT_DIAG_PULSE_SWITCH		115
 #define ACT_DIAG_PULSE_LED			116
 #define ACT_DIAG_PULSE_SYNC			117
-#define ACT_DIAG_DETECTOR			118
+#define ACT_DIAG_DETECTOR			118	// Обновить состояние детектора
 
 #define ACT_DIAG_GENERATE_SETP		119
 #define ACT_DIAG_READ_CELL_REG		120
 #define ACT_DIAG_WRITE_CELL_REG		121
 #define ACT_DIAG_CALL_CELL			122
+#define ACT_DIAG_SYNC_IN			123	// Обновить состояние внешней синхронизации
 //
 #define ACT_SAVE_TO_ROM				200	// Save parameters to EEPROM module
 #define ACT_RESTORE_FROM_ROM		201	// Restore parameters from EEPROM module
@@ -154,6 +155,7 @@
 #define REG_DIAG_GATEV_CELL5		234	// Cell 5 gate voltage
 #define REG_DIAG_GATEV_CELL6		235	// Cell 6 gate voltage
 #define REG_DIAG_DETECTOR			236	// Состояние детектора
+#define REG_DIAG_SYNC_IN			237	// Состояние внешней синхронизации
 //
 #define REG_DIAG_DIST_R1			240	// Diagnostic distance info for range R1
 #define REG_DIAG_DIST_R2			241	// Diagnostic distance info for range R2

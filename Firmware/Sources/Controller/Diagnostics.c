@@ -90,6 +90,8 @@ Boolean DIAG_DispatchCommand(Int16U Command)
 		case ACT_DIAG_CALL_CELL:
 			CELLMUX_CallCellAction(DataTable[REG_DIAG_TEST_CELL_ID], DataTable[REG_DIAG_TEST_PARAM_1]);
 			break;
+		case ACT_DIAG_SYNC_IN:
+			DataTable[REG_DIAG_SYNC_IN] = ZbGPIO_ReadSync();
 		default:
 			return FALSE;
 	}
