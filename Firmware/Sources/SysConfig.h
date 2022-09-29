@@ -23,7 +23,7 @@
 
 // Power control
 //--------------------------------------------------------
-#define SYS_PUMOD           ZW_POWER_PWM4_CLK | ZW_POWER_PWM6_CLK | \
+#define SYS_PUMOD           ZW_POWER_PWM6_CLK | \
                             ZW_POWER_SCIA_CLK | ZW_POWER_SCIB_CLK | \
                             ZW_POWER_CANA_CLK | ZW_POWER_SPIB_CLK
 
