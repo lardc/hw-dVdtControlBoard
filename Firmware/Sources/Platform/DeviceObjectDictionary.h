@@ -20,8 +20,8 @@
 #define ACT_START_TEST_1600			103	// Start test 1600V/us
 #define ACT_START_TEST_2000			104	// Start test 2000V/us
 #define ACT_START_TEST_2500			105	// Start test 2500V/us
-#define ACT_ENABLE_EXT_SYNC_START   106 // Enable external sync
-#define ACT_DISABLE_EXT_SYNC_START  107 // Disable external sync
+#define ACT_ENABLE_EXT_SYNC_START	106	// Enable external sync
+#define ACT_DISABLE_EXT_SYNC_START	107	// Disable external sync
 //
 #define ACT_STOP					109	// Stop test
 //
@@ -33,8 +33,7 @@
 #define ACT_DIAG_PULSE_SWITCH		115
 #define ACT_DIAG_PULSE_LED			116
 #define ACT_DIAG_PULSE_SYNC			117
-#define ACT_DIAG_READ_REALT         118
-// 118
+#define ACT_DIAG_READ_DETECTOR		118
 #define ACT_DIAG_GENERATE_SETP		119
 #define ACT_DIAG_READ_CELL_REG		120
 #define ACT_DIAG_WRITE_CELL_REG		121
@@ -54,47 +53,29 @@
 #define REG_V_FINE_N				0	// Voltage amplitude fine (N)
 #define REG_V_FINE_D				1	// Voltage amplitude fine (D)
 #define REG_V_OFFSET				2	// Voltage offset (in V)
-#define REG_CORR_RATE_BY_VOLTAGE	3	// Correction factor based on voltage (in %)
-#define REG_CORR_RATE_VPOINT		4	// Voltage point for correction based on voltage (in V)
-#define REG_CORR_RATE_BY_RATE		5	// Correction factor based on rate (in %)
+#define REG_CSU_V_OFFSET			3	// CSU Voltage Offset V
+// 4 - 5
 #define REG_RATE_GLOBAL_K_N			6	// Global rate correction (N)
 #define REG_RATE_GLOBAL_K_D			7	// Global rate correction (D)
+
 #define REG_CELL_MASK				8	// Cell presence mask
 #define REG_CELL_MIN_VOLTAGE		9	// Cell min voltage (in V)
 #define REG_CELL_MAX_VOLTAGE		10	// Cell max voltage (in V)
 #define REG_CELL_MIN_RATE			11	// Cell min rate (in V/us x10)
 #define REG_CELL_MAX_RATE			12	// Cell max rate (in V/us x10)
+
 #define REG_FAN_OPERATE_PERIOD		13	// Default fan turn on period (in s)
 #define REG_FAN_OPERATE_MIN_TIME	14	// Minimum fan turn on time (in s)
+
 #define REG_UNIT_RATE_MIN			15	// Unit min rate (in V/us x10)
 #define REG_UNIT_RATE_MAX			16	// Unit max rate (in V/us x10)
+
 #define REG_UNIT_USE_RANGE1			17	// Use setpoint data for range 1 (low)
 #define REG_UNIT_USE_RANGE2			18	// Use setpoint data for range 2 (mid)
-#define REG_CORR_RANGE1				19	// Correction coefficient for range 1 x1000
-#define REG_CORR_RANGE2				20	// Correction coefficient for range 2 x1000
-#define REG_SINGLE_CELL_NUMBER		21	// Single cell number
-#define REG_SINGLE_CELL_V_LEVEL		22	// Maximum voltage for single cell mode (in V)
-#define REG_SINGLE_RATE_MAX         23  // Single cell max rate (in V/us x10)
-#define REG_SINGLE_RATE_MIN         24  // Single cell min rate (in V/us x10)
-#define REG_SINGLE_CORR_BY_RATE     25  // Single correction factor based on rate (in %)
-#define REG_SINGLE_CORR_VPOINT      26  // Single voltage point for correction based on voltage (in V)
-#define REG_SINGLE_CORR_BY_VOLTAGE  27  // Single correction factor based on voltage (in %)
-#define REG_SINGLE_CORR_RANGE1      28  // Single correction coefficient for range 1 x1000
-#define REG_SINGLE_CORR_RANGE2      29  // Single correction coefficient for range 2 based on voltage
-#define REG_SINGLE_RATE_GLOBAL_K_N  30  // Single global rate correction (N)
-#define REG_SINGLE_RATE_GLOBAL_K_D  31  // Single global rate correction (D)
-#define REG_SINGLE_RATE_OFFSET      32  // Single offset based on voltage
-#define REG_RATE_OFFSET             33  // Offset based on voltage
-#define REG_SINGLE_OFFSET_RANGE2    34  // Single Offset range2 based on voltage
-#define REG_OFFSET_RANGE2           35  // Offset range2 based on voltage
-#define REG_SINGLE_CORR_N_RANGE2    36  // Prop for range 2 single
-#define REG_DUO_CELL_V_LEVEL        37  // Prop for range 2
-#define REG_DBG_DATA                38  // debug data
-#define REG_CSU_V_OFFSET            39  // CSU Voltage Offset V
-// 38 - 39
+// 19 - 39
 #define REG_CELL1_GATEV1			40	// Gate voltage setpoint 1 for cell 1
 #define REG_CELL1_VRATE1			41	// Voltage rate setpoint 1 for cell 1
-// 32 - 111								// Setpoints for 6 cells (7 per cell)
+// 42 - 121								// Setpoints for 6 cells (7 per cell)
 #define REG_CELL6_GATEV7			122	// Gate voltage setpoint 7 for cell 6
 #define REG_CELL6_VRATE7			123	// Voltage rate setpoint 7 for cell 6
 //
@@ -200,7 +181,7 @@
 // CELL REGISTERS
 //
 #define CELL_REG_DESIRED_VOLTAGE	1	// Desired cell voltage
-#define CELL_REG_DESIRED_GATE_V		2   // Desired gate voltage
+#define CELL_REG_DESIRED_GATE_V		2 	// Desired gate voltage
 #define	CELL_REG_VOLTAGE_FINE_N		3	// Voltage coefficient N (D = 1024)
 #define	CELL_REG_RATE_RANGE			4	// Rate range selector
 //
@@ -234,6 +215,12 @@
 #define FAULT_NOT_READY_4			614	// Cell 4 is not charged
 #define FAULT_NOT_READY_5			615	// Cell 5 is not charged
 #define FAULT_NOT_READY_6			616	// Cell 6 is not charged
+
+// OPERATION RESULTS
+//
+#define OPRESULT_NONE				0	// No information or not finished
+#define OPRESULT_OK					1	// Operation was successful
+#define OPRESULT_FAIL				2	// Operation failed
 
 // WARNING CODES
 //

@@ -16,9 +16,9 @@ const TableItemConstraint NVConstraint[DATA_TABLE_NV_SIZE] =
 										{0, INT16U_MAX, X_D_DEF2},												// 0
 										{1, X_D_DEF3, X_D_DEF2},												// 1
 										{0, INT16U_MAX, 0},														// 2
-										{RATE_CORR_MIN, RATE_CORR_MAX, RATE_CORR_DEF},							// 3
-										{DESIRED_VOLTAGE_MIN, DESIRED_VOLTAGE_MAX, DESIRED_VOLTAGE_MIN},		// 4
-										{RATE_CORR_MIN, RATE_CORR_MAX, RATE_CORR_DEF},							// 5
+										{0, INT16U_MAX, 0},														// 3
+										{0, 0, 0},																// 4
+										{0, 0, 0},																// 5
 										{0, INT16U_MAX, X_D_DEF2},												// 6
 										{1, X_D_DEF3, X_D_DEF2},												// 7
 										{0, 0x3F, 0x3F},														// 8
@@ -32,27 +32,27 @@ const TableItemConstraint NVConstraint[DATA_TABLE_NV_SIZE] =
 										{UNIT_RATE_MIN, UNIT_RATE_MAX, UNIT_RATE_MAX_DEF},						// 16
 										{NO, YES, NO},															// 17
 										{NO, YES, NO},															// 18
-										{X_D_DEF1, X_D_DEF3, X_D_DEF2},											// 19
-										{X_D_DEF1, X_D_DEF3, X_D_DEF2},							                // 20
-										{CELL_NUM_MIN, CELL_NUM_MAX, CELL_NUM_DEF},								// 21
-										{SINGLE_CELL_VLIM_MIN, SINGLE_CELL_VLIM_MAX, SINGLE_CELL_VLIM_DEF},		// 22
-										{UNIT_RATE_MIN, UNIT_RATE_MAX, UNIT_RATE_MAX_DEF},						// 23
-										{UNIT_RATE_MIN, UNIT_RATE_MAX, UNIT_RATE_MIN_DEF},		                // 24
-										{RATE_CORR_MIN, RATE_CORR_MAX, RATE_CORR_DEF},		                    // 25
-										{DESIRED_VOLTAGE_MIN, DESIRED_VOLTAGE_MAX, DESIRED_VOLTAGE_MIN},	    // 26
-										{RATE_CORR_MIN, RATE_CORR_MAX, RATE_CORR_DEF},							// 27
-										{X_D_DEF1, X_D_DEF3, X_D_DEF2},											// 28
-										{X_D_DEF1, X_D_DEF3, X_D_DEF2},							                // 29
-										{1, INT16U_MAX, X_D_DEF2},						                        // 30
-										{1, X_D_DEF3, X_D_DEF2},                                      			// 31
-										{0, INT16U_MAX, 0},						                                // 32
-										{0, INT16U_MAX, 0},						                                // 33
-										{0, INT16U_MAX, 0},						                                // 34
-										{0, INT16U_MAX, 0},						                                // 35
-										{X_D_DEF1, X_D_DEF3, X_D_DEF2},						                    // 36
-										{DUO_CELL_VLIM_MIN, DUO_CELL_VLIM_MAX, DUO_CELL_VLIM_DEF},		        // 37
-										{0, INT16U_MAX, 0},						                                // 38
-										{0, INT16U_MAX, 0},                                      				// 39
+										{0, 0, 0},																// 19
+										{0, 0, 0},																// 20
+										{0, 0, 0},																// 21
+										{0, 0, 0},																// 22
+										{0, 0, 0},																// 23
+										{0, 0, 0},																// 24
+										{0, 0, 0},																// 25
+										{0, 0, 0},																// 26
+										{0, 0, 0},																// 27
+										{0, 0, 0},																// 28
+										{0, 0, 0},																// 29
+										{0, 0, 0},																// 30
+										{0, 0, 0},																// 31
+										{0, 0, 0},																// 32
+										{0, 0, 0},																// 33
+										{0, 0, 0},																// 34
+										{0, 0, 0},																// 35
+										{0, 0, 0},																// 36
+										{0, 0, 0},																// 37
+										{0, 0, 0},																// 38
+										{0, 0, 0},																// 39
 										{GATEV_CELL_MIN, GATEV_CELL_MAX, GATEV_CELL_DEF},						// 40
 										{VRATE_CELL_MIN, VRATE_CELL_MAX, VRATE_CELL_DEF},						// 41
 										{GATEV_CELL_MIN, GATEV_CELL_MAX, GATEV_CELL_DEF},						// 42

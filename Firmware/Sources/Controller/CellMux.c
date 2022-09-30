@@ -123,7 +123,7 @@ Boolean CELLMUX_ReadStates()
 }
 // ----------------------------------------
 
-Boolean CELLMUX_SetCellsState(Int16U CellVoltage, Int16U CellVRate, Boolean SingleCellMode, Boolean DuoCellMode)
+Boolean CELLMUX_SetCellsState(Int16U CellVoltage, Int16U CellVRate)
 {
 	Int16U i, GateV;
 	
@@ -135,18 +135,7 @@ Boolean CELLMUX_SetCellsState(Int16U CellVoltage, Int16U CellVRate, Boolean Sing
 			ZbGPIO_SetActiveCell(i);
 			
 			Int16U CellVRateRange;
-			
-			if((!SingleCellMode && !DuoCellMode) || ((SingleCellMode || DuoCellMode) && (i + 1 == DataTable[REG_SINGLE_CELL_NUMBER])) ||
-			        (DuoCellMode && (i + 1 == (DataTable[REG_SINGLE_CELL_NUMBER] - 1))))
-			{
-				GateV = SP_Generate(i, CellVRate, &CellVRateRange);
-			}
-			else
-			{
-				GateV = 0;
-				CellVRateRange = VRATE_RANGE_DEF;
-			}
-			DataTable[REG_DIAG_GATEV_CELL1 + i] = GateV;
+			DataTable[REG_DIAG_GATEV_CELL1 + i] = GateV = SP_Generate(i, CellVRate, &CellVRateRange);
 			
 			if((ErrorCodeEx = SCCIM_Write16(&DEVICE_UART_Interface, SCCI_CELL_NODE_ID, CELL_REG_DESIRED_GATE_V, GateV))
 					== ERR_NO_ERROR)
