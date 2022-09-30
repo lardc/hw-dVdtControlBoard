@@ -16,11 +16,6 @@
 #include "Controller.h"
 #include "Setpoint.h"
 
-// Constants
-#define CELL_MAPPING_SOURCE_START		10
-#define CELL_MAPPING_DEST_START			3
-#define CELL_MAPPING_COUNT				1
-
 // Variables
 //
 static Int16U InternalFaultReason = FAULT_NONE, ErrorCodeEx = ERR_NO_ERROR;
@@ -55,20 +50,14 @@ Int16U CELLMUX_CellCount()
 }
 // ----------------------------------------
 
-Int16U CELLMUX_CellMask()
-{
-	return DataTable[REG_CELL_MASK];
-}
-// ----------------------------------------
-
 Boolean CELLMUX_SetCellPowerState(Boolean Enable)
 {
-	Int16U i;
-	
+	while(ThreadLocker);
 	ThreadLocker = TRUE;
 	
+	Int16U i;
 	for(i = 0; i < MAX_CELLS_COUNT; ++i)
-		if(((1 << i) & CELLMUX_CellMask()) != 0)
+		if((1 << i) & DataTable[REG_CELL_MASK])
 		{
 			ZbGPIO_SetActiveCell(i);
 			
@@ -92,15 +81,13 @@ Boolean CELLMUX_SetCellPowerState(Boolean Enable)
 #endif
 Boolean CELLMUX_ReadStates()
 {
-	Int16U i;
-	
 	if(ThreadLocker)
 		return TRUE;
-	
 	ThreadLocker = TRUE;
 	
+	Int16U i;
 	for(i = 0; i < MAX_CELLS_COUNT; ++i)
-		if(((1 << i) & CELLMUX_CellMask()) != 0)
+		if((1 << i) & DataTable[REG_CELL_MASK])
 		{
 			ZbGPIO_SetActiveCell(i);
 			
@@ -125,16 +112,16 @@ Boolean CELLMUX_ReadStates()
 
 Boolean CELLMUX_SetCellsState(Int16U CellVoltage, Int16U CellVRate)
 {
-	Int16U i, GateV;
-	
+	while(ThreadLocker);
 	ThreadLocker = TRUE;
 	
+	Int16U i;
 	for(i = 0; i < MAX_CELLS_COUNT; ++i)
-		if(((1 << i) & CELLMUX_CellMask()) != 0)
+		if((1 << i) & DataTable[REG_CELL_MASK])
 		{
 			ZbGPIO_SetActiveCell(i);
 			
-			Int16U CellVRateRange;
+			Int16U CellVRateRange, GateV;
 			DataTable[REG_DIAG_GATEV_CELL1 + i] = GateV = SP_Generate(i, CellVRate, &CellVRateRange);
 			
 			if((ErrorCodeEx = SCCIM_Write16(&DEVICE_UART_Interface, SCCI_CELL_NODE_ID, CELL_REG_DESIRED_GATE_V, GateV))
@@ -169,6 +156,7 @@ Int16U CELLMUX_GetFaultReason(pInt16U pErrorCodeEx)
 
 void CELLMUX_ReadCellRegister(Int16U CellIndex, Int16U Register, pInt16U Output)
 {
+	while(ThreadLocker);
 	ThreadLocker = TRUE;
 	
 	ZbGPIO_SetActiveCell(CellIndex - 1);
@@ -180,6 +168,7 @@ void CELLMUX_ReadCellRegister(Int16U CellIndex, Int16U Register, pInt16U Output)
 
 void CELLMUX_WriteCellRegister(Int16U CellIndex, Int16U Register, Int16U Value)
 {
+	while(ThreadLocker);
 	ThreadLocker = TRUE;
 	
 	ZbGPIO_SetActiveCell(CellIndex - 1);
@@ -191,6 +180,7 @@ void CELLMUX_WriteCellRegister(Int16U CellIndex, Int16U Register, Int16U Value)
 
 void CELLMUX_CallCellAction(Int16U CellIndex, Int16U ActionID)
 {
+	while(ThreadLocker);
 	ThreadLocker = TRUE;
 	
 	ZbGPIO_SetActiveCell(CellIndex - 1);

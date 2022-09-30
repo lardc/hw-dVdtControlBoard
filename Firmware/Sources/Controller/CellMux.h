@@ -17,7 +17,6 @@
 void CELLMUX_Init();
 // Return cell mask parameters
 Int16U CELLMUX_CellCount();
-Int16U CELLMUX_CellMask();
 // Begin preparation and test
 Boolean CELLMUX_SetCellPowerState(Boolean Enable);
 // Read state of cells

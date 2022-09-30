@@ -48,7 +48,7 @@ Int16U SP_Generate(Int16U CellIndex, Int16U VRate, pInt16U RateRange)
 	Int16U BaseDTVRateAddr = VRateStartReg + CellIndex * SETPOINT_ARRAY_SIZE * 2;
 	
 	// For incorrect cell
-	if(CELLMUX_CellMask() & (1 << CellIndex) == 0)
+	if((DataTable[REG_CELL_MASK] & (1 << CellIndex)) == 0)
 		return 0;
 	
 	// For voltage rate out of range
@@ -138,7 +138,7 @@ Int16U SP_GetRangeXMaxRate(Int16U RangeBaseRateRegister)
 	Int32U i, MaxRate = INT32U_MAX;
 
 	for(i = 0; i < MAX_CELLS_COUNT; ++i)
-		if(((1 << i) & CELLMUX_CellMask()) != 0)
+		if((1 << i) & DataTable[REG_CELL_MASK])
 			MaxRate = MIN(MaxRate, DataTable[RangeBaseRateRegister + i * SETPOINT_ARRAY_SIZE * 2]);
 
 	return MaxRate;

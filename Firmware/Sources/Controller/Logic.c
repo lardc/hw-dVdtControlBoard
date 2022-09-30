@@ -1,4 +1,4 @@
-﻿// -----------------------------------------
+﻿// ----------------------------------------
 // dVdt test routine
 // ----------------------------------------
 
@@ -60,7 +60,7 @@ void LOGIC_Update(Int64U TimerTicks)
 	    voltageOK = TRUE;
 
 	    for(i = 0; i < MAX_CELLS_COUNT; ++i)
-	        if (((1 << i) & CELLMUX_CellMask()) != 0)
+	        if((1 << i) & DataTable[REG_CELL_MASK])
 	            if(!(voltageOK &= DataTable[REG_VOLTAGE_OK_1 + i] ? TRUE : FALSE))
 	                targetCell = i;
 
