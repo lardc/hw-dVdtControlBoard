@@ -336,30 +336,24 @@ static Boolean CONTROL_DispatchAction(Int16U ActionID, pInt16U UserError)
 			break;
 
 		case ACT_DISABLE_POWER:
+			if(CONTROL_State == DS_Ready || CONTROL_State == DS_InProcess)
 			{
-				if(CONTROL_State == DS_Ready || CONTROL_State == DS_InProcess)
+				if(!CELLMUX_SetCellPowerState(FALSE))
+					CONTROL_SwitchToFaultEx();
+				else
 				{
-					if(!CELLMUX_SetCellPowerState(FALSE))
-						CONTROL_SwitchToFaultEx();
-					else
-					{
-						CONTROL_SetDeviceState(DS_None);
-						CONTROL_FillWPPartDefault();
-					}
-					
-					DELAY_US(MEANWELL_SWITCH_DELAY_US);
-					ZbGPIO_SwitchMeanwell(FALSE);
+					CONTROL_SetDeviceState(DS_None);
+					CONTROL_FillWPPartDefault();
 				}
+
+				DELAY_US(MEANWELL_SWITCH_DELAY_US);
+				ZbGPIO_SwitchMeanwell(FALSE);
 			}
 			break;
 
 		case ACT_APPLY_SETTINGS:
-			{
-				if(CONTROL_State == DS_Ready)
-				{
-					CONTROL_PrepareStart(UserError, DataTable[REG_VOLTAGE_RATE], DataTable[REG_TUNE_CUSTOM_SETTING], FALSE);
-				}
-			}
+			if(CONTROL_State == DS_Ready)
+				CONTROL_PrepareStart(UserError, DataTable[REG_VOLTAGE_RATE], DataTable[REG_TUNE_CUSTOM_SETTING], FALSE);
 			break;
 
 		case ACT_ENABLE_EXT_SYNC_START:

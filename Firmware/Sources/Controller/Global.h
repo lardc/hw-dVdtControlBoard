@@ -32,10 +32,11 @@
 #define MAX_CELLS_COUNT					6			// maximum cells 6
 #define SCCI_CELL_NODE_ID				0			// cells have NodeID 0
 #define	SCCI_TIMEOUT_TICKS_MS			500			// (in ms)
-#define TEST_APPLY_FIXED_MS				9000		// Apply parameters fixed delay (in ms)
-#define TEST_PREPARE_TIMEOUT_MS			5000		// (in ms)
-#define TEST_PAUSE_LONG_MS				1000		// Long pause in case of triggered device (in ms)
-#define TEST_PAUSE_SHORT_MS				500			// Short pause between measurements (in ms)
+
+// Задержки в процессе тестирования (в мс)
+#define TEST_PREPARE_TIMEOUT_MS			5000		// Таймаут настройки ячеек
+#define TEST_PAUSE_LONG_MS				1000		// Пауза при отпирании прибора
+#define TEST_PAUSE_SHORT_MS				500			// Пауза, если прибор остаётся запертым
 
 // Voltage rate ranges
 #define VRATE_RANGE_DEF					0			// Default rate range (500 - 2500 V/us)
@@ -45,10 +46,8 @@
 #define MEANWELL_SWITCH_DELAY_US		500000L		// (in us)
 #define RELAY_SWITCH_DELAY_US			5000		// (in us)
 #define RELAY_SWITCH_DELAY_L_US			25000		// (in us)
-#define INFO_UPDATE_DELAY_US			500			// (in us)
 
 #define PRE_PROBE_TIME_US				250			// (in us)
-#define PRE_PROBE_TIME_DIAG_US			250			// (in us)
 
 #define EXT_LED_SWITCH_ON_TIME			500		 	// (in ms)
 //--------------------------------------------------------

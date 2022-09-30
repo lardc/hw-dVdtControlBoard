@@ -1,4 +1,4 @@
-﻿// -----------------------------------------
+﻿// ----------------------------------------
 // dVdt test routine
 // ----------------------------------------
 
@@ -8,7 +8,6 @@
 // Include
 #include "stdinc.h"
 
-
 // Constants
 typedef enum __LogicState
 {
@@ -17,7 +16,6 @@ typedef enum __LogicState
 	LS_Pause		= 2,
     LS_Apply        = 3
 } LogicState;
-
 
 // Functions
 //
@@ -31,6 +29,6 @@ void LOGIC_Update(Int64U TimerTicks);
 void LOGIC_Reset();
 // Get fault information
 Int16U LOGIC_GetFaultReason(pInt16U pErrorCodeEx);
-
+Boolean LOGIC_TestSequence();
 
 #endif // __LOGIC_H
