@@ -14,53 +14,54 @@
 
 // Definitions
 #define SETPOINT_ARRAY_SIZE		7
+#define SETPOINT_RANGES			3
 
 // Forward functions
-Int16U SP_GetDistanceToRange(Int16U CellIndex, Int16U VRate, Int16U RangeBaseRateRegister, Boolean RangeIsActive);
-Int16U SP_FindActiveRange(Int16U CellIndex, Int16U VRate);
-Int16U SP_GetRangeXMaxRate(Int16U RangeBaseRateRegister);
+Boolean SP_Generate(Int16U CellIndex, Int16U VRate, pInt16U RateRange, pInt16U GateV);
 
 // Functions
-Int16U SP_Generate(Int16U CellIndex, Int16U VRate, pInt16U RateRange)
+Boolean SP_Generate(Int16U CellIndex, Int16U VRate, pInt16U RateRange, pInt16U GateV)
 {
-	Int16U i, GateVStartReg, VRateStartReg;
-	
-	*RateRange = SP_FindActiveRange(CellIndex, VRate);
-	switch(*RateRange)
+	Boolean Result = FALSE;
+	Int16U i, RangeStartRegs[SETPOINT_RANGES] = {REG_CELL1_LOW_GATEV1, REG_CELL1_MID_GATEV1, REG_CELL1_HIGH_GATEV1};
+
+	// Поиск активных диапазонов с подходящей скоростью нарастания
+	for(i = 0; i <= SETPOINT_RANGES; i++)
 	{
-		case VRATE_RANGE_LOWER1:
-			GateVStartReg = REG_CELL1_R1_GATEV1;
-			VRateStartReg = REG_CELL1_R1_VRATE1;
-			break;
-			
-		case VRATE_RANGE_LOWER2:
-			GateVStartReg = REG_CELL1_R2_GATEV1;
-			VRateStartReg = REG_CELL1_R2_VRATE1;
-			break;
-			
-		default:
-			GateVStartReg = REG_CELL1_GATEV1;
-			VRateStartReg = REG_CELL1_VRATE1;
-			break;
+		// Проверка при активном диапазоне
+		if(DataTable[i + REG_UNIT_USE_RANGE_LOW])
+		{
+			// Определение граничных скоростей нарастания в диапазоне
+			Int16U CellRateStartIndex = RangeStartRegs[i] + CellIndex * SETPOINT_ARRAY_SIZE * 2 + 1;
+			Int16U CellRateEndIndex = CellRateStartIndex + (SETPOINT_ARRAY_SIZE - 1) * 2;
+
+			if(DataTable[CellRateStartIndex] <= VRate && VRate <= DataTable[CellRateEndIndex])
+			{
+				Result = TRUE;
+				*RateRange = i;
+				break;
+			}
+		}
 	}
 	
-	Int16U BaseDTGateVAddr = GateVStartReg + CellIndex * SETPOINT_ARRAY_SIZE * 2;
-	Int16U BaseDTVRateAddr = VRateStartReg + CellIndex * SETPOINT_ARRAY_SIZE * 2;
+	// Если нет попадания в активный диапазон - ошибка
+	if(!Result)
+		return FALSE;
 	
-	// For incorrect cell
-	if((DataTable[REG_CELL_MASK] & (1 << CellIndex)) == 0)
-		return 0;
+	Int16U BaseDTGateVAddr = RangeStartRegs[i] + CellIndex * SETPOINT_ARRAY_SIZE * 2;
+	Int16U BaseDTVRateAddr = BaseDTGateVAddr + 1;
 	
-	// For voltage rate out of range
-	if(VRate < DataTable[BaseDTVRateAddr])
-		return DataTable[BaseDTGateVAddr];
-	
-	// Find direct matching
+	// Проверка на прямое совпадение
 	for(i = 0; i < SETPOINT_ARRAY_SIZE; i++)
+	{
 		if(DataTable[BaseDTVRateAddr + i * 2] == VRate)
-			return DataTable[BaseDTGateVAddr + i * 2];
+		{
+			*GateV = DataTable[BaseDTGateVAddr + i * 2];
+			return TRUE;
+		}
+	}
 	
-	// Interpolate and extrapolate
+	// Интерполяция значений
 	for(i = SETPOINT_ARRAY_SIZE - 1; i > 0; i--)
 	{
 		if(VRate > DataTable[BaseDTVRateAddr + (i - 1) * 2])
@@ -70,88 +71,45 @@ Int16U SP_Generate(Int16U CellIndex, Int16U VRate, pInt16U RateRange)
 			Int32U D = DataTable[BaseDTVRateAddr + i * 2] - DataTable[BaseDTVRateAddr + (i - 1) * 2];
 			Int32U K = VRate - DataTable[BaseDTVRateAddr + (i - 1) * 2];
 			
-			return Base + N * K / D;
+			*GateV = Base + N * K / D;
+			return TRUE;
 		}
 		else
 			continue;
 	}
 	
-	return 0;
+	return FALSE;
 }
 // ----------------------------------------
 
-Int16U SP_GetDistanceToRange(Int16U CellIndex, Int16U VRate, Int16U RangeBaseRateRegister, Boolean RangeIsActive)
+Boolean SP_GetSetpointArray(Int16U VRate, pInt16U RateRangeArray, pInt16U GateVArray)
 {
-	if(RangeIsActive)
+	DataTable[REG_DIAG_CALC_FAILED_CELL] = 0;
+
+	Int16U i, RateRange, GateV;
+	for(i = 0; i < MAX_CELLS_COUNT; i++)
 	{
-		Int16U RegRateStart = RangeBaseRateRegister + CellIndex * SETPOINT_ARRAY_SIZE * 2;
-		Int16U RegRateEnd = RegRateStart + (SETPOINT_ARRAY_SIZE - 1) * 2;
-
-		Int16U RateStart = DataTable[RegRateStart];
-		Int16U RateEnd = DataTable[RegRateEnd];
-
-		if((RateStart <= VRate) && (VRate <= RateEnd))
-			return 0;
-		else
+		if((1 << i) & DataTable[REG_CELL_MASK])
 		{
-			Int16U DistStart = ABS((Int32S)VRate - RateStart);
-			Int16U DistEnd = ABS((Int32S)VRate - RateEnd);
+			if(SP_Generate(i, VRate, &RateRange, &GateV))
+			{
+				if(RateRangeArray)
+					RateRangeArray[i] = RateRange;
 
-			return MIN(DistStart, DistEnd);
+				if(GateVArray)
+					GateVArray[i] = GateV;
+
+				DataTable[REG_DIAG_GATEV_CELL1 + i] = GateV;
+				DataTable[REG_DIAG_RANGE_CELL1 + i] = RateRange;
+			}
+			else
+			{
+				DataTable[REG_DIAG_CALC_FAILED_CELL] = i + 1;
+				return FALSE;
+			}
 		}
 	}
-	else
-		return INT16U_MAX;
-}
-// ----------------------------------------
 
-Int16U SP_FindActiveRange(Int16U CellIndex, Int16U VRate)
-{
-	Int16U DistR1, DistR2, DistDef;
-
-	// Поиск попадания в границы диапазона
-	if((DistR1 = SP_GetDistanceToRange(CellIndex, VRate, REG_CELL1_R1_VRATE1,
-			DataTable[REG_UNIT_USE_RANGE_LOW])) == 0)
-		return VRATE_RANGE_LOWER1;
-
-	if((DistR2 = SP_GetDistanceToRange(CellIndex, VRate, REG_CELL1_R2_VRATE1,
-			DataTable[REG_UNIT_USE_RANGE_MID])) == 0)
-		return VRATE_RANGE_LOWER2;
-
-	if((DistDef = SP_GetDistanceToRange(CellIndex, VRate, REG_CELL1_VRATE1, TRUE)) == 0)
-		return VRATE_RANGE_DEF;
-
-	// Если значение не попало в диапазон, то определяем самый ближний диапазон
-	Int16U ClosestDist = MIN(MIN(DistR1, DistR2), DistDef);
-	if(ClosestDist == DistR1)
-		return VRATE_RANGE_LOWER1;
-	else if(ClosestDist == DistR2)
-		return VRATE_RANGE_LOWER2;
-	else
-		return VRATE_RANGE_DEF;
-}
-// ----------------------------------------
-
-Int16U SP_GetRangeXMaxRate(Int16U RangeBaseRateRegister)
-{
-	Int32U i, MaxRate = INT32U_MAX;
-
-	for(i = 0; i < MAX_CELLS_COUNT; ++i)
-		if((1 << i) & DataTable[REG_CELL_MASK])
-			MaxRate = MIN(MaxRate, DataTable[RangeBaseRateRegister + i * SETPOINT_ARRAY_SIZE * 2]);
-
-	return MaxRate;
-}
-// ----------------------------------------
-
-Int16U SP_GetRange1MaxRate()
-{
-	return SP_GetRangeXMaxRate(REG_CELL1_R1_VRATE1 + ((SETPOINT_ARRAY_SIZE * 2)-2));
-}
-// ----------------------------------------
-
-Int16U SP_GetRange2MaxRate()
-{
-	return SP_GetRangeXMaxRate(REG_CELL1_R2_VRATE1 + ((SETPOINT_ARRAY_SIZE * 2)-2));
+	return TRUE;
 }
 // ----------------------------------------

@@ -26,6 +26,7 @@ volatile Int64U CONTROL_TimeCounter = 0;
 volatile DeviceState CONTROL_State = DS_None;
 static volatile Boolean CycleActive = FALSE;
 static Int16U cellVoltageCopy = 0, cellVRateCopy = 0;
+static Int16U CONTROL_RateRangeArray[MAX_CELLS_COUNT], CONTROL_GateVArray[MAX_CELLS_COUNT];
 //
 // Boot-loader flag
 #pragma DATA_SECTION(CONTROL_BootLoaderRequest, "bl_flag");
@@ -39,8 +40,7 @@ static Boolean CONTROL_DispatchAction(Int16U ActionID, pInt16U UserError);
 static void CONTROL_SwitchToFault(Int16U FaultReason, Int16U ErrorCodeEx);
 static void CONTROL_SwitchToFaultEx();
 static Boolean CONTROL_ApplySettings(Int16U VRate, Boolean PerfomRateCorrection);
-static void CONTROL_StartTest(Int16U VRate, Boolean PerfomRateCorrection, Boolean StartTest);
-void CONTROL_PrepareStart(pInt16U UserError, Int16U Rate_x10, Boolean ApplyRateCorrection, Boolean StartTest);
+static void CONTROL_PrepareStart(pInt16U UserError, Int16U Rate_x10, Boolean ApplyRateCorrection, Boolean StartTest);
 
 // Functions
 //
@@ -133,7 +133,7 @@ Boolean CONTROL_ApplySettings(Int16U VRate, Boolean ApplyRateCorrection)
 	
 	if(cellVoltage != cellVoltageCopy || cellVRate != cellVRateCopy)
 	{
-		if(CELLMUX_SetCellsState(cellVoltage, cellVRate))
+		if(CELLMUX_SetCellsState(cellVoltage, cellVRate, CONTROL_RateRangeArray, CONTROL_GateVArray))
 		{
 			cellVoltageCopy = cellVoltage;
 			cellVRateCopy = cellVRate;
@@ -255,51 +255,10 @@ static void CONTROL_SwitchToFaultEx()
 }
 // ----------------------------------------
 
-static void CONTROL_StartTest(Int16U VRate, Boolean ApplyRateCorrection, Boolean StartTest)
+static Boolean CONTROL_ValidateVoltage()
 {
-	CONTROL_HandleExtLed(StartTest);
-	ZbGPIO_SwitchOutRelay(StartTest);
-	ZbGPIO_SwitchLED2(StartTest);
-
-	DataTable[REG_TEST_RESULT] = OPRESULT_NONE;
-	
-	if(!CONTROL_ApplySettings(VRate, ApplyRateCorrection))
-	{
-		CONTROL_SwitchToFaultEx();
-		return;
-	}
-
-	CONTROL_SetDeviceState(DS_InProcess);
-
-	if (StartTest)
-	{
-		LOGIC_BeginTest(CONTROL_TimeCounter);
-	}
-	else
-	{
-		LOGIC_ApplyParameters(CONTROL_TimeCounter);
-	}
-
-	CycleActive = TRUE;
-}
-// ----------------------------------------
-
-static Boolean CONTROL_ValidateSettings(Int16U Rate_x10)
-{
-	Int16U Voltage = CONTROL_CorrectVoltage();
-	Int16U CellVoltage = Voltage / CELLMUX_CellCount();
-	Int16U CellRate = Rate_x10 / CELLMUX_CellCount();
-	
-	if(Rate_x10 < DataTable[REG_UNIT_RATE_MIN] || Rate_x10 > DataTable[REG_UNIT_RATE_MAX])
-		return FALSE;
-
-	if(CellRate < DataTable[REG_CELL_MIN_RATE] || CellRate > DataTable[REG_CELL_MAX_RATE])
-		return FALSE;
-	
-	if(CellVoltage < DataTable[REG_CELL_MIN_VOLTAGE] || CellVoltage > DataTable[REG_CELL_MAX_VOLTAGE])
-		return FALSE;
-	
-	return TRUE;
+	Int16U CellVoltage = CONTROL_CorrectVoltage() / CELLMUX_CellCount();
+	return (DataTable[REG_CELL_MIN_VOLTAGE] <= CellVoltage && CellVoltage <= DataTable[REG_CELL_MAX_VOLTAGE]);
 }
 // ----------------------------------------
 
@@ -405,11 +364,35 @@ void CONTROL_PrepareStart(pInt16U UserError, Int16U Rate_x10, Boolean ApplyRateC
 {
 	if(CONTROL_State == DS_Ready)
 	{
-		if(CONTROL_ValidateSettings(Rate_x10))
+		// Проверка уставки по напряжению и скорости нарастания
+		if(CONTROL_ValidateVoltage() && SP_GetSetpointArray(Rate_x10, CONTROL_RateRangeArray, CONTROL_GateVArray))
 		{
-			CONTROL_FillWPPartDefault();
-			CONTROL_HandleFanLogic(StartTest);
-			CONTROL_StartTest(Rate_x10, ApplyRateCorrection, StartTest);
+			// Применение настроеек к ячейкам
+			if(CONTROL_ApplySettings(Rate_x10, ApplyRateCorrection))
+			{
+				CONTROL_FillWPPartDefault();
+
+				CONTROL_HandleFanLogic(StartTest);
+				CONTROL_HandleExtLed(StartTest);
+				ZbGPIO_SwitchLED2(StartTest);
+
+				// Реле включается только при явном запросе
+				if(StartTest)
+					ZbGPIO_SwitchOutRelay(TRUE);
+
+				if(StartTest)
+					LOGIC_BeginTest(CONTROL_TimeCounter);
+				else
+					LOGIC_ApplyParameters(CONTROL_TimeCounter);
+
+				CONTROL_SetDeviceState(DS_InProcess);
+				CycleActive = TRUE;
+			}
+			else
+			{
+				CONTROL_SwitchToFaultEx();
+				return;
+			}
 		}
 		else
 			*UserError = ERR_OUT_OF_RANGE;

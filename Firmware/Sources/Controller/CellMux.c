@@ -110,7 +110,7 @@ Boolean CELLMUX_ReadStates()
 }
 // ----------------------------------------
 
-Boolean CELLMUX_SetCellsState(Int16U CellVoltage, Int16U CellVRate)
+Boolean CELLMUX_SetCellsState(Int16U CellVoltage, Int16U CellVRate, pInt16U RateRangeArray, pInt16U GateVArray)
 {
 	while(ThreadLocker);
 	ThreadLocker = TRUE;
@@ -121,15 +121,12 @@ Boolean CELLMUX_SetCellsState(Int16U CellVoltage, Int16U CellVRate)
 		{
 			ZbGPIO_SetActiveCell(i);
 			
-			Int16U CellVRateRange, GateV;
-			DataTable[REG_DIAG_GATEV_CELL1 + i] = GateV = SP_Generate(i, CellVRate, &CellVRateRange);
-			
-			if((ErrorCodeEx = SCCIM_Write16(&DEVICE_UART_Interface, SCCI_CELL_NODE_ID, CELL_REG_DESIRED_GATE_V, GateV))
+			if((ErrorCodeEx = SCCIM_Write16(&DEVICE_UART_Interface, SCCI_CELL_NODE_ID, CELL_REG_DESIRED_GATE_V, GateVArray[i]))
 					== ERR_NO_ERROR)
 				if((ErrorCodeEx = SCCIM_Write16(&DEVICE_UART_Interface, SCCI_CELL_NODE_ID, CELL_REG_DESIRED_VOLTAGE,
 						CellVoltage)) == ERR_NO_ERROR)
 					if((ErrorCodeEx = SCCIM_Write16(&DEVICE_UART_Interface, SCCI_CELL_NODE_ID, CELL_REG_RATE_RANGE,
-							CellVRateRange)) == ERR_NO_ERROR)
+							RateRangeArray[i])) == ERR_NO_ERROR)
 						if((ErrorCodeEx = SCCIM_Call(&DEVICE_UART_Interface, SCCI_CELL_NODE_ID,
 								CELL_ACT_APPLY_PARAMS)) == ERR_NO_ERROR)
 							continue;
