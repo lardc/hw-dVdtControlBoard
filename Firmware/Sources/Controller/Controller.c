@@ -61,7 +61,9 @@ void CONTROL_Init(Boolean BadClockDetected)
 	// Init data table
 	DT_Init(EPROMService, BadClockDetected);
 	DT_SaveFirmwareInfo(DEVICE_CAN_ADDRESS, 0);
+
 	// Fill state variables with default values
+	CONTROL_SetDeviceState(DS_None);
 	CONTROL_FillWPPartDefault();
 	
 	// Device profile initialization
@@ -200,7 +202,7 @@ void CONTROL_ExtSyncFinish()
 
 	CONTROL_NotifyEndTest(PinState, FAULT_NONE, WARNING_NONE);
 }
-
+// ----------------------------------------
 
 void CONTROL_NotifyEndTest(Boolean Result, Int16U FaultReason, Int16U Warning)
 {
@@ -235,14 +237,11 @@ static void CONTROL_SetDeviceState(DeviceState NewState)
 
 static void CONTROL_FillWPPartDefault()
 {
-	Int16U i;
-	
-	// Set states
-	DataTable[REG_DEV_STATE] = DS_None;
 	DataTable[REG_FAULT_REASON] = FAULT_NONE;
 	DataTable[REG_WARNING] = WARNING_NONE;
 	DataTable[REG_TEST_RESULT] = OPRESULT_NONE;
 	
+	Int16U i;
 	for(i = REG_VOLTAGE_OK; i <= REG_CELL_STATE_6; ++i)
 		DataTable[i] = 0;
 }
@@ -321,22 +320,21 @@ static Boolean CONTROL_DispatchAction(Int16U ActionID, pInt16U UserError)
 	switch(ActionID)
 	{
 		case ACT_ENABLE_POWER:
+			if(CONTROL_State == DS_None)
 			{
-				if(CONTROL_State == DS_None)
-				{
-					cellVoltageCopy = cellVRateCopy = 0;
-					ZbGPIO_SwitchMeanwell(TRUE);
-					DELAY_US(MEANWELL_SWITCH_DELAY_US);
-					
-					if(!CELLMUX_SetCellPowerState(TRUE))
-						CONTROL_SwitchToFaultEx();
-					else
-						CONTROL_SetDeviceState(DS_Ready);
-				}
+				cellVoltageCopy = cellVRateCopy = 0;
+				ZbGPIO_SwitchMeanwell(TRUE);
+				DELAY_US(MEANWELL_SWITCH_DELAY_US);
+
+				if(!CELLMUX_SetCellPowerState(TRUE))
+					CONTROL_SwitchToFaultEx();
 				else
-					*UserError = ERR_DEVICE_NOT_READY;
+					CONTROL_SetDeviceState(DS_Ready);
 			}
+			else
+				*UserError = ERR_DEVICE_NOT_READY;
 			break;
+
 		case ACT_DISABLE_POWER:
 			{
 				if(CONTROL_State == DS_Ready || CONTROL_State == DS_InProcess)
@@ -354,6 +352,7 @@ static Boolean CONTROL_DispatchAction(Int16U ActionID, pInt16U UserError)
 				}
 			}
 			break;
+
 		case ACT_APPLY_SETTINGS:
 			{
 				if(CONTROL_State == DS_Ready)
@@ -364,18 +363,12 @@ static Boolean CONTROL_DispatchAction(Int16U ActionID, pInt16U UserError)
 			break;
 
 		case ACT_ENABLE_EXT_SYNC_START:
-			{
-				if(CONTROL_State == DS_Ready)
-				{
-					CONTROL_EnableExternalSync(TRUE);
-				}
-			}
+			if(CONTROL_State == DS_Ready)
+				CONTROL_EnableExternalSync(TRUE);
 			break;
 
 		case ACT_DISABLE_EXT_SYNC_START:
-			{
-				CONTROL_EnableExternalSync(FALSE);
-			}
+			CONTROL_EnableExternalSync(FALSE);
 			break;
 
 		case ACT_START_TEST_CUSTOM:
@@ -403,17 +396,17 @@ static Boolean CONTROL_DispatchAction(Int16U ActionID, pInt16U UserError)
 			break;
 
 		case ACT_CLR_FAULT:
+			if(CONTROL_State == DS_Fault)
 			{
-				if(CONTROL_State == DS_Fault)
-				{
-					CONTROL_SetDeviceState(DS_None);
-					CONTROL_FillWPPartDefault();
-				}
+				CONTROL_SetDeviceState(DS_None);
+				CONTROL_FillWPPartDefault();
 			}
 			break;
+
 		case ACT_CLR_WARNING:
 			DataTable[REG_WARNING] = WARNING_NONE;
 			break;
+
 		case ACT_STOP:
 			if(CONTROL_State == DS_InProcess)
 			{
@@ -422,6 +415,7 @@ static Boolean CONTROL_DispatchAction(Int16U ActionID, pInt16U UserError)
 				CONTROL_SetDeviceState(DS_None);
 			}
 			break;
+
 		default:
 			return DIAG_DispatchCommand(ActionID);
 	}
@@ -436,6 +430,7 @@ void CONTROL_PrepareStart(pInt16U UserError, Int16U Rate_x10, Boolean ApplyRateC
 	{
 		if(CONTROL_ValidateSettings(Rate_x10))
 		{
+			CONTROL_FillWPPartDefault();
 			CONTROL_HandleFanLogic(StartTest);
 			CONTROL_StartTest(Rate_x10, ApplyRateCorrection, StartTest);
 		}

@@ -30,9 +30,9 @@ const TableItemConstraint NVConstraint[DATA_TABLE_NV_SIZE] =
 										{FAN_TIME_MIN, FAN_TIME_MAX, FAN_TIME_DEF},								// 14
 										{UNIT_RATE_MIN, UNIT_RATE_MAX, UNIT_RATE_MIN_DEF},						// 15
 										{UNIT_RATE_MIN, UNIT_RATE_MAX, UNIT_RATE_MAX_DEF},						// 16
-										{NO, YES, NO},															// 17
-										{NO, YES, NO},															// 18
-										{0, 0, 0},																// 19
+										{NO, YES, YES},															// 17
+										{NO, YES, YES},															// 18
+										{NO, YES, YES},															// 19
 										{0, 0, 0},																// 20
 										{0, 0, 0},																// 21
 										{0, 0, 0},																// 22

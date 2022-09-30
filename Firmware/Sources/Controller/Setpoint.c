@@ -112,11 +112,11 @@ Int16U SP_FindActiveRange(Int16U CellIndex, Int16U VRate)
 
 	// Поиск попадания в границы диапазона
 	if((DataTable[REG_DIAG_DIST_R1] = DistR1 = SP_GetDistanceToRange(CellIndex, VRate, REG_CELL1_R1_VRATE1,
-			DataTable[REG_UNIT_USE_RANGE1])) == 0)
+			DataTable[REG_UNIT_USE_RANGE_LOW])) == 0)
 		return VRATE_RANGE_LOWER1;
 
 	if((DataTable[REG_DIAG_DIST_R2] = DistR2 = SP_GetDistanceToRange(CellIndex, VRate, REG_CELL1_R2_VRATE1,
-			DataTable[REG_UNIT_USE_RANGE2])) == 0)
+			DataTable[REG_UNIT_USE_RANGE_MID])) == 0)
 		return VRATE_RANGE_LOWER2;
 
 	if((DataTable[REG_DIAG_DIST_DEF] = DistDef = SP_GetDistanceToRange(CellIndex, VRate, REG_CELL1_VRATE1, TRUE)) == 0)
