@@ -71,13 +71,5 @@
 #define PIN_CELL_IND_1		13
 #define PIN_CELL_IND_2		26
 #define PIN_CELL_IND_3		32
-//
-#define PIN_EMPTY_1			11
-#define PIN_EMPTY_2			19
-#define PIN_EMPTY_3			20
-#define PIN_EMPTY_4			21
-#define PIN_EMPTY_5			24
-#define PIN_EMPTY_6			27
-#define PIN_EMPTY_7			33
 
 #endif // __BOARD_CONFIG_H

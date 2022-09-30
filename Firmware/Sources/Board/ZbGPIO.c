@@ -4,29 +4,15 @@
 
 // Header
 #include "ZbGPIO.h"
-//
+
+// Include
 #include "SysConfig.h"
 #include "Global.h"
-
-
-// Constants
-//
-static const Int16U EmptyPins[] = { PIN_EMPTY_1, PIN_EMPTY_2, PIN_EMPTY_3, PIN_EMPTY_4, PIN_EMPTY_5, PIN_EMPTY_6, PIN_EMPTY_7 };
-
 
 // Functions
 //
 void ZbGPIO_Init()
 {
-    Int16U i;
-
-    // Hold down empty DSC pins
-    for(i = 0; i < sizeof(EmptyPins) / sizeof(Int16U); ++i)
-    {
-        ZwGPIO_WritePin(EmptyPins[i], FALSE);
-        ZwGPIO_PinToOutput(EmptyPins[i]);
-    }
-
     // Configure input pin
     ZwGPIO_PinToInput(PIN_SYNC_IN, FALSE, GPIO_NSAMPLE);
     ZwGPIO_PinToInput(PIN_DETECTOR, FALSE, GPIO_NSAMPLE);
@@ -152,6 +138,3 @@ void ZbGPIO_SwitchStartPulse(Boolean Set)
     ZwGPIO_WritePin(PIN_START_PULSE, Set);
 }
 // ----------------------------------------
-
-
-// No more.
