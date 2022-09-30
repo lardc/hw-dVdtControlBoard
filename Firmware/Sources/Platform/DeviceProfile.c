@@ -40,7 +40,6 @@ static BCCI_IOConfig CAN_IOConfig;
 static xCCI_ServiceConfig X_ServiceConfig;
 static xCCI_FUNC_CallbackAction ControllerDispatchFunction;
 static EPStates RS232_EPState, CAN_EPState;
-static Boolean UnlockedForNVWrite = FALSE;
 //
 static volatile Boolean *MaskChangesFlag;
 
@@ -100,7 +99,7 @@ void DEVPROFILE_Init(xCCI_FUNC_CallbackAction SpecializedDispatch, volatile Bool
 
 void DEVPROFILE_InitEPService(pInt16U Indexes, pInt16U Sizes, pInt16U *Counters, pInt16U *Datas)
 {
-	Int16U i;
+	Int16S i;
 	
 	for(i = 0; i < EP_COUNT; ++i)
 	{
@@ -135,7 +134,7 @@ void DEVPROFILE_ProcessRequests()
 #endif
 void DEVPROFILE_ResetEPReadState()
 {
-	Int16U i;
+	Int16S i;
 	
 	for(i = 0; i < EP_COUNT; ++i)
 	{
@@ -155,7 +154,7 @@ void DEVPROFILE_ResetControlSection()
 
 void DEVPROFILE_ResetScopes(Int16U ResetPosition, Int16U ScopeMask)
 {
-	Int16U i;
+	Int16S i;
 	
 	for(i = 0; i < EP_COUNT; ++i)
 	{
@@ -231,9 +230,6 @@ static void DEVPROFILE_FillWRPartDefault()
 
 static Boolean DEVPROFILE_Validate16(Int16U Address, Int16U Data)
 {
-	if(ENABLE_LOCKING && !UnlockedForNVWrite && (Address < DATA_TABLE_WR_START))
-		return FALSE;
-	
 	if(Address < DATA_TABLE_WR_START)
 	{
 		if(Data < NVConstraint[Address - DATA_TABLE_NV_START].Min
@@ -253,9 +249,6 @@ static Boolean DEVPROFILE_Validate16(Int16U Address, Int16U Data)
 
 static Boolean DEVPROFILE_Validate32(Int16U Address, Int32U Data)
 {
-	if(ENABLE_LOCKING && !UnlockedForNVWrite && (Address < DATA_TABLE_WR_START))
-		return FALSE;
-	
 	return FALSE;
 }
 // ----------------------------------------
@@ -265,48 +258,21 @@ static Boolean DEVPROFILE_DispatchAction(Int16U ActionID, pInt16U UserError)
 	switch(ActionID)
 	{
 		case ACT_SAVE_TO_ROM:
-			{
-				if(ENABLE_LOCKING && !UnlockedForNVWrite)
-					*UserError = ERR_WRONG_PWD;
-				else
-					DT_SaveNVPartToEPROM();
-			}
+			DT_SaveNVPartToEPROM();
 			break;
+
 		case ACT_RESTORE_FROM_ROM:
-			{
-				if(ENABLE_LOCKING && !UnlockedForNVWrite)
-					*UserError = ERR_WRONG_PWD;
-				else
-					DT_RestoreNVPartFromEPROM();
-			}
+			DT_RestoreNVPartFromEPROM();
 			break;
+
 		case ACT_RESET_TO_DEFAULT:
-			{
-				if(ENABLE_LOCKING && !UnlockedForNVWrite)
-					*UserError = ERR_WRONG_PWD;
-				else
-					DT_ResetNVPart(&DEVPROFILE_FillNVPartDefault);
-			}
+			DT_ResetNVPart(&DEVPROFILE_FillNVPartDefault);
 			break;
-		case ACT_LOCK_NV_AREA:
-			UnlockedForNVWrite = FALSE;
-			break;
-		case ACT_UNLOCK_NV_AREA:
-			if(DataTable[REG_PWD_1] == UNLOCK_PWD_1 && DataTable[REG_PWD_2] == UNLOCK_PWD_2
-					&& DataTable[REG_PWD_3] == UNLOCK_PWD_3 && DataTable[REG_PWD_4] == UNLOCK_PWD_4)
-			{
-				UnlockedForNVWrite = TRUE;
-				DataTable[REG_PWD_1] = 0;
-				DataTable[REG_PWD_2] = 0;
-				DataTable[REG_PWD_3] = 0;
-				DataTable[REG_PWD_4] = 0;
-			}
-			else
-				*UserError = ERR_WRONG_PWD;
-			break;
+
 		case ACT_BOOT_LOADER_REQUEST:
 			CONTROL_BootLoaderRequest = BOOT_LOADER_REQUEST;
 			break;
+
 		default:
 			return (ControllerDispatchFunction) ? ControllerDispatchFunction(ActionID, UserError) : FALSE;
 	}

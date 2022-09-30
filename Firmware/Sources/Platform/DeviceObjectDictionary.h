@@ -39,8 +39,6 @@
 #define ACT_SAVE_TO_ROM				200	// Save parameters to EEPROM module
 #define ACT_RESTORE_FROM_ROM		201	// Restore parameters from EEPROM module
 #define ACT_RESET_TO_DEFAULT		202	// Reset parameters to default values (only in controller memory)
-#define ACT_LOCK_NV_AREA			203	// Lock modifications of parameters area
-#define ACT_UNLOCK_NV_AREA			204	// Unlock modifications of parameters area (password-protected)
 //
 #define ACT_BOOT_LOADER_REQUEST		320	// Request reboot to bootloader
 //
@@ -98,12 +96,7 @@
 #define REG_DESIRED_VOLTAGE			128	// Desired plate voltage (in V)
 #define REG_VOLTAGE_RATE			129	// dV/dt rate (in V/us x10)
 #define REG_TUNE_CUSTOM_SETTING		130	// Apply voltage rate correction for custom setting
-// 131 - 179
-#define REG_PWD_1					180	// Unlock password location 1
-#define REG_PWD_2					181	// Unlock password location 2
-#define REG_PWD_3					182	// Unlock password location 3
-#define REG_PWD_4					183	// Unlock password location 4
-// 184
+// 131 - 184
 #define REG_DIAG_TEST_CELL_ID		185
 #define REG_DIAG_TEST_PARAM_1		186
 #define REG_DIAG_TEST_PARAM_2		187
@@ -155,10 +148,6 @@
 #define REG_DIAG_GATEV_CELL5		234	// Cell 5 gate voltage
 #define REG_DIAG_GATEV_CELL6		235	// Cell 6 gate voltage
 //
-#define REG_DIAG_DIST_R1			240	// Diagnostic distance info for range R1
-#define REG_DIAG_DIST_R2			241	// Diagnostic distance info for range R2
-#define REG_DIAG_DIST_DEF			242	// Diagnostic distance info for default range
-//
 // ----------------------------------------
 //
 #define REG_FWINFO_SLAVE_NID		256	// Device CAN slave node ID
@@ -172,26 +161,18 @@
 #define CELL_ACT_ENABLE_POWER		1	// Enable flyback converter
 #define CELL_ACT_DISABLE_POWER		2	// Disable flyback converter
 #define CELL_ACT_APPLY_PARAMS		10	// Apply params
-#define CELL_ACT_DIAG_SET_PWM_FB	110	// Set PWM duty on Flyback
-#define CELL_ACT_DIAG_SET_PWM_BRK	111	// Set PWM duty on Brake
-#define CELL_ACT_DIAG_SET_GATE_V	112	// Set gate control voltage
-#define CELL_ACT_DIAG_UPD_PWM_FREQ	113	// Set alternative PWM frequency
 
 // CELL REGISTERS
 //
 #define CELL_REG_DESIRED_VOLTAGE	1	// Desired cell voltage
 #define CELL_REG_DESIRED_GATE_V		2 	// Desired gate voltage
-#define	CELL_REG_VOLTAGE_FINE_N		3	// Voltage coefficient N (D = 1024)
+//
 #define	CELL_REG_RATE_RANGE			4	// Rate range selector
 //
 #define CELL_REG_DEV_STATE			10	// Device state
 //
 #define CELL_REG_VOLTAGE_OK			14	// Charged flag
 #define CELL_REG_ACTUAL_VOLTAGE		15	// Actual capacitor level
-//
-#define CELL_REG_DIAG_PWM_FB		20	// Flyback PWM duty (diagnostics)
-#define CELL_REG_DIAG_PWM_BRK		21	// Brake PWM duty (diagnostics)
-#define CELL_REG_DIAG_PWM_FREQ		22	// Update PWM frequency (diagnostics)
 //
 // ----------------------------------------
 
@@ -224,13 +205,11 @@
 // WARNING CODES
 //
 #define WARNING_NONE				0
-//
 #define WARNING_WATCHDOG_RESET		1001	// System has been reseted by WD
 
 // DISABLE CODES
 //
 #define DISABLE_NONE				0
-//
 #define DISABLE_BAD_CLOCK			1001	// Problem with main oscillator
 
 // USER ERROR CODES
@@ -241,6 +220,5 @@
 #define ERR_DEVICE_NOT_READY		3	// Device isn't ready to switch state
 #define ERR_WRONG_PWD				4	// Wrong password - unlock failed
 #define ERR_OUT_OF_RANGE			5	// Configured value is out of range
-
 
 #endif // __DEV_OBJ_DIC_H

@@ -27,10 +27,6 @@ volatile DeviceState CONTROL_State = DS_None;
 static volatile Boolean CycleActive = FALSE;
 static Int16U cellVoltageCopy = 0, cellVRateCopy = 0;
 //
-#pragma DATA_SECTION(CONTROL_Values_1, "data_mem");
-Int16U CONTROL_Values_1[VALUES_x_SIZE];
-volatile Int16U CONTROL_Values_1_Counter = 0;
-//
 // Boot-loader flag
 #pragma DATA_SECTION(CONTROL_BootLoaderRequest, "bl_flag");
 volatile Int16U CONTROL_BootLoaderRequest = 0;
@@ -50,11 +46,6 @@ void CONTROL_PrepareStart(pInt16U UserError, Int16U Rate_x10, Boolean ApplyRateC
 //
 void CONTROL_Init(Boolean BadClockDetected)
 {
-	// Variables for endpoint configuration
-	Int16U EPIndexes[EP_COUNT] = {EP16_Data_V};
-	Int16U EPSized[EP_COUNT] = {VALUES_x_SIZE};
-	pInt16U EPCounters[EP_COUNT] = {(pInt16U)&CONTROL_Values_1_Counter};
-	pInt16U EPDatas[EP_COUNT] = {CONTROL_Values_1};
 	// Data-table EPROM service configuration
 	EPROMServiceConfig EPROMService = {&ZbMemory_WriteValuesEPROM, &ZbMemory_ReadValuesEPROM};
 	
@@ -68,7 +59,6 @@ void CONTROL_Init(Boolean BadClockDetected)
 	
 	// Device profile initialization
 	DEVPROFILE_Init(&CONTROL_DispatchAction, &CycleActive);
-	DEVPROFILE_InitEPService(EPIndexes, EPSized, EPCounters, EPDatas);
 	// Reset control values
 	DEVPROFILE_ResetControlSection();
 	
