@@ -25,10 +25,7 @@
 //
 #define ACT_STOP					109	// Stop test
 //
-#define ACT_DIAG_SWITCH_ON			110
-#define ACT_DIAG_SWITCH_OFF			111
-#define ACT_DIAG_MW_ON				112
-#define ACT_DIAG_MW_OFF				113
+#define ACT_DIAG_PULSE_FAN			113
 #define ACT_DIAG_PULSE_START		114
 #define ACT_DIAG_PULSE_SWITCH		115
 #define ACT_DIAG_PULSE_LED			116

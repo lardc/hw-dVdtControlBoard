@@ -43,11 +43,10 @@
 #define VRATE_RANGE_LOWER1				1			// Lower range 1
 #define VRATE_RANGE_LOWER2				2			// Lower range 2
 
-#define MEANWELL_SWITCH_DELAY_US		500000L		// (in us)
 #define RELAY_SWITCH_DELAY_US			5000		// (in us)
 #define RELAY_SWITCH_DELAY_L_US			25000		// (in us)
 
-#define PRE_PROBE_TIME_US				250			// (in us)
+#define PRE_PROBE_TIME_US				100			// (in us)
 
 #define EXT_LED_SWITCH_ON_TIME			500		 	// (in ms)
 //--------------------------------------------------------

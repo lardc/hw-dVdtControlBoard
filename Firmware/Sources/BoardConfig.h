@@ -65,7 +65,6 @@
 #define PIN_OPT_V3V4		5
 #define PIN_OPT_V5V6		4
 #define PIN_OPT_V7V8		3
-#define PIN_MEANWELL_EN		7
 #define PIN_DETECTOR		16
 #define PIN_RESULT_OUT		18
 #define PIN_CELL_IND_1		13

@@ -125,7 +125,7 @@ Boolean LOGIC_TestSequence()
 
 	DINT;
 	ZbGPIO_SwitchStartPulse(TRUE);
-	ZbGPIO_SwitchResultOut(TRUE);
+	ZbGPIO_SwitchResultOut(TRUE);			// RESULT_OUT is used for sync output
 
 	DELAY_US(Delay);
 

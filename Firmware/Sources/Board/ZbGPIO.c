@@ -31,7 +31,6 @@ void ZbGPIO_Init()
     ZwGPIO_WritePin(PIN_CELL_IND_1, FALSE);
     ZwGPIO_WritePin(PIN_CELL_IND_2, FALSE);
     ZwGPIO_WritePin(PIN_CELL_IND_3, FALSE);
-    ZwGPIO_WritePin(PIN_MEANWELL_EN, FALSE);
     // Configure pins
     ZwGPIO_PinToOutput(PIN_LED_1);
     ZwGPIO_PinToOutput(PIN_LED_2);
@@ -46,7 +45,6 @@ void ZbGPIO_Init()
     ZwGPIO_PinToOutput(PIN_CELL_IND_1);
     ZwGPIO_PinToOutput(PIN_CELL_IND_2);
     ZwGPIO_PinToOutput(PIN_CELL_IND_3);
-    ZwGPIO_PinToOutput(PIN_MEANWELL_EN);
 }
 // ----------------------------------------
 
@@ -92,12 +90,6 @@ void ZbGPIO_ToggleLED2()
 }
 // ----------------------------------------
 
-void ZbGPIO_SwitchMeanwell(Boolean Enable)
-{
-    ZwGPIO_WritePin(PIN_MEANWELL_EN, Enable);
-}
-// ----------------------------------------
-
 void ZbGPIO_SwitchResultOut(Boolean Set)
 {
     ZwGPIO_WritePin(PIN_RESULT_OUT, Set);
@@ -107,13 +99,6 @@ void ZbGPIO_SwitchResultOut(Boolean Set)
 void ZbGPIO_SwitchSyncEn(Boolean Enable)
 {
     ZwGPIO_WritePin(PIN_SYNC_EN, !Enable);
-}
-// ----------------------------------------
-
-void ZbGPIO_RelayLine(Boolean Out)
-{
-    ZwGPIO_WritePin(PIN_OPT_V3V4, Out);
-    ZwGPIO_WritePin(PIN_OPT_V5V6, Out);
 }
 // ----------------------------------------
 

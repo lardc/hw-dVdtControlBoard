@@ -249,9 +249,7 @@ static void CONTROL_FillWPPartDefault()
 
 static void CONTROL_SwitchToFault(Int16U FaultReason, Int16U ErrorCodeEx)
 {
-	ZbGPIO_SwitchMeanwell(FALSE);
 	LOGIC_Reset();
-	
 	CONTROL_SetDeviceState(DS_Fault);
 	DataTable[REG_FAULT_REASON] = FaultReason;
 	DataTable[REG_FAULT_REASON_EX] = ErrorCodeEx;
@@ -323,15 +321,13 @@ static Boolean CONTROL_DispatchAction(Int16U ActionID, pInt16U UserError)
 			if(CONTROL_State == DS_None)
 			{
 				cellVoltageCopy = cellVRateCopy = 0;
-				ZbGPIO_SwitchMeanwell(TRUE);
-				DELAY_US(MEANWELL_SWITCH_DELAY_US);
 
 				if(!CELLMUX_SetCellPowerState(TRUE))
 					CONTROL_SwitchToFaultEx();
 				else
 					CONTROL_SetDeviceState(DS_Ready);
 			}
-			else
+			else if(CONTROL_State != DS_Ready)
 				*UserError = ERR_DEVICE_NOT_READY;
 			break;
 
@@ -345,9 +341,6 @@ static Boolean CONTROL_DispatchAction(Int16U ActionID, pInt16U UserError)
 					CONTROL_SetDeviceState(DS_None);
 					CONTROL_FillWPPartDefault();
 				}
-
-				DELAY_US(MEANWELL_SWITCH_DELAY_US);
-				ZbGPIO_SwitchMeanwell(FALSE);
 			}
 			break;
 

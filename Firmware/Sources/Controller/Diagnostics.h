@@ -1,4 +1,4 @@
-﻿// -----------------------------------------
+﻿// ----------------------------------------
 // dVdt diagnostics routines
 // ----------------------------------------
 
@@ -8,10 +8,7 @@
 // Include
 #include "stdinc.h"
 
-
 // Functions
-//
 Boolean DIAG_DispatchCommand(Int16U Command);
-
 
 #endif // __DIAGNOSTICS_H
