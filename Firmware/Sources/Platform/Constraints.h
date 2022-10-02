@@ -47,40 +47,13 @@ typedef struct __TableItemConstraint
 #define GATEV_CELL_DEF				3000
 
 // in %
-#define RATE_CORR_MIN				0
-#define RATE_CORR_MAX				50
-#define RATE_CORR_DEF				0
 #define FAN_DUTY_MAX				100
 #define FAN_DUTY_DEF				20
-
-// Cell rate ranges (in V/us x10)
-#define CELL_RATE_MIN				20
-#define CELL_RATE_MAX				10000
-#define CELL_RATE_DEF_MAX			5500
-#define CELL_RATE_DEF_MIN			1000
-
-// Unit rates (in V/us x10)
-#define UNIT_RATE_MIN				10
-#define UNIT_RATE_MAX				50000
-#define UNIT_RATE_MIN_DEF			5000
-#define UNIT_RATE_MAX_DEF			25000
-#define UNIT_RATE_R1_DEF			500
-#define UNIT_RATE_R2_DEF			5000
 
 // Single cell number
 #define CELL_NUM_MIN				1
 #define CELL_NUM_MAX				6
 #define CELL_NUM_DEF				1
-
-// Single cell voltage limit
-#define SINGLE_CELL_VLIM_MIN		20
-#define SINGLE_CELL_VLIM_MAX		500
-#define SINGLE_CELL_VLIM_DEF		300
-
-//Duo cell voltage limit
-#define DUO_CELL_VLIM_MIN           300
-#define DUO_CELL_VLIM_MAX           600
-#define DUO_CELL_VLIM_DEF           300
 
 // Cell vaoltage ranges
 #define CELL_V_MIN					20		// in V

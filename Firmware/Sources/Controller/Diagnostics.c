@@ -66,12 +66,7 @@ Boolean DIAG_DispatchCommand(Int16U Command)
 		    break;
 
 		case ACT_DIAG_GENERATE_SETP:
-			{
-				Int16U i, RatePerCell = DataTable[REG_VOLTAGE_RATE] / CELLMUX_CellCount(), dummy;
-				for (i = 0; i < MAX_CELLS_COUNT; i++)
-					if (DataTable[REG_CELL_MASK] & (1 << i))
-						DataTable[REG_DIAG_GATEV_CELL1 + i] = SP_Generate(i, RatePerCell, &dummy);
-			}
+			SP_GetSetpointArray(DataTable[REG_VOLTAGE_RATE] / CELLMUX_CellCount(), NULL, NULL);
 			break;
 
 		default:

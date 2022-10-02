@@ -24,12 +24,12 @@ const TableItemConstraint NVConstraint[DATA_TABLE_NV_SIZE] =
 										{0, 0x3F, 0x3F},														// 8
 										{CELL_V_MIN, CELL_V_MAX, CELL_V_DEF_MIN},								// 9
 										{CELL_V_MIN, CELL_V_MAX, CELL_V_DEF_MAX},								// 10
-										{CELL_RATE_MIN, CELL_RATE_MAX, CELL_RATE_DEF_MIN},						// 11
-										{CELL_RATE_MIN, CELL_RATE_MAX, CELL_RATE_DEF_MAX},						// 12
+										{0, 0, 0},																// 11
+										{0, 0, 0},																// 12
 										{FAN_TIME_MIN, FAN_TIME_MAX, FAN_TIME_DEF},								// 13
 										{FAN_TIME_MIN, FAN_TIME_MAX, FAN_TIME_DEF},								// 14
-										{UNIT_RATE_MIN, UNIT_RATE_MAX, UNIT_RATE_MIN_DEF},						// 15
-										{UNIT_RATE_MIN, UNIT_RATE_MAX, UNIT_RATE_MAX_DEF},						// 16
+										{0, 0, 0},																// 15
+										{0, 0, 0},																// 16
 										{NO, YES, YES},															// 17
 										{NO, YES, YES},															// 18
 										{NO, YES, YES},															// 19
@@ -147,7 +147,7 @@ const TableItemConstraint VConstraint[DATA_TABLE_WP_START - DATA_TABLE_WR_START]
 									{
 										{DESIRED_VOLTAGE_MIN, DESIRED_VOLTAGE_MAX, DESIRED_VOLTAGE_DEF},		// 128
 										{VOLTAGE_RATE_MIN, VOLTAGE_RATE_MAX, VOLTAGE_RATE_DEF},					// 129
-										{NO, YES, YES},															// 130
+										{0, 0, 0},																// 130
 										{0, 0, 0},																// 131
 										{0, 0, 0},																// 132
 										{0, 0, 0},																// 133

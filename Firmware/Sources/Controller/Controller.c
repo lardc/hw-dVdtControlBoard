@@ -39,8 +39,8 @@ static void CONTROL_FillWPPartDefault();
 static Boolean CONTROL_DispatchAction(Int16U ActionID, pInt16U UserError);
 static void CONTROL_SwitchToFault(Int16U FaultReason, Int16U ErrorCodeEx);
 static void CONTROL_SwitchToFaultEx();
-static Boolean CONTROL_ApplySettings(Int16U VRate, Boolean PerfomRateCorrection);
-static void CONTROL_PrepareStart(pInt16U UserError, Int16U Rate_x10, Boolean ApplyRateCorrection, Boolean StartTest);
+static Boolean CONTROL_ApplySettings(Int16U VRate);
+static void CONTROL_PrepareStart(pInt16U UserError, Int16U Rate_x10, Boolean StartTest);
 
 // Functions
 //
@@ -125,11 +125,11 @@ Int16U CONTROL_СorrectRate(Int16U VRate)
 }
 // ----------------------------------------
 
-Boolean CONTROL_ApplySettings(Int16U VRate, Boolean ApplyRateCorrection)
+Boolean CONTROL_ApplySettings(Int16U VRate)
 {
 	Int16U cellCount = CELLMUX_CellCount();
 	Int16U cellVoltage = CONTROL_CorrectVoltage() / cellCount;
-	Int16U cellVRate = (ApplyRateCorrection ? CONTROL_СorrectRate(VRate) : VRate) / cellCount;
+	Int16U cellVRate = CONTROL_СorrectRate(VRate) / cellCount;
 	
 	if(cellVoltage != cellVoltageCopy || cellVRate != cellVRateCopy)
 	{
@@ -295,7 +295,7 @@ static Boolean CONTROL_DispatchAction(Int16U ActionID, pInt16U UserError)
 
 		case ACT_APPLY_SETTINGS:
 			if(CONTROL_State == DS_Ready)
-				CONTROL_PrepareStart(UserError, DataTable[REG_VOLTAGE_RATE], DataTable[REG_TUNE_CUSTOM_SETTING], FALSE);
+				CONTROL_PrepareStart(UserError, DataTable[REG_VOLTAGE_RATE], FALSE);
 			break;
 
 		case ACT_ENABLE_EXT_SYNC_START:
@@ -308,27 +308,27 @@ static Boolean CONTROL_DispatchAction(Int16U ActionID, pInt16U UserError)
 			break;
 
 		case ACT_START_TEST_CUSTOM:
-			CONTROL_PrepareStart(UserError, DataTable[REG_VOLTAGE_RATE], DataTable[REG_TUNE_CUSTOM_SETTING], TRUE);
+			CONTROL_PrepareStart(UserError, DataTable[REG_VOLTAGE_RATE], TRUE);
 			break;
 
 		case ACT_START_TEST_500:
-			CONTROL_PrepareStart(UserError, 500 * 10, TRUE, TRUE);
+			CONTROL_PrepareStart(UserError, 500 * 10, TRUE);
 			break;
 
 		case ACT_START_TEST_1000:
-			CONTROL_PrepareStart(UserError, 1000 * 10, TRUE, TRUE);
+			CONTROL_PrepareStart(UserError, 1000 * 10, TRUE);
 			break;
 
 		case ACT_START_TEST_1600:
-			CONTROL_PrepareStart(UserError, 1600 * 10, TRUE, TRUE);
+			CONTROL_PrepareStart(UserError, 1600 * 10, TRUE);
 			break;
 
 		case ACT_START_TEST_2000:
-			CONTROL_PrepareStart(UserError, 2000 * 10, TRUE, TRUE);
+			CONTROL_PrepareStart(UserError, 2000 * 10, TRUE);
 			break;
 
 		case ACT_START_TEST_2500:
-			CONTROL_PrepareStart(UserError, 2500 * 10, TRUE, TRUE);
+			CONTROL_PrepareStart(UserError, 2500 * 10, TRUE);
 			break;
 
 		case ACT_CLR_FAULT:
@@ -360,18 +360,18 @@ static Boolean CONTROL_DispatchAction(Int16U ActionID, pInt16U UserError)
 }
 // ----------------------------------------
 
-void CONTROL_PrepareStart(pInt16U UserError, Int16U Rate_x10, Boolean ApplyRateCorrection, Boolean StartTest)
+void CONTROL_PrepareStart(pInt16U UserError, Int16U Rate_x10, Boolean StartTest)
 {
 	if(CONTROL_State == DS_Ready)
 	{
 		// Проверка уставки по напряжению и скорости нарастания
 		if(CONTROL_ValidateVoltage() && SP_GetSetpointArray(Rate_x10, CONTROL_RateRangeArray, CONTROL_GateVArray))
 		{
-			// Применение настроеек к ячейкам
-			if(CONTROL_ApplySettings(Rate_x10, ApplyRateCorrection))
-			{
-				CONTROL_FillWPPartDefault();
+			CONTROL_FillWPPartDefault();
 
+			// Применение настроеек к ячейкам
+			if(CONTROL_ApplySettings(Rate_x10))
+			{
 				CONTROL_HandleFanLogic(StartTest);
 				CONTROL_HandleExtLed(StartTest);
 				ZbGPIO_SwitchLED2(StartTest);
