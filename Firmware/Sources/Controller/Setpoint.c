@@ -17,10 +17,10 @@
 #define SETPOINT_RANGES			3
 
 // Forward functions
-Boolean SP_Generate(Int16U CellIndex, Int16U VRate, pInt16U RateRange, pInt16U GateV);
+Boolean SP_Generate(Int16U CellIndex, Int16U VRate_x10, pInt16U RateRange, pInt16U GateV);
 
 // Functions
-Boolean SP_Generate(Int16U CellIndex, Int16U VRate, pInt16U RateRange, pInt16U GateV)
+Boolean SP_Generate(Int16U CellIndex, Int16U VRate_x10, pInt16U RateRange, pInt16U GateV)
 {
 	Boolean Result = FALSE;
 	Int16U i, RangeStartRegs[SETPOINT_RANGES] = {REG_CELL1_LOW_GATEV1, REG_CELL1_MID_GATEV1, REG_CELL1_HIGH_GATEV1};
@@ -35,7 +35,7 @@ Boolean SP_Generate(Int16U CellIndex, Int16U VRate, pInt16U RateRange, pInt16U G
 			Int16U CellRateStartIndex = RangeStartRegs[i] + CellIndex * SETPOINT_ARRAY_SIZE * 2 + 1;
 			Int16U CellRateEndIndex = CellRateStartIndex + (SETPOINT_ARRAY_SIZE - 1) * 2;
 
-			if(DataTable[CellRateStartIndex] <= VRate && VRate <= DataTable[CellRateEndIndex])
+			if(DataTable[CellRateStartIndex] <= VRate_x10 && VRate_x10 <= DataTable[CellRateEndIndex])
 			{
 				Result = TRUE;
 				*RateRange = i;
@@ -54,7 +54,7 @@ Boolean SP_Generate(Int16U CellIndex, Int16U VRate, pInt16U RateRange, pInt16U G
 	// Проверка на прямое совпадение
 	for(i = 0; i < SETPOINT_ARRAY_SIZE; i++)
 	{
-		if(DataTable[BaseDTVRateAddr + i * 2] == VRate)
+		if(DataTable[BaseDTVRateAddr + i * 2] == VRate_x10)
 		{
 			*GateV = DataTable[BaseDTGateVAddr + i * 2];
 			return TRUE;
@@ -64,12 +64,12 @@ Boolean SP_Generate(Int16U CellIndex, Int16U VRate, pInt16U RateRange, pInt16U G
 	// Интерполяция значений
 	for(i = SETPOINT_ARRAY_SIZE - 1; i > 0; i--)
 	{
-		if(VRate > DataTable[BaseDTVRateAddr + (i - 1) * 2])
+		if(VRate_x10 > DataTable[BaseDTVRateAddr + (i - 1) * 2])
 		{
 			Int32U Base = DataTable[BaseDTGateVAddr + (i - 1) * 2];
 			Int32U N = DataTable[BaseDTGateVAddr + i * 2] - DataTable[BaseDTGateVAddr + (i - 1) * 2];
 			Int32U D = DataTable[BaseDTVRateAddr + i * 2] - DataTable[BaseDTVRateAddr + (i - 1) * 2];
-			Int32U K = VRate - DataTable[BaseDTVRateAddr + (i - 1) * 2];
+			Int32U K = VRate_x10 - DataTable[BaseDTVRateAddr + (i - 1) * 2];
 			
 			*GateV = Base + N * K / D;
 			return TRUE;
@@ -82,7 +82,7 @@ Boolean SP_Generate(Int16U CellIndex, Int16U VRate, pInt16U RateRange, pInt16U G
 }
 // ----------------------------------------
 
-Boolean SP_GetSetpointArray(Int16U VRate, pInt16U RateRangeArray, pInt16U GateVArray)
+Boolean SP_GetSetpointArray(Int16U VRate_x10, pInt16U RateRangeArray, pInt16U GateVArray)
 {
 	DataTable[REG_DIAG_CALC_FAILED_CELL] = 0;
 
@@ -91,7 +91,7 @@ Boolean SP_GetSetpointArray(Int16U VRate, pInt16U RateRangeArray, pInt16U GateVA
 	{
 		if((1 << i) & DataTable[REG_CELL_MASK])
 		{
-			if(SP_Generate(i, VRate, &RateRange, &GateV))
+			if(SP_Generate(i, VRate_x10, &RateRange, &GateV))
 			{
 				if(RateRangeArray)
 					RateRangeArray[i] = RateRange;

@@ -110,7 +110,7 @@ Boolean CELLMUX_ReadStates()
 }
 // ----------------------------------------
 
-Boolean CELLMUX_SetCellsState(Int16U CellVoltage, Int16U CellVRate, pInt16U RateRangeArray, pInt16U GateVArray)
+Boolean CELLMUX_SetCellsState(Int16U CellVoltage, pInt16U RateRangeArray, pInt16U GateVArray)
 {
 	while(ThreadLocker);
 	ThreadLocker = TRUE;

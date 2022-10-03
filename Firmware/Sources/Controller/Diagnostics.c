@@ -69,7 +69,7 @@ Boolean DIAG_DispatchCommand(Int16U Command)
 		    break;
 
 		case ACT_DIAG_GENERATE_SETP:
-			SP_GetSetpointArray(DataTable[REG_VOLTAGE_RATE] / CELLMUX_CellCount(), NULL, NULL);
+			SP_GetSetpointArray(CONTROL_СorrectRate(DataTable[REG_VOLTAGE_RATE]) / CELLMUX_CellCount(), NULL, NULL);
 			break;
 
 		default:

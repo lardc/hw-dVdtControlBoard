@@ -25,7 +25,7 @@
 volatile Int64U CONTROL_TimeCounter = 0;
 volatile DeviceState CONTROL_State = DS_None;
 static volatile Boolean CycleActive = FALSE;
-static Int16U cellVoltageCopy = 0, cellVRateCopy = 0;
+static Int16U cellVoltageCopy = 0, cellVRate_x10Copy = 0;
 static Int16U CONTROL_RateRangeArray[MAX_CELLS_COUNT], CONTROL_GateVArray[MAX_CELLS_COUNT];
 //
 // Boot-loader flag
@@ -39,8 +39,8 @@ static void CONTROL_FillWPPartDefault();
 static Boolean CONTROL_DispatchAction(Int16U ActionID, pInt16U UserError);
 static void CONTROL_SwitchToFault(Int16U FaultReason, Int16U ErrorCodeEx);
 static void CONTROL_SwitchToFaultEx();
-static Boolean CONTROL_ApplySettings(Int16U VRate);
-static void CONTROL_PrepareStart(pInt16U UserError, Int16U Rate_x10, Boolean StartTest);
+Boolean CONTROL_ApplySettings(Int16U CellVRate_x10, Int16U CellVoltage);
+static void CONTROL_PrepareStart(pInt16U UserError, Int16U VRate_x10, Boolean StartTest);
 
 // Functions
 //
@@ -119,24 +119,20 @@ Int16U CONTROL_CorrectVoltage()
 }
 // ----------------------------------------
 
-Int16U CONTROL_СorrectRate(Int16U VRate)
+Int16U CONTROL_СorrectRate(Int16U VRate_x10)
 {
-	return (Int32S)VRate * DataTable[REG_RATE_GLOBAL_K_N] / DataTable[REG_RATE_GLOBAL_K_D];
+	return (Int32S)VRate_x10 * DataTable[REG_RATE_GLOBAL_K_N] / DataTable[REG_RATE_GLOBAL_K_D];
 }
 // ----------------------------------------
 
-Boolean CONTROL_ApplySettings(Int16U VRate)
+Boolean CONTROL_ApplySettings(Int16U CellVRate_x10, Int16U CellVoltage)
 {
-	Int16U cellCount = CELLMUX_CellCount();
-	Int16U cellVoltage = CONTROL_CorrectVoltage() / cellCount;
-	Int16U cellVRate = CONTROL_СorrectRate(VRate) / cellCount;
-	
-	if(cellVoltage != cellVoltageCopy || cellVRate != cellVRateCopy)
+	if(CellVoltage != cellVoltageCopy || CellVRate_x10 != cellVRate_x10Copy)
 	{
-		if(CELLMUX_SetCellsState(cellVoltage, cellVRate, CONTROL_RateRangeArray, CONTROL_GateVArray))
+		if(CELLMUX_SetCellsState(CellVoltage, CONTROL_RateRangeArray, CONTROL_GateVArray))
 		{
-			cellVoltageCopy = cellVoltage;
-			cellVRateCopy = cellVRate;
+			cellVoltageCopy = CellVoltage;
+			cellVRate_x10Copy = CellVRate_x10;
 		}
 		else
 			return FALSE;
@@ -255,13 +251,6 @@ static void CONTROL_SwitchToFaultEx()
 }
 // ----------------------------------------
 
-static Boolean CONTROL_ValidateVoltage()
-{
-	Int16U CellVoltage = CONTROL_CorrectVoltage() / CELLMUX_CellCount();
-	return (DataTable[REG_CELL_MIN_VOLTAGE] <= CellVoltage && CellVoltage <= DataTable[REG_CELL_MAX_VOLTAGE]);
-}
-// ----------------------------------------
-
 static Boolean CONTROL_DispatchAction(Int16U ActionID, pInt16U UserError)
 {
 	switch(ActionID)
@@ -269,7 +258,7 @@ static Boolean CONTROL_DispatchAction(Int16U ActionID, pInt16U UserError)
 		case ACT_ENABLE_POWER:
 			if(CONTROL_State == DS_None)
 			{
-				cellVoltageCopy = cellVRateCopy = 0;
+				cellVoltageCopy = cellVRate_x10Copy = 0;
 
 				if(!CELLMUX_SetCellPowerState(TRUE))
 					CONTROL_SwitchToFaultEx();
@@ -357,17 +346,22 @@ static Boolean CONTROL_DispatchAction(Int16U ActionID, pInt16U UserError)
 }
 // ----------------------------------------
 
-void CONTROL_PrepareStart(pInt16U UserError, Int16U Rate_x10, Boolean StartTest)
+void CONTROL_PrepareStart(pInt16U UserError, Int16U VRate_x10, Boolean StartTest)
 {
 	if(CONTROL_State == DS_Ready)
 	{
+		Int16U cellCount = CELLMUX_CellCount();
+		Int16U cellVoltage = CONTROL_CorrectVoltage() / cellCount;
+		Int16U cellVRate_x10 = CONTROL_СorrectRate(VRate_x10) / cellCount;
+
 		// Проверка уставки по напряжению и скорости нарастания
-		if(CONTROL_ValidateVoltage() && SP_GetSetpointArray(Rate_x10, CONTROL_RateRangeArray, CONTROL_GateVArray))
+		if(DataTable[REG_CELL_MIN_VOLTAGE] <= cellVoltage && cellVoltage <= DataTable[REG_CELL_MAX_VOLTAGE] &&
+				SP_GetSetpointArray(cellVRate_x10, CONTROL_RateRangeArray, CONTROL_GateVArray))
 		{
 			CONTROL_FillWPPartDefault();
 
 			// Применение настроеек к ячейкам
-			if(CONTROL_ApplySettings(Rate_x10))
+			if(CONTROL_ApplySettings(cellVRate_x10, cellVoltage))
 			{
 				CONTROL_HandleFanLogic(StartTest);
 				CONTROL_HandleExtLed(StartTest);
