@@ -13,6 +13,10 @@
 #include "CellMux.h"
 #include "Setpoint.h"
 #include "Logic.h"
+#include "Controller.h"
+
+// Definitions
+#define DIAG_PULSE_TIME		500000ul
 
 // Functions
 Boolean DIAG_DispatchCommand(Int16U Command)
@@ -21,30 +25,29 @@ Boolean DIAG_DispatchCommand(Int16U Command)
 	{
 		case ACT_DIAG_PULSE_FAN:
 			ZbGPIO_SwitchFAN(TRUE);
-			DELAY_US(1000000);
+			DELAY_US(DIAG_PULSE_TIME);
 			ZbGPIO_SwitchFAN(FALSE);
 			break;
 
 		case ACT_DIAG_PULSE_START:
 			ZbGPIO_SwitchOutRelay(TRUE);
+			DELAY_US(20000);
 			DataTable[REG_TEST_RESULT] = LOGIC_TestSequence();
 			break;
 
 		case ACT_DIAG_PULSE_SWITCH:
 			ZbGPIO_SwitchOutRelay(TRUE);
-			DELAY_US(1000000);
+			DELAY_US(DIAG_PULSE_TIME);
 			ZbGPIO_SwitchOutRelay(FALSE);
 			break;
 
 		case ACT_DIAG_PULSE_LED:
-			ZbGPIO_SwitchExtLed(TRUE);
-			DELAY_US(1000000);
-			ZbGPIO_SwitchExtLed(FALSE);
+			CONTROL_HandleExtLed(TRUE);
 			break;
 
 		case ACT_DIAG_PULSE_SYNC:
 			ZbGPIO_SwitchResultOut(TRUE);
-			DELAY_US(100000);
+			DELAY_US(DIAG_PULSE_TIME);
 			ZbGPIO_SwitchResultOut(FALSE);
 			break;
 
