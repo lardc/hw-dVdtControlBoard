@@ -36,9 +36,7 @@ Boolean DIAG_DispatchCommand(Int16U Command)
 			break;
 
 		case ACT_DIAG_PULSE_SWITCH:
-			ZbGPIO_SwitchOutRelay(TRUE);
-			DELAY_US(DIAG_PULSE_TIME);
-			ZbGPIO_SwitchOutRelay(FALSE);
+			ZbGPIO_SwitchOutRelay(DataTable[REG_DBG]);
 			break;
 
 		case ACT_DIAG_PULSE_LED:
@@ -46,9 +44,7 @@ Boolean DIAG_DispatchCommand(Int16U Command)
 			break;
 
 		case ACT_DIAG_PULSE_SYNC:
-			ZbGPIO_SwitchResultOut(TRUE);
-			DELAY_US(DIAG_PULSE_TIME);
-			ZbGPIO_SwitchResultOut(FALSE);
+			ZbGPIO_SwitchResultOut(DataTable[REG_DBG]);
 			break;
 
 		case ACT_DIAG_READ_CELL_REG:
@@ -69,7 +65,7 @@ Boolean DIAG_DispatchCommand(Int16U Command)
 		    break;
 
 		case ACT_DIAG_GENERATE_SETP:
-			SP_GetSetpointArray(CONTROL_СorrectRate(DataTable[REG_VOLTAGE_RATE]) / CELLMUX_CellCount(), NULL, NULL);
+			SP_GetSetpointArray(CONTROL_СorrectRate(DataTable[REG_DESIRED_VOLTAGE] / CELLMUX_CellCount(), DataTable[REG_VOLTAGE_RATE] / CELLMUX_CellCount()), NULL, NULL);
 			break;
 
 		default:

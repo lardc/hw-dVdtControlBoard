@@ -50,6 +50,7 @@
 #define REG_V_OFFSET				2	// Voltage offset (in V)
 #define REG_CSU_V_OFFSET			3	// CSU Voltage Offset V
 // 4 - 5
+#define REG_RATE_GLOBAL_OFFSET		5	// Offset correction (N)
 #define REG_RATE_GLOBAL_K_N			6	// Global rate correction (N)
 #define REG_RATE_GLOBAL_K_D			7	// Global rate correction (D)
 
@@ -71,6 +72,8 @@
 #define REG_CELL6_HIGH_GATEV7		122	// Gate voltage setpoint 7 for cell 6
 #define REG_CELL6_HIGH_VRATE7		123	// Voltage rate setpoint 7 for cell 6
 //
+
+#define REG_DBG						150		// Отладочный регистр 1
 // Extended NV-registers
 // Range 1
 #define REG_CELL1_LOW_GATEV1		320	// Gate voltage setpoint 1 for cell 1

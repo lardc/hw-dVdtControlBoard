@@ -119,9 +119,10 @@ Int16U CONTROL_CorrectVoltage()
 }
 // ----------------------------------------
 
-Int16U CONTROL_СorrectRate(Int16U VRate_x10)
+Int16U CONTROL_СorrectRate(Int16U cellVoltage, Int16U VRate_x10)
 {
-	return (Int32S)VRate_x10 * DataTable[REG_RATE_GLOBAL_K_N] / DataTable[REG_RATE_GLOBAL_K_D];
+	return (Int32S)DataTable[REG_RATE_GLOBAL_OFFSET] * VRate_x10 / cellVoltage +
+			(Int32S)VRate_x10 * DataTable[REG_RATE_GLOBAL_K_N] / DataTable[REG_RATE_GLOBAL_K_D];
 }
 // ----------------------------------------
 
@@ -352,7 +353,7 @@ void CONTROL_PrepareStart(pInt16U UserError, Int16U VRate_x10, Boolean StartTest
 	{
 		Int16U cellCount = CELLMUX_CellCount();
 		Int16U cellVoltage = CONTROL_CorrectVoltage() / cellCount;
-		Int16U cellVRate_x10 = CONTROL_СorrectRate(VRate_x10) / cellCount;
+		Int16U cellVRate_x10 = CONTROL_СorrectRate(cellVoltage, VRate_x10) / cellCount;
 
 		// Проверка уставки по напряжению и скорости нарастания
 		if(DataTable[REG_CELL_MIN_VOLTAGE] <= cellVoltage && cellVoltage <= DataTable[REG_CELL_MAX_VOLTAGE] &&
