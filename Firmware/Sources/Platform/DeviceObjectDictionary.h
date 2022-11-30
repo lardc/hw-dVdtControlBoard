@@ -49,8 +49,8 @@
 #define REG_V_FINE_D				1	// Voltage amplitude fine (D)
 #define REG_V_OFFSET				2	// Voltage offset (in V)
 #define REG_CSU_V_OFFSET			3	// CSU Voltage Offset V
-// 4 - 5
-#define REG_RATE_GLOBAL_OFFSET		5	// Offset correction (N)
+// 4
+#define REG_RATE_GLOBAL_OFFSET		5	// Offset correction ([V/us]/V)
 #define REG_RATE_GLOBAL_K_N			6	// Global rate correction (N)
 #define REG_RATE_GLOBAL_K_D			7	// Global rate correction (D)
 

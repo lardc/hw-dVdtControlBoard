@@ -125,7 +125,7 @@ Boolean LOGIC_TestSequence()
 
 	DINT;
 	ZbGPIO_SwitchStartPulse(TRUE);
-	ZbGPIO_SwitchResultOut(TRUE);			// RESULT_OUT is used for sync output
+	ZbGPIO_SwitchResultOut(TRUE);			// RESULT_OUT is used for sync oscilloscope
 
 	DELAY_US(Delay);
 
@@ -135,7 +135,7 @@ Boolean LOGIC_TestSequence()
 
 	Result = ZbGPIO_ReadDetectorPin();
 
-	ZbGPIO_SwitchResultOut(FALSE);			// RESULT_OUT is used for sync output
+	ZbGPIO_SwitchResultOut(FALSE);			// RESULT_OUT is used for sync oscilloscope
 	EINT;
 
 	DELAY_US(RELAY_SWITCH_DELAY_US);
