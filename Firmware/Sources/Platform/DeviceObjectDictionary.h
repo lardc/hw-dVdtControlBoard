@@ -35,6 +35,7 @@
 #define ACT_DIAG_READ_CELL_REG		120
 #define ACT_DIAG_WRITE_CELL_REG		121
 #define ACT_DIAG_CALL_CELL			122
+#define ACT_DIAG_READ_SYNC_IN		123
 //
 #define ACT_SAVE_TO_ROM				200	// Save parameters to EEPROM module
 #define ACT_RESTORE_FROM_ROM		201	// Restore parameters from EEPROM module

@@ -37,5 +37,7 @@ void ZbGPIO_SwitchFAN(Boolean Set);
 Boolean ZbGPIO_ReadDetectorPin();
 //Enable internal sync
 void ZbGPIO_SwitchStartPulse(Boolean Set);
+//Read SYNC_IN pin
+Boolean ZbGPIO_ReadSyncIn();
 
 #endif // __ZBGPIO_H

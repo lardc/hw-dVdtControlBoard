@@ -123,3 +123,9 @@ void ZbGPIO_SwitchStartPulse(Boolean Set)
     ZwGPIO_WritePin(PIN_START_PULSE, Set);
 }
 // ----------------------------------------
+
+Boolean ZbGPIO_ReadSyncIn()
+{
+	return (!ZwGPIO_ReadPin(PIN_SYNC_IN));
+}
+// ----------------------------------------
