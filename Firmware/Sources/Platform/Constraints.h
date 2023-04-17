@@ -47,7 +47,7 @@ typedef struct __TableItemConstraint
 #define GATEV_CELL_DEF				3000	// in mV
 //
 #define RATE_CORR_MIN				0		// in %
-#define RATE_CORR_MAX				90		// in %
+#define RATE_CORR_MAX				10000	// in %
 #define RATE_CORR_DEF				0		// in %
 
 #define FAN_DUTY_MAX				100		// in %
