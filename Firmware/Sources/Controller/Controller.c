@@ -301,6 +301,34 @@ static Boolean CONTROL_DispatchAction(Int16U ActionID, pInt16U UserError)
 			CONTROL_PrepareStart(UserError, DataTable[REG_VOLTAGE_RATE], TRUE);
 			break;
 
+		case ACT_START_TEST_500:
+			CONTROL_PrepareStart(UserError, 500 * 10, TRUE);
+			break;
+
+		case ACT_START_TEST_1000:
+			CONTROL_PrepareStart(UserError, 1000 * 10, TRUE);
+			break;
+
+		case ACT_START_TEST_1600:
+			CONTROL_PrepareStart(UserError, 1600 * 10, TRUE);
+			break;
+
+		case ACT_START_TEST_2000:
+			CONTROL_PrepareStart(UserError, 2000 * 10, TRUE);
+			break;
+
+		case ACT_START_TEST_2500:
+			CONTROL_PrepareStart(UserError, 2500 * 10, TRUE);
+			break;
+
+		case ACT_START_TEST_200:
+			CONTROL_PrepareStart(UserError, 200 * 10, TRUE);
+			break;
+
+		case ACT_START_TEST_320:
+			CONTROL_PrepareStart(UserError, 320 * 10, TRUE);
+			break;
+
 		case ACT_START_TEST_20:
 			CONTROL_PrepareStart(UserError, 20 * 10, TRUE);
 			break;
@@ -311,11 +339,6 @@ static Boolean CONTROL_DispatchAction(Int16U ActionID, pInt16U UserError)
 
 		case ACT_START_TEST_100:
 			CONTROL_PrepareStart(UserError, 100 * 10, TRUE);
-			break;
-
-		case ACT_START_TEST_200:
-		case ACT_START_TEST_200_DUMMY:
-			CONTROL_PrepareStart(UserError, 200 * 10, TRUE);
 			break;
 
 		case ACT_CLR_FAULT:

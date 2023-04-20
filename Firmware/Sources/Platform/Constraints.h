@@ -27,14 +27,14 @@ typedef struct __TableItemConstraint
 #define X_D_DEF3					10000
 
 // in V
-#define DESIRED_VOLTAGE_MIN			400
-#define DESIRED_VOLTAGE_MAX			4400
-#define DESIRED_VOLTAGE_DEF			500
+#define DESIRED_VOLTAGE_MIN			536
+#define DESIRED_VOLTAGE_MAX			1876
+#define DESIRED_VOLTAGE_DEF			536
 
 // Global voltage rate constraints rates (in V/us x10)
-#define VOLTAGE_RATE_MIN			200
-#define VOLTAGE_RATE_MAX			2000
-#define VOLTAGE_RATE_DEF			500
+#define VOLTAGE_RATE_MIN			2000
+#define VOLTAGE_RATE_MAX			10000
+#define VOLTAGE_RATE_DEF			2000
 
 // Voltage rate setpoint constraints (in V/us x10)
 #define VRATE_CELL_MIN				10
