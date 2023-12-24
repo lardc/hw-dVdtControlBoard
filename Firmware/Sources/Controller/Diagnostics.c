@@ -67,9 +67,7 @@ Boolean DIAG_DispatchCommand(Int16U Command)
 		    ZbGPIO_SwitchOutRelay(EnableRelay);
 			break;
 		case ACT_DIAG_PULSE_SYNC:
-			ZbGPIO_SwitchResultOut(TRUE);
-			DELAY_US(100000);
-			ZbGPIO_SwitchResultOut(FALSE);
+			ZbGPIO_SwitchResultOut(DataTable[REG_DBG]);
 			break;
 		case ACT_DIAG_READ_CELL_REG:
 			DataTable[REG_DIAG_GENERAL_OUT] = 0;

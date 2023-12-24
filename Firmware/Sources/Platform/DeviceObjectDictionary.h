@@ -118,6 +118,8 @@
 #define REG_DESIRED_VOLTAGE			128	// Desired plate voltage (in V)
 #define REG_VOLTAGE_RATE			129	// dV/dt rate (in V/us x10)
 #define REG_TUNE_CUSTOM_SETTING		130	// Apply voltage rate correction for custom setting
+
+#define REG_DBG						150	// Отладочный регистр 1
 // 131 - 179
 #define REG_PWD_1					180	// Unlock password location 1
 #define REG_PWD_2					181	// Unlock password location 2
