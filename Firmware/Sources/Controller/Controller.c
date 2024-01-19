@@ -139,7 +139,7 @@ Boolean CONTROL_EnableSingleCellMode()
      Voltage = (Int32U)DataTable[REG_DESIRED_VOLTAGE];
 
      // Условие активации работы с одиночной ячейкой
-     Boolean SingleCellMode = (Voltage <= DataTable[REG_SINGLE_CELL_V_LEVEL]);
+     Boolean SingleCellMode = (Voltage <= DataTable[REG_SINGLE_CELL_V_LEVEL] && DataTable[REG_VOLTAGE_RATE] < MIN_RATE_FOR_DUO_MODE);
 
      return SingleCellMode;
 }
@@ -151,73 +151,76 @@ Boolean CONTROL_EnableDuoCellMode()
      Voltage = (Int32U)DataTable[REG_DESIRED_VOLTAGE];
 
      // Условие активации работы с двумя ячейками
-     Boolean DuoCellMode = ((Voltage > DataTable[REG_SINGLE_CELL_V_LEVEL]) && (Voltage <= DataTable[REG_DUO_CELL_V_LEVEL])
-             && (DataTable[REG_VOLTAGE_RATE] > MIN_RATE_FOR_DUO_MODE));
+     Boolean DuoCellMode = (Voltage <= DataTable[REG_DUO_CELL_V_LEVEL] && DataTable[REG_VOLTAGE_RATE] > MIN_RATE_FOR_DUO_MODE
+    		 	 	 	 	 && DataTable[REG_VOLTAGE_RATE] < MAX_RATE_FOR_DUO_MODE);
 
      return DuoCellMode;
 }
 
 Int16U CONTROL_СalculationRateXMode(Int16U MaxRate, Int16U MinRate, Int16U VRate, Int16U RegCorrByRate, Int16U RegCorrRateVpoint, Int16U RegCorrRateByVoltage,
-        Int16U RegCorrRange1, Int16U RegCorrRange2, Int16U RegOffsetRange2, Int16U RegRateGlobalKN, Int16U RegRateGlobalKD, Int16U OffsetByVoltage, Boolean EnableTuneLow)
+		Int16U RegCorrRange1, Int16U RegCorrRange2, Int16U RegOffsetRange2, Int16U RegRateGlobalKN, Int16U RegRateGlobalKD, Int16U OffsetByVoltage, Boolean EnableTuneLow)
 {
-    Int16U  KRate, CalRate;
+	Int16U  KRate, CalRate;
 
-    /*
-     * Описание принципа корректировки скорости нарастания:
-     * 1. Наилучшее отношение ожидаемой и реальной скорости нарастания получается на максимальном напряжении (4500В)
-     * и на средней скорости нарастания (1600В/мкс);
-     * 2. При сохранении значения напряжения и увеличении скорости нарастания возрастает ошибка скорости нарастания.
-     * Максимальная ошибка ~20-30% на максимальной скорости нарастания (2500В/мкс) (или на минимальной - в зависимости от схемы ячеек);
-     * 3. При сохранении значения скорости нарастания и уменьшении напряжения возрастает ошибка скорости нарастания.
-     * Максимальная ошибка ~20-30% на минимальном напряжении (500В), причём эффект наблюдается на напряжениях ниже 1000-1500В;
-     * 4. Т.о. требуется одновременно вносить две корректировки: по напряжению и по скорости нарастания.
-     */
+	/*
+	* Описание принципа корректировки скорости нарастания:
+	* 1. Наилучшее отношение ожидаемой и реальной скорости нарастания получается на максимальном напряжении (4500В)
+	* и на средней скорости нарастания (1600В/мкс);
+	* 2. При сохранении значения напряжения и увеличении скорости нарастания возрастает ошибка скорости нарастания.
+	* Максимальная ошибка ~20-30% на максимальной скорости нарастания (2500В/мкс) (или на минимальной - в зависимости от схемы ячеек);
+	* 3. При сохранении значения скорости нарастания и уменьшении напряжения возрастает ошибка скорости нарастания.
+	* Максимальная ошибка ~20-30% на минимальном напряжении (500В), причём эффект наблюдается на напряжениях ниже 1000-1500В;
+	* 4. Т.о. требуется одновременно вносить две корректировки: по напряжению и по скорости нарастания.
+	*/
 
-    Int16U VRateMax = DataTable[MaxRate];
-    Int16U VRateMin = DataTable[MinRate];
+	Int16U VRateMax = DataTable[MaxRate];
+	Int16U VRateMin = DataTable[MinRate];
 
-    if(DataTable[REG_UNIT_USE_RANGE1] && (VRate < SP_GetRange1MaxRate()))
-    {
-        VRate = (Int32U)VRate * DataTable[RegCorrRange1] /1000;
+	if ((DataTable[REG_DESIRED_VOLTAGE] < 1500) && ((DataTable[REG_VOLTAGE_RATE] / 10) >= 1600))
+		VRate = (Int32U)(VRate - (Int32U)VRate * (1500 - DataTable[REG_DESIRED_VOLTAGE])/(1500 - 500) / DataTable[REG_CORR_VOL_RATE1] * 10);
 
-    }
-    else if(DataTable[REG_UNIT_USE_RANGE2] && (VRate < SP_GetRange2MaxRate()))
-    {
-        VRate = (Int32U)VRate * DataTable[RegCorrRange2] /1000 + (Int16S)DataTable[RegOffsetRange2];
-    }
-    else
-    {
-        // by rate (and full range voltage)
-        if(CORR_RATE_BY_FS_VOLTAGE)
-        {
-            KRate = ((Int32U)DataTable[RegCorrByRate] * (DESIRED_VOLTAGE_MAX - DataTable[REG_DESIRED_VOLTAGE]))
-                    / (DESIRED_VOLTAGE_MAX - DESIRED_VOLTAGE_MIN);
-        }
-        else
-            KRate = DataTable[RegCorrByRate];
+	if (DataTable[REG_UNIT_USE_RANGE1] && (VRate < SP_GetRange1MaxRate()))
+	{
+		VRate = (Int32U)VRate * DataTable[RegCorrRange1] /1000;
 
-        // by rate
-        if(EnableTuneLow)
-            VRate = ((100 + (((Int32U)(VRateMax - VRate) * KRate) / (VRateMax - VRateMin))) * VRate) / 100;
-        else
-            VRate = ((100 + (((Int32U)(VRate - VRateMin) * KRate) / (VRateMax - VRateMin))) * VRate) / 100;
+	}
+	else if (DataTable[REG_UNIT_USE_RANGE2] && (VRate < SP_GetRange2MaxRate()))
+	{
+		VRate = (Int32U)VRate * DataTable[RegCorrRange2] /1000 + (Int16S)DataTable[RegOffsetRange2];
+	}
+	else
+	{
+		// by rate (and full range voltage)
+		if(CORR_RATE_BY_FS_VOLTAGE)
+		{
+			KRate = ((Int32U)DataTable[RegCorrByRate] * (DESIRED_VOLTAGE_MAX - DataTable[REG_DESIRED_VOLTAGE]))
+					/ (DESIRED_VOLTAGE_MAX - DESIRED_VOLTAGE_MIN);
+		}
+		else
+			KRate = DataTable[RegCorrByRate];
 
-        // by voltage (lower zone)
-        if(DataTable[RegCorrRateVpoint] > DataTable[REG_DESIRED_VOLTAGE])
-        {
-            VRate = (((((Int32U)(DataTable[RegCorrRateVpoint] - DataTable[REG_DESIRED_VOLTAGE])
-                    * DataTable[RegCorrRateByVoltage]) / (DataTable[RegCorrRateVpoint] - DESIRED_VOLTAGE_MIN))
-                    + 100) * VRate) / 100 + (Int16S)DataTable[OffsetByVoltage];
-        }
+		// by rate
+		if (EnableTuneLow)
+			VRate = ((100 + (((Int32U)(VRateMax - VRate) * KRate) / (VRateMax - VRateMin))) * VRate) / 100;
+		else
+			VRate = ((100 + (((Int32U)(VRate - VRateMin) * KRate) / (VRateMax - VRateMin))) * VRate) / 100;
 
-        // global correction
-        VRate = (Int32U)VRate * DataTable[RegRateGlobalKN] / DataTable[RegRateGlobalKD];
+		// by voltage (lower zone)
+		if (DataTable[RegCorrRateVpoint] > DataTable[REG_DESIRED_VOLTAGE])
+		{
+			VRate = (((((Int32U)(DataTable[RegCorrRateVpoint] - DataTable[REG_DESIRED_VOLTAGE])
+					* DataTable[RegCorrRateByVoltage]) / (DataTable[RegCorrRateVpoint] - DESIRED_VOLTAGE_MIN))
+					+ 100) * VRate) / 100 + (Int16S)DataTable[OffsetByVoltage];
+		}
 
-    }
+		// global correction
+		VRate = (Int32U)VRate * DataTable[RegRateGlobalKN] / DataTable[RegRateGlobalKD];
 
-    CalRate = VRate;
+	}
 
-    return CalRate;
+	CalRate = VRate;
+
+	return CalRate;
 }
 // ----------------------------------------
 

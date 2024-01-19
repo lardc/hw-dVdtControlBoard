@@ -64,7 +64,8 @@
 
 #define EXT_LED_SWITCH_ON_TIME          500         // (in ms)
 
-#define MIN_RATE_FOR_DUO_MODE           6600        // (В/мкс)*10
+#define MIN_RATE_FOR_DUO_MODE           4000        // (В/мкс) * 10
+#define MAX_RATE_FOR_DUO_MODE           8000        // (В/мкс) * 10
 
 //--------------------------------------------------------
 

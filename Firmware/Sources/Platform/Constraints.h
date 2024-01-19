@@ -73,14 +73,14 @@ typedef struct __TableItemConstraint
 #define CELL_NUM_DEF				1
 
 // Single cell voltage limit
-#define SINGLE_CELL_VLIM_MIN		20
-#define SINGLE_CELL_VLIM_MAX		500
-#define SINGLE_CELL_VLIM_DEF		300
+#define SINGLE_CELL_VLIM_MIN		100
+#define SINGLE_CELL_VLIM_MAX		900
+#define SINGLE_CELL_VLIM_DEF		900
 
 //Duo cell voltage limit
-#define DUO_CELL_VLIM_MIN           300
-#define DUO_CELL_VLIM_MAX           600
-#define DUO_CELL_VLIM_DEF           300
+#define DUO_CELL_VLIM_MIN			200
+#define DUO_CELL_VLIM_MAX			1800
+#define DUO_CELL_VLIM_DEF			900
 
 // Cell vaoltage ranges
 #define CELL_V_MIN					20		// in V
