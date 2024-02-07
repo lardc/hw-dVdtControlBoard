@@ -114,7 +114,7 @@
 #define REG_WARNING					195	// Warning if present
 #define REG_PROBLEM					196	// Problem if present
 //
-#define REG_TEST_RESULT				197	// Test result
+#define REG_TEST_RESULT				198	// Test result
 #define REG_FAULT_REASON_EX			199 // External fault code
 //
 #define REG_VOLTAGE_OK				200	// Charged summary
