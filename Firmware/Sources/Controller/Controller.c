@@ -124,40 +124,44 @@ void CONTROL_Update()
 
 Boolean CONTROL_ApplySettings(Int16U VRate, Boolean PerfomRateCorrection)
 {
-	Int16U cellVoltage, cellVRate;
-
-	/*
-	 * Описание принципа корректировки скорости нарастания:
-	 * 1) Ячейки калибруются при напряжении 150 В, для получения всех скорстей с одной ячейки
-	 * 2) Диапазон разделен на 2 - по напряженияю - регистр REG_VOLTAGE_RANGE_POINT - 1500 В
-	 * т.к. до него невозможно ее выполнить в автоматическом режимя в связи с искажением формы исигнала и ошибкой измерения
-	 * и делается в ручныом режиме (по сркипту)
-	 * 3) Внутри диапазона есть еще разделение на диапазон по скорости REG_RATE_RANGE_DVPOINT - влияет только пропорциональный коэффициент
-	 * 4) Далее выравнивается загиб малых скоростей CORR_RATE_TUNE_LOW
-	 * 5) увеличиваются  скорости на малых амплитудах KRateUpOnLowVoltage - чем меньше значение, тем больше корректировка
-	 * 6) Увеличивается скорость 2500 при малой амплитуде REG_K2
-	 */
-
-	// Check if settings differ
-	cellVoltage = ((Int32U)DataTable[REG_DESIRED_VOLTAGE] * DataTable[REG_V_FINE_N] / DataTable[REG_V_FINE_D] +
-					(Int16S)DataTable[REG_V_OFFSET]) / CELLMUX_CellCount();
+	Int16U cellVoltage, cellVRate, KRate;
 
 	// Perfom rate correction
 	if (PerfomRateCorrection)
 	{
-		if(VRate < DataTable[REG_RATE_RANGE_DVPOINT])
-			VRate = (Int32S)DataTable[REG_RH_K_LV] * VRate / 1000;
-
-		if(VRate == 2500 && DataTable[REG_DESIRED_VOLTAGE] <= 500)
-			VRate = (Int32S)VRate * 1.4;
-
-		// Rate correction
-		if(DataTable[REG_DESIRED_VOLTAGE] < DataTable[REG_CORR_RATE_VPOINT])
-			VRate = (Int32S)DataTable[REG_CORR_RATE_BY_RATE_HV] * VRate / (cellVoltage * cellVoltage) +
-					(Int32S)VRate * DataTable[REG_RH_K_HV] / DataTable[REG_RL_K_HV];
+		// by rate (and full range voltage)
+		if (CORR_RATE_BY_FS_VOLTAGE)
+		{
+			KRate = ((Int32U)DataTable[REG_CORR_RATE_BY_RATE] * (DESIRED_VOLTAGE_MAX - DataTable[REG_DESIRED_VOLTAGE])) /
+					(DESIRED_VOLTAGE_MAX - DESIRED_VOLTAGE_MIN);
+		}
 		else
-			VRate = (Int32S)VRate * DataTable[REG_RH_K_HV] / DataTable[REG_RL_K_HV];
+			KRate = DataTable[REG_CORR_RATE_BY_RATE];
+
+		// by rate
+		if (CORR_RATE_TUNE_LOW)
+			VRate = ((100 + (((Int32U)(2500 - VRate) * KRate) / (2500 - 500))) * VRate) / 100;
+		else
+			VRate = ((100 + (((Int32U)(VRate - 500) * KRate) / (2500 - 500))) * VRate) / 100;
+
+		// by voltage (lower zone)
+		if (DataTable[REG_CORR_RATE_VPOINT] > DataTable[REG_DESIRED_VOLTAGE])
+		{
+			VRate = (((((Int32U)(DataTable[REG_CORR_RATE_VPOINT] - DataTable[REG_DESIRED_VOLTAGE]) *
+					DataTable[REG_CORR_RATE_BY_VOLTAGE]) /
+					(DataTable[REG_CORR_RATE_VPOINT] - DESIRED_VOLTAGE_MIN)) + 100) * VRate) / 100;
+		}
+
+		// global correction
+		VRate = (Int32U)VRate * DataTable[REG_RATE_GLOBAL_K_N] / DataTable[REG_RATE_GLOBAL_K_D];
+
+		// rate offset correction
+		VRate = (Int32U)((Int16S)VRate + (Int16S)DataTable[REG_RATE_OFFSET]);
 	}
+
+	// Check if settings differ
+	cellVoltage = ((Int32U)DataTable[REG_DESIRED_VOLTAGE] * DataTable[REG_V_FINE_N] / DataTable[REG_V_FINE_D] +
+					(Int16S)DataTable[REG_V_OFFSET]) / CELLMUX_CellCount();
 
 	cellVRate = VRate / CELLMUX_CellCount();
 

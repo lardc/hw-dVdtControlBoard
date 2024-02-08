@@ -54,9 +54,9 @@
 #define REG_V_OFFSET				2	// Voltage offset (in V)
 #define REG_CORR_RATE_BY_VOLTAGE	3	// Correction factor based on voltage (in %)
 #define REG_CORR_RATE_VPOINT		4	// Voltage point for correction based on voltage (in V)
-#define REG_CORR_RATE_BY_RATE_HV	5	// Correction factor based on rate (in %) HV
-#define REG_RH_K_HV					6	// High range rate correction (N) high voltage range
-#define REG_RL_K_HV					7	// Low range rate correction (N) high voltage range
+#define REG_CORR_RATE_BY_RATE		5	// Correction factor based on rate (in %)
+#define REG_RATE_GLOBAL_K_N			6	// High range rate correction (N)
+#define REG_RATE_GLOBAL_K_D			7	// Low range rate correction (D)
 #define REG_CELL_MASK				8	// Cell presence mask
 #define REG_CELL_MIN_VOLTAGE		9	// Cell min voltage (in V)
 #define REG_CELL_MAX_VOLTAGE		10	// Cell max voltage (in V)
@@ -64,21 +64,9 @@
 #define REG_CELL_MAX_RATE			12	// Cell max rate (in V/us)
 #define REG_FAN_OPERATE_PERIOD		13	// Default fan turn on period (in s)
 #define REG_FAN_OPERATE_MIN_TIME	14	// Minimum fan turn on time (in s)
-#define REG_RATE_OFFSET_HV			15	// Rate offset (in V) in high voltage range
-#define REG_RATE_RANGE_DVPOINT		16	// Rate point for correction based on range (in V)
+#define REG_RATE_OFFSET				15	// Rate offset (in V)
 
-#define REG_K1						17	// Correction ratio in low voltage range
-#define REG_K2						18	// Correction ratio in low voltage range high rate Up
-#define REG_RATE_POINT_AT_LOW_RATE	19	// Correction rate only low rate in high voltage
-#define REG_CORR_LOWRATE_MAXVOLT	20	// Correction low rate max voltage
-
-#define REG_VOLTAGE_RANGE_POINT		22	// VoltageRangePoint
-#define REG_RH_K_LV					23	// High range rate correction (N) low voltage range
-#define REG_RL_K_LV					24	// Low range rate correction (N) low voltage range
-#define REG_RATE_OFFSET_LV			25	// Rate offset (in V) in low voltage range
-#define REG_CORR_RATE_BY_RATE_LV	26	// Correction factor based on rate (in %) LV
-
-// 14 -  29
+// 16 -  29
 #define REG_CELL1_GATEV1			30	// Gate voltage setpoint 1 for cell 1
 #define REG_CELL1_VRATE1			31	// Voltage rate setpoint 1 for cell 1
 // 32 - 111								// Setpoints for 6 cells (7 per cell)
