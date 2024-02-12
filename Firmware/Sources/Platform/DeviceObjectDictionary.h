@@ -14,14 +14,19 @@
 //
 #define ACT_APPLY_SETTINGS			10	// Apply settings to cells
 //
+#define ACT_START_TEST_100			97	// Start test 100 V/us
+#define ACT_START_TEST_200			98	// Start test 200 V/us
+#define ACT_START_TEST_320			99	// Start test 320 V/us
+//
 #define ACT_START_TEST_CUSTOM		100	// Start test custom voltage rate
-#define ACT_START_TEST_500			101	// Start test 500V/us
-#define ACT_START_TEST_1000			102	// Start test 1000V/us
-#define ACT_START_TEST_1600			103	// Start test 1600V/us
-#define ACT_START_TEST_2000			104	// Start test 2000V/us
-#define ACT_START_TEST_2500			105	// Start test 2500V/us
-#define ACT_ENABLE_EXT_SYNC_START   106 // Enable external sync
-#define ACT_DISABLE_EXT_SYNC_START  107 // Disable external sync
+//
+#define ACT_START_TEST_500			101	// Start test 500 V/us
+#define ACT_START_TEST_1000			102	// Start test 1000 V/us
+#define ACT_START_TEST_1600			103	// Start test 1600 V/us
+#define ACT_START_TEST_2000			104	// Start test 2000 V/us
+#define ACT_START_TEST_2500			105	// Start test 2500 V/us
+#define ACT_ENABLE_EXT_SYNC_START	106	// Enable external sync
+#define ACT_DISABLE_EXT_SYNC_START	107	// Disable external sync
 //
 #define ACT_STOP					109	// Stop test
 //

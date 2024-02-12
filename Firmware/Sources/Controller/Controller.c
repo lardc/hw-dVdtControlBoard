@@ -517,6 +517,18 @@ static Boolean CONTROL_DispatchAction(Int16U ActionID, pInt16U UserError)
             }
             break;
 
+		case ACT_START_TEST_100:
+			CONTROL_PrepareStart(UserError, 100 * 10, TRUE, TRUE);
+			break;
+
+		case ACT_START_TEST_200:
+			CONTROL_PrepareStart(UserError, 200 * 10, TRUE, TRUE);
+			break;
+
+		case ACT_START_TEST_320:
+			CONTROL_PrepareStart(UserError, 320 * 10, TRUE, TRUE);
+			break;
+
 		case ACT_START_TEST_CUSTOM:
 			CONTROL_PrepareStart(UserError, DataTable[REG_VOLTAGE_RATE], DataTable[REG_TUNE_CUSTOM_SETTING], TRUE);
 			break;
