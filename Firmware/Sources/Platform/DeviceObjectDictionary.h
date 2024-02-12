@@ -142,8 +142,9 @@
 #define REG_DISABLE_REASON			194	// Disbale reason in the case DeviceState -> DISABLE
 #define REG_WARNING					195	// Warning if present
 #define REG_PROBLEM					196	// Problem if present
+#define REG_TEST_FINISHED			197	// Indicates that test is done and there is result or fault
 //
-#define REG_TEST_RESULT				197	// Test result
+#define REG_TEST_RESULT				198	// Test result
 #define REG_FAULT_REASON_EX			199 // External fault code
 //
 #define REG_VOLTAGE_OK				200	// Charged summary
@@ -225,6 +226,12 @@
 // ENDPOINTS
 //
 #define EP16_Data_V					1	// Data V
+
+// OPERATION RESULTS
+//
+#define OPRESULT_NONE				0	// No information or not finished
+#define OPRESULT_OK					1	// Operation was successful
+#define OPRESULT_FAIL				2	// Operation failed
 
 // FAULT CODES
 //

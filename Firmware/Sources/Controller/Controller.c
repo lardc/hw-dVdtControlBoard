@@ -295,7 +295,8 @@ Boolean CONTROL_ApplySettings(Int16U VRate, Boolean PerfomRateCorrection)
 
 void CONTROL_EnableExternalSync(Boolean Enable)
 {
-    DataTable[REG_TEST_RESULT] = TEST_RESULT_NULL;
+	DataTable[REG_TEST_FINISHED] = OPRESULT_NONE;
+	DataTable[REG_TEST_RESULT] = TEST_RESULT_NULL;
     ZwPWM_EnableTZInterruptsGlobal(FALSE);
 
     // Prepare timer
@@ -345,6 +346,7 @@ void CONTROL_NotifyEndTest(Boolean Result, Int16U FaultReason, Int16U Warning)
 {
 	DataTable[REG_TEST_RESULT] = Result ? TEST_RESULT_OK : TEST_RESULT_FAIL;
 	DataTable[REG_WARNING] = Warning;
+	DataTable[REG_TEST_FINISHED] = (FaultReason == FAULT_NONE) ? OPRESULT_OK : OPRESULT_FAIL;
 	
 	if(FaultReason != FAULT_NONE)
 		CONTROL_SwitchToFault(FaultReason, 0);
@@ -380,6 +382,7 @@ static void CONTROL_FillWPPartDefault()
 	DataTable[REG_DEV_STATE] = DS_None;
 	DataTable[REG_FAULT_REASON] = FAULT_NONE;
 	DataTable[REG_WARNING] = WARNING_NONE;
+	DataTable[REG_TEST_FINISHED] = OPRESULT_NONE;
 	DataTable[REG_TEST_RESULT] = TEST_RESULT_NULL;
 	
 	for(i = REG_VOLTAGE_OK; i <= REG_CELL_STATE_6; ++i)
@@ -413,6 +416,7 @@ static void CONTROL_StartTest(Int16U VRate, Boolean PerfomRateCorrection, Boolea
 	ZbGPIO_SwitchOutRelay(StartTest);
 	ZbGPIO_SwitchLED2(StartTest);
 
+	DataTable[REG_TEST_FINISHED] = OPRESULT_NONE;
 	DataTable[REG_TEST_RESULT] = TEST_RESULT_NULL;
 	
 	if(!CONTROL_ApplySettings(VRate, PerfomRateCorrection))
