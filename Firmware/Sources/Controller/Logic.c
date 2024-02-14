@@ -23,6 +23,7 @@ static volatile Boolean WaitingForStart = FALSE;
 static volatile LogicState LOGIC_State = LS_None;
 static Int16U InternalFaultReason, ErrorCodeEx = 0;
 static Int64U Timeout;
+Int32U DesiredVoltageRate_x10;
 
 
 // Forward functions
@@ -139,7 +140,7 @@ static Boolean LOGIC_TestSequence()
 	ZbGPIO_SwitchStartPulse(TRUE);
 	ZbGPIO_SwitchResultOut(TRUE);
 
-	DELAY_US((DataTable[REG_DESIRED_VOLTAGE] / DataTable[REG_VOLTAGE_RATE]) + PRE_PROBE_TIME_US);
+	DELAY_US((DataTable[REG_DESIRED_VOLTAGE] / DesiredVoltageRate_x10) + PRE_PROBE_TIME_US);
 
 	ZbGPIO_SwitchStartPulse(FALSE);
 	ZbGPIO_SwitchOutRelay(FALSE);

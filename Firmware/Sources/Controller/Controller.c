@@ -139,7 +139,7 @@ Boolean CONTROL_EnableSingleCellMode()
      Voltage = (Int32U)DataTable[REG_DESIRED_VOLTAGE];
 
      // Условие активации работы с одиночной ячейкой
-     Boolean SingleCellMode = (Voltage <= DataTable[REG_SINGLE_CELL_V_LEVEL] && DataTable[REG_VOLTAGE_RATE] < MIN_RATE_FOR_DUO_MODE);
+     Boolean SingleCellMode = (Voltage <= DataTable[REG_SINGLE_CELL_V_LEVEL] && DesiredVoltageRate_x10 < MIN_RATE_FOR_DUO_MODE);
 
      return SingleCellMode;
 }
@@ -151,8 +151,8 @@ Boolean CONTROL_EnableDuoCellMode()
      Voltage = (Int32U)DataTable[REG_DESIRED_VOLTAGE];
 
      // Условие активации работы с двумя ячейками
-     Boolean DuoCellMode = (Voltage <= DataTable[REG_DUO_CELL_V_LEVEL] && DataTable[REG_VOLTAGE_RATE] > MIN_RATE_FOR_DUO_MODE
-    		 	 	 	 	 && DataTable[REG_VOLTAGE_RATE] < MAX_RATE_FOR_DUO_MODE);
+     Boolean DuoCellMode = (Voltage <= DataTable[REG_DUO_CELL_V_LEVEL] && DesiredVoltageRate_x10 > MIN_RATE_FOR_DUO_MODE
+    		 	 	 	 	 && DesiredVoltageRate_x10 < MAX_RATE_FOR_DUO_MODE);
 
      return DuoCellMode;
 }
@@ -176,7 +176,7 @@ Int16U CONTROL_СalculationRateXMode(Int16U MaxRate, Int16U MinRate, Int16U VRat
 	Int16U VRateMax = DataTable[MaxRate];
 	Int16U VRateMin = DataTable[MinRate];
 
-	if ((DataTable[REG_DESIRED_VOLTAGE] < 1500) && ((DataTable[REG_VOLTAGE_RATE] / 10) >= 1600))
+	if ((DataTable[REG_DESIRED_VOLTAGE] < 1500) && ((DesiredVoltageRate_x10 / 10) >= 1600))
 		VRate = (Int32U)(VRate - (Int32U)VRate * (1500 - DataTable[REG_DESIRED_VOLTAGE])/(1500 - 500) / DataTable[REG_CORR_VOL_RATE1] * 10);
 
 	if (DataTable[REG_UNIT_USE_RANGE1] && (VRate < SP_GetRange1MaxRate()))
@@ -591,6 +591,7 @@ void CONTROL_PrepareStart(pInt16U UserError, Int16U Rate_x10, Boolean UseCustomS
 	{
 		if(CONTROL_ValidateSettings(Rate_x10))
 		{
+			DesiredVoltageRate_x10 = Rate_x10;
 			CONTROL_HandleFanLogic(StartTest);
 			CONTROL_StartTest(Rate_x10, UseCustomSettings, StartTest);
 		}

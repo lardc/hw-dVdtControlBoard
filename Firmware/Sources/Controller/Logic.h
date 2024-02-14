@@ -19,6 +19,10 @@ typedef enum __LogicState
 } LogicState;
 
 
+// Variables
+extern Int32U DesiredVoltageRate_x10;
+
+
 // Functions
 //
 // Execute test
