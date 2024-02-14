@@ -144,11 +144,11 @@ Int16U SP_GetRangeXMaxRate(Int16U RangeBaseRateRegister)
 
 	if(CONTROL_EnableSingleCellMode())
 	{
-	    MaxRate = MaxRate * CELLMUX_CellCount();
+		MaxRate = MaxRate * CELLMUX_CellCount();
 	}
 	else if (CONTROL_EnableDuoCellMode())
 	{
-	    MaxRate = MaxRate * 2;
+		MaxRate = MaxRate * 2;
 	}
 
 	return MaxRate;

@@ -15,7 +15,7 @@ typedef enum __LogicState
 	LS_None			= 0,
 	LS_Measure		= 1,
 	LS_Pause		= 2,
-    LS_Apply        = 3
+	LS_Apply		= 3
 } LogicState;
 
 

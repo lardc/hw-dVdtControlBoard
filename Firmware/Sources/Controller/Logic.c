@@ -42,8 +42,8 @@ void LOGIC_BeginTest(Int64U TimerTicks)
 
 void LOGIC_ApplyParameters(Int64U TimerTicks)
 {
-    Timeout = TimerTicks + TEST_APPLY_FIXED_MS;
-    LOGIC_State = LS_Apply;
+	Timeout = TimerTicks + TEST_APPLY_FIXED_MS;
+	LOGIC_State = LS_Apply;
 }
 // ----------------------------------------
 
@@ -58,14 +58,14 @@ void LOGIC_Update(Int64U TimerTicks)
 
 	if(LOGIC_State != LS_None)
 	{
-	    voltageOK = TRUE;
+		voltageOK = TRUE;
 
-	    for(i = 0; i < MAX_CELLS_COUNT; ++i)
-	        if (((1 << i) & CELLMUX_CellMask()) != 0)
-	            if(!(voltageOK &= DataTable[REG_VOLTAGE_OK_1 + i] ? TRUE : FALSE))
-	                targetCell = i;
+		for(i = 0; i < MAX_CELLS_COUNT; ++i)
+			if (((1 << i) & CELLMUX_CellMask()) != 0)
+				if(!(voltageOK &= DataTable[REG_VOLTAGE_OK_1 + i] ? TRUE : FALSE))
+					targetCell = i;
 
-            DataTable[REG_VOLTAGE_OK] = voltageOK ? 1 : 0;
+			DataTable[REG_VOLTAGE_OK] = voltageOK ? 1 : 0;
 	}
 
 	switch (LOGIC_State)
@@ -95,18 +95,18 @@ void LOGIC_Update(Int64U TimerTicks)
 			}
 			break;
 
-        case LS_Apply:
-            if (voltageOK)
-            {
-                CONTROL_NotifyEndTest(FALSE, FAULT_NONE, WARNING_NONE);
-                LOGIC_Reset();
-            }
-            else if (TimerTicks > Timeout + TEST_APPLY_FIXED_MS)
-            {
-                CONTROL_NotifyEndTest(FALSE, FAULT_NOT_READY_1 + targetCell, WARNING_NONE);
-                LOGIC_Reset();
-            }
-            break;
+		case LS_Apply:
+			if (voltageOK)
+			{
+				CONTROL_NotifyEndTest(FALSE, FAULT_NONE, WARNING_NONE);
+				LOGIC_Reset();
+			}
+			else if (TimerTicks > Timeout + TEST_APPLY_FIXED_MS)
+			{
+				CONTROL_NotifyEndTest(FALSE, FAULT_NOT_READY_1 + targetCell, WARNING_NONE);
+				LOGIC_Reset();
+			}
+			break;
 
 		default:
 			break;

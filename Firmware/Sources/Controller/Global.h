@@ -32,7 +32,7 @@
 #define MAX_CELLS_COUNT					6			// maximum cells 6
 #define SCCI_CELL_NODE_ID				0			// cells have NodeID 0
 #define	SCCI_TIMEOUT_TICKS_MS			500			// (in ms)
-#define TEST_APPLY_FIXED_MS             9000         // Apply parameters fixed delay (in ms)
+#define TEST_APPLY_FIXED_MS				9000		// Apply parameters fixed delay (in ms)
 #define TEST_PREPARE_TIMEOUT_MS			5000		// (in ms)
 #define TEST_PAUSE_LONG_MS				1000		// Long pause in case of triggered device (in ms)
 #define TEST_PAUSE_SHORT_MS				500			// Short pause between measurements (in ms)
@@ -56,16 +56,16 @@
 
 #define INVERT_SYNC						FALSE		// Invert SYNC pin
 
-#define TEST_RESULT_NULL                0           //
-#define TEST_RESULT_OK                  1           //
-#define TEST_RESULT_FAIL                2           //
+#define TEST_RESULT_NULL				0
+#define TEST_RESULT_OK					1
+#define TEST_RESULT_FAIL				2
 
-#define CSU_VOLTAGE_OFFSET              100         // Voltage offset for CSU
+#define CSU_VOLTAGE_OFFSET				100			// Voltage offset for CSU
 
-#define EXT_LED_SWITCH_ON_TIME          500         // (in ms)
+#define EXT_LED_SWITCH_ON_TIME			500			// (in ms)
 
-#define MIN_RATE_FOR_DUO_MODE           4000        // (В/мкс) * 10
-#define MAX_RATE_FOR_DUO_MODE           8000        // (В/мкс) * 10
+#define MIN_RATE_FOR_DUO_MODE			4000		// (В/мкс) * 10
+#define MAX_RATE_FOR_DUO_MODE			8000		// (В/мкс) * 10
 
 //--------------------------------------------------------
 
