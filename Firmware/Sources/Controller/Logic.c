@@ -140,7 +140,7 @@ static Boolean LOGIC_TestSequence()
 	ZbGPIO_SwitchStartPulse(TRUE);
 	ZbGPIO_SwitchResultOut(TRUE);
 
-	DELAY_US((DataTable[REG_DESIRED_VOLTAGE] / DesiredVoltageRate_x10) + PRE_PROBE_TIME_US);
+	DELAY_US((10ul * DataTable[REG_DESIRED_VOLTAGE] / DesiredVoltageRate_x10) + PRE_PROBE_TIME_US);
 
 	ZbGPIO_SwitchStartPulse(FALSE);
 	ZbGPIO_SwitchOutRelay(FALSE);
