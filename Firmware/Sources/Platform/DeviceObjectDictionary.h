@@ -38,7 +38,7 @@
 #define ACT_DIAG_PULSE_SWITCH		115
 #define ACT_DIAG_PULSE_LED			116
 #define ACT_DIAG_PULSE_SYNC			117
-#define ACT_DIAG_READ_REALT         118
+#define ACT_DIAG_READ_REALT			118
 // 118
 #define ACT_DIAG_GENERATE_SETP		119
 #define ACT_DIAG_READ_CELL_REG		120
@@ -79,23 +79,23 @@
 #define REG_CORR_RANGE2				20	// Correction coefficient for range 2 x1000
 #define REG_SINGLE_CELL_NUMBER		21	// Single cell number
 #define REG_SINGLE_CELL_V_LEVEL		22	// Maximum voltage for single cell mode (in V)
-#define REG_SINGLE_RATE_MAX         23  // Single cell max rate (in V/us x10)
-#define REG_SINGLE_RATE_MIN         24  // Single cell min rate (in V/us x10)
-#define REG_SINGLE_CORR_BY_RATE     25  // Single correction factor based on rate (in %)
-#define REG_SINGLE_CORR_VPOINT      26  // Single voltage point for correction based on voltage (in V)
-#define REG_SINGLE_CORR_BY_VOLTAGE  27  // Single correction factor based on voltage (in %)
-#define REG_SINGLE_CORR_RANGE1      28  // Single correction coefficient for range 1 x1000
-#define REG_SINGLE_CORR_RANGE2      29  // Single correction coefficient for range 2 based on voltage
-#define REG_SINGLE_RATE_GLOBAL_K_N  30  // Single global rate correction (N)
-#define REG_SINGLE_RATE_GLOBAL_K_D  31  // Single global rate correction (D)
-#define REG_SINGLE_RATE_OFFSET      32  // Single offset based on voltage
-#define REG_RATE_OFFSET             33  // Offset based on voltage
-#define REG_SINGLE_OFFSET_RANGE2    34  // Single Offset range2 based on voltage
-#define REG_OFFSET_RANGE2           35  // Offset range2 based on voltage
-#define REG_CORR_VOL_RATE1			36  // Корректировка скорости нарастания до 1500 В и скорости выше 1600 В/мкс
-#define REG_DUO_CELL_V_LEVEL        37  // Prop for range 2
-#define REG_DBG_DATA                38  // debug data
-#define REG_CSU_V_OFFSET            39  // CSU Voltage Offset V
+#define REG_SINGLE_RATE_MAX			23	// Single cell max rate (in V/us x10)
+#define REG_SINGLE_RATE_MIN			24	// Single cell min rate (in V/us x10)
+#define REG_SINGLE_CORR_BY_RATE		25	// Single correction factor based on rate (in %)
+#define REG_SINGLE_CORR_VPOINT		26	// Single voltage point for correction based on voltage (in V)
+#define REG_SINGLE_CORR_BY_VOLTAGE	27	// Single correction factor based on voltage (in %)
+#define REG_SINGLE_CORR_RANGE1		28	// Single correction coefficient for range 1 x1000
+#define REG_SINGLE_CORR_RANGE2		29	// Single correction coefficient for range 2 based on voltage
+#define REG_SINGLE_RATE_GLOBAL_K_N	30	// Single global rate correction (N)
+#define REG_SINGLE_RATE_GLOBAL_K_D	31	// Single global rate correction (D)
+#define REG_SINGLE_RATE_OFFSET		32	// Single offset based on voltage
+#define REG_RATE_OFFSET				33	// Offset based on voltage
+#define REG_SINGLE_OFFSET_RANGE2	34	// Single Offset range2 based on voltage
+#define REG_OFFSET_RANGE2			35	// Offset range2 based on voltage
+#define REG_CORR_VOL_RATE1			36	// Корректировка скорости нарастания до 1500 В и скорости выше 1600 В/мкс
+#define REG_DUO_CELL_V_LEVEL		37	// Prop for range 2
+#define REG_DBG_DATA				38	// debug data
+#define REG_CSU_V_OFFSET			39	// CSU Voltage Offset V
 // 38 - 39
 #define REG_CELL1_GATEV1			40	// Gate voltage setpoint 1 for cell 1
 #define REG_CELL1_VRATE1			41	// Voltage rate setpoint 1 for cell 1
@@ -208,7 +208,7 @@
 // CELL REGISTERS
 //
 #define CELL_REG_DESIRED_VOLTAGE	1	// Desired cell voltage
-#define CELL_REG_DESIRED_GATE_V		2   // Desired gate voltage
+#define CELL_REG_DESIRED_GATE_V		2	// Desired gate voltage
 #define	CELL_REG_VOLTAGE_FINE_N		3	// Voltage coefficient N (D = 1024)
 #define	CELL_REG_RATE_RANGE			4	// Rate range selector
 //

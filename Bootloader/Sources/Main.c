@@ -82,26 +82,26 @@ void FlashLoader(void)
 // Initialize and prepare DSP
 Boolean InitializeCPU()
 {
-    Boolean clockInitResult;
+	Boolean clockInitResult;
 
 	// Init clock and peripherals
-    clockInitResult = ZwSystem_Init(CPU_PLL, CPU_CLKINDIV, SYS_LOSPCP, SYS_HISPCP, SYS_PUMOD);
+	clockInitResult = ZwSystem_Init(CPU_PLL, CPU_CLKINDIV, SYS_LOSPCP, SYS_HISPCP, SYS_PUMOD);
 
-    if(clockInitResult)
-    {
+	if(clockInitResult)
+	{
 		// Do default GPIO configuration
 		ZwGPIO_Init(GPIO_TSAMPLE, GPIO_TSAMPLE, GPIO_TSAMPLE, GPIO_TSAMPLE, GPIO_TSAMPLE);
 		// Initialize PIE
 		ZwPIE_Init();
 		// Prepare PIE vectors
 		ZwPIE_Prepare();
-    }
+	}
 
 	// Configure flash
 	ZW_FLASH_CODE_SHADOW;
 	ZW_FLASH_OPTIMIZE(FLASH_FWAIT, FLASH_OTPWAIT);
 
-   	return clockInitResult;
+	return clockInitResult;
 }
 // -----------------------------------------
 
@@ -183,7 +183,7 @@ ISRCALL Timer2_ISR(void)
 // Line 0 ISR
 ISRCALL CAN0_ISR(void)
 {
-    // handle CAN system events
+	// handle CAN system events
 	ZwCANa_DispatchSysEvent();
 
 	// allow other interrupts from group 9
