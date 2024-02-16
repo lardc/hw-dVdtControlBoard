@@ -103,6 +103,7 @@ void LOGIC_Update(Int64U TimerTicks)
 
 void LOGIC_Reset()
 {
+	CycleActive = FALSE;
 	LOGIC_State = LS_None;
 	ZbGPIO_SwitchLED2(FALSE);
 	ZbGPIO_SwitchOutRelay(FALSE);

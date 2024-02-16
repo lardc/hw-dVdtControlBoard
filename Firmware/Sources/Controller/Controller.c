@@ -24,7 +24,7 @@
 //
 volatile Int64U CONTROL_TimeCounter = 0;
 volatile DeviceState CONTROL_State = DS_None;
-static volatile Boolean CycleActive = FALSE;
+volatile Boolean CycleActive = FALSE;
 static Int16U cellVoltageCopy = 0, cellVRate_x10Copy = 0;
 static Int16U CONTROL_RateRangeArray[MAX_CELLS_COUNT], CONTROL_GateVArray[MAX_CELLS_COUNT];
 //
