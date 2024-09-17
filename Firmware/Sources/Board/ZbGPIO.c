@@ -23,7 +23,7 @@ void ZbGPIO_Init()
     ZwGPIO_WritePin(PIN_DEBUG, FALSE);
     ZwGPIO_WritePin(PIN_RESULT_OUT, FALSE);
     ZwGPIO_WritePin(PIN_START_PULSE, FALSE);
-    ZwGPIO_WritePin(PIN_SYNC_EN, TRUE);
+    ZwGPIO_WritePin(PIN_SYNC_EN, FALSE);
     ZwGPIO_WritePin(PIN_OPT_V1V2, FALSE);
     ZwGPIO_WritePin(PIN_OPT_V3V4, FALSE);
     ZwGPIO_WritePin(PIN_OPT_V5V6, FALSE);
@@ -98,7 +98,7 @@ void ZbGPIO_SwitchResultOut(Boolean Set)
 
 void ZbGPIO_SwitchSyncEn(Boolean Enable)
 {
-    ZwGPIO_WritePin(PIN_SYNC_EN, !Enable);
+    ZwGPIO_WritePin(PIN_SYNC_EN, Enable);
 }
 // ----------------------------------------
 

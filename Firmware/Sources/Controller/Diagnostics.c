@@ -69,6 +69,10 @@ Boolean DIAG_DispatchCommand(Int16U Command)
 			SP_GetSetpointArray(CONTROL_СorrectRate(DataTable[REG_DESIRED_VOLTAGE] / CELLMUX_CellCount(), DataTable[REG_VOLTAGE_RATE] / CELLMUX_CellCount()), NULL, NULL);
 			break;
 
+		case ACT_DIAG_PULSE_SYNC_EN:
+			ZbGPIO_SwitchSyncEn(DataTable[REG_DBG]);
+			break;
+
 		default:
 			return FALSE;
 	}

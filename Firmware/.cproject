@@ -16,7 +16,7 @@
 			<storageModule moduleId="cdtBuildSystem" version="4.0.0">
 				<configuration artifactExtension="out" artifactName="${ProjName}" buildProperties="" cleanCommand="${CG_CLEAN_CMD}" description="" id="com.ti.ccstudio.buildDefinitions.C2000.Debug.1100059998" name="Debug" parent="com.ti.ccstudio.buildDefinitions.C2000.Debug" postbuildStep="" prebuildStep="">
 					<folderInfo id="com.ti.ccstudio.buildDefinitions.C2000.Debug.1100059998." name="/" resourcePath="">
-						<toolChain id="com.ti.ccstudio.buildDefinitions.C2000_6.4.exe.DebugToolchain.106868057" name="TI Build Tools" superClass="com.ti.ccstudio.buildDefinitions.C2000_6.4.exe.DebugToolchain" targetTool="com.ti.ccstudio.buildDefinitions.C2000_6.4.exe.linkerDebug.1176230203">
+						<toolChain id="com.ti.ccstudio.buildDefinitions.C2000_6.4.exe.DebugToolchain.106868057" name="TI Build Tools" secondaryOutputs="com.ti.ccstudio.buildDefinitions.C2000_6.4.hex.outputType__BIN" superClass="com.ti.ccstudio.buildDefinitions.C2000_6.4.exe.DebugToolchain" targetTool="com.ti.ccstudio.buildDefinitions.C2000_6.4.exe.linkerDebug.1176230203">
 							<option id="com.ti.ccstudio.buildDefinitions.core.OPT_TAGS.1098351950" superClass="com.ti.ccstudio.buildDefinitions.core.OPT_TAGS" valueType="stringList">
 								<listOptionValue builtIn="false" value="DEVICE_CONFIGURATION_ID=TMS320C28XX.TMS320F2809"/>
 								<listOptionValue builtIn="false" value="OUTPUT_FORMAT=COFF"/>
@@ -78,7 +78,9 @@
 								<inputType id="com.ti.ccstudio.buildDefinitions.C2000_6.4.exeLinker.inputType__CMD2_SRCS.1492607986" name="Linker Command Files" superClass="com.ti.ccstudio.buildDefinitions.C2000_6.4.exeLinker.inputType__CMD2_SRCS"/>
 								<inputType id="com.ti.ccstudio.buildDefinitions.C2000_6.4.exeLinker.inputType__GEN_CMDS.824290955" name="Generated Linker Command Files" superClass="com.ti.ccstudio.buildDefinitions.C2000_6.4.exeLinker.inputType__GEN_CMDS"/>
 							</tool>
-							<tool id="com.ti.ccstudio.buildDefinitions.C2000_6.4.hex.1607356419" name="C2000 Hex Utility" superClass="com.ti.ccstudio.buildDefinitions.C2000_6.4.hex"/>
+							<tool id="com.ti.ccstudio.buildDefinitions.C2000_6.4.hex.1607356419" name="C2000 Hex Utility" superClass="com.ti.ccstudio.buildDefinitions.C2000_6.4.hex">
+								<option id="com.ti.ccstudio.buildDefinitions.C2000_6.4.hex.TOOL_ENABLE.1076070377" superClass="com.ti.ccstudio.buildDefinitions.C2000_6.4.hex.TOOL_ENABLE" value="true" valueType="boolean"/>
+							</tool>
 						</toolChain>
 					</folderInfo>
 					<sourceEntries>
