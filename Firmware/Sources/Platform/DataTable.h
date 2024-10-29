@@ -12,7 +12,7 @@
 //
 #define DATA_TABLE_NV_SIZE			128
 #define DATA_TABLE_SIZE				320
-#define DATA_TABLE_SIZE_PLUS_EXT	512
+#define DATA_TABLE_SIZE_PLUS_EXT	640
 #define DATA_TABLE_NV_EXT_SIZE		(DATA_TABLE_SIZE_PLUS_EXT - DATA_TABLE_SIZE)
 //
 #define DATA_TABLE_NV_START 		0
@@ -35,8 +35,8 @@
  * 		END OF READ-ONLY FW INFO AREA	--------- 319
  * 		START OF EXT NV-AREA		------------- 320
  * 			[EXT NV-AREA]
- *		END OF EXT NV-AREA			------------- 511
- * DATA TABLE END 					------------- [512]
+ *		END OF EXT NV-AREA			------------- 639
+ * DATA TABLE END 					------------- [640]
  */
 
 // Types

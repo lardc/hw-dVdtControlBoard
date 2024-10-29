@@ -27,6 +27,7 @@
 #define ACT_START_TEST_1600			103	// Start test 1600V/us
 #define ACT_START_TEST_2000			104	// Start test 2000V/us
 #define ACT_START_TEST_2500			105	// Start test 2500V/us
+//
 #define ACT_ENABLE_EXT_SYNC_START	106	// Enable external sync
 #define ACT_DISABLE_EXT_SYNC_START	107	// Disable external sync
 //
@@ -72,28 +73,25 @@
 #define REG_UNIT_USE_RANGE_LOW		17	// Use setpoint data for range low
 #define REG_UNIT_USE_RANGE_MID		18	// Use setpoint data for range mid
 #define REG_UNIT_USE_RANGE_HIGH		19	// Use setpoint data for range high
-
 // 20 - 39
 #define REG_CELL1_HIGH_GATEV1		40	// Gate voltage setpoint 1 for cell 1
 #define REG_CELL1_HIGH_VRATE1		41	// Voltage rate setpoint 1 for cell 1
 // 42 - 121								// Setpoints for 6 cells (7 per cell)
 #define REG_CELL6_HIGH_GATEV7		122	// Gate voltage setpoint 7 for cell 6
 #define REG_CELL6_HIGH_VRATE7		123	// Voltage rate setpoint 7 for cell 6
-//
 
-#define REG_DBG						150		// Отладочный регистр 1
 // Extended NV-registers
 // Range 1
 #define REG_CELL1_LOW_GATEV1		320	// Gate voltage setpoint 1 for cell 1
 #define REG_CELL1_LOW_VRATE1		321	// Voltage rate setpoint 1 for cell 1
-// 322 - 400						// Setpoints for 6 cells (7 per cell)
+// 322 - 400							// Setpoints for 6 cells (7 per cell)
 #define REG_CELL6_LOW_GATEV7		401	// Gate voltage setpoint 7 for cell 6
 #define REG_CELL6_LOW_VRATE7		402	// Voltage rate setpoint 7 for cell 6
 //
 // Range 2
 #define REG_CELL1_MID_GATEV1		410	// Gate voltage setpoint 1 for cell 1
 #define REG_CELL1_MID_VRATE1		411	// Voltage rate setpoint 1 for cell 1
-// 412 - 490						// Setpoints for 6 cells (7 per cell)
+// 412 - 490							// Setpoints for 6 cells (7 per cell)
 #define REG_CELL6_MID_GATEV7		491	// Gate voltage setpoint 7 for cell 6
 #define REG_CELL6_MID_VRATE7		492	// Voltage rate setpoint 7 for cell 6
 //
@@ -101,7 +99,9 @@
 //
 #define REG_DESIRED_VOLTAGE			128	// Desired plate voltage (in V)
 #define REG_VOLTAGE_RATE			129	// dV/dt rate (in V/us x10)
-// 130 - 184
+
+#define REG_DBG						150	// Отладочный регистр
+
 #define REG_DIAG_TEST_CELL_ID		185
 #define REG_DIAG_TEST_PARAM_1		186
 #define REG_DIAG_TEST_PARAM_2		187
