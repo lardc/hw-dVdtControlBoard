@@ -211,3 +211,35 @@ const TableItemConstraint VConstraint[DATA_TABLE_WP_START - DATA_TABLE_WR_START]
 										{0, 0, 0}																// 191
 									};
 
+/*
+										{0, INT16U_MAX, 0}																// 500
+										{0, INT16U_MAX, 0}																// 501
+										{0, INT16U_MAX, 0}																// 502
+										{0, INT16U_MAX, 0}																// 503
+										{0, INT16U_MAX, 0}																// 504
+										{0, INT16U_MAX, 0}																// 505
+										{0, INT16U_MAX, 0}																// 506
+										{0, INT16U_MAX, 0}																// 507
+										{0, INT16U_MAX, 0}																// 508
+										{0, INT16U_MAX, 0}																// 509
+										{0, INT16U_MAX, 0}																// 510
+										{0, INT16U_MAX, 0}																// 511
+										{0, INT16U_MAX, 0}																// 512
+										{0, INT16U_MAX, 0}																// 513
+										{0, INT16U_MAX, 0}																// 514
+										{0, INT16U_MAX, 0}																// 515
+										{0, INT16U_MAX, 0}																// 516
+										{0, INT16U_MAX, 0}																// 517
+										{0, INT16U_MAX, 0}																// 518
+										{0, INT16U_MAX, 0}																// 519
+										{0, INT16U_MAX, 0}																// 520
+										{0, INT16U_MAX, 0}																// 521
+										{0, INT16U_MAX, 0}																// 522
+										{0, INT16U_MAX, 0}																// 523
+										{0, INT16U_MAX, 0}																// 524
+										{0, INT16U_MAX, 0}																// 525
+										{0, INT16U_MAX, 0}																// 526
+										{0, INT16U_MAX, 0}																// 527
+										{0, INT16U_MAX, 0}																// 528
+										{0, INT16U_MAX, 0}																// 529
+*/

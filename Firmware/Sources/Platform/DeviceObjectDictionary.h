@@ -167,7 +167,41 @@
 // 258 - 259
 #define REG_FWINFO_STR_LEN			260	// Length of the information string record
 #define REG_FWINFO_STR_BEGIN		261	// Begining of the information string record
-
+//
+// 262 - 499
+//
+#define REG_RATE_TUNE_20_P2			500	// 20V/us tune quadratic coefficient P2
+#define REG_RATE_TUNE_20_P1			501	// 20V/us tune quadratic coefficient P1
+#define REG_RATE_TUNE_20_P0			502	// 20V/us tune quadratic coefficient P0
+#define REG_RATE_TUNE_50_P2			503	// 50V/us tune quadratic coefficient P2
+#define REG_RATE_TUNE_50_P1			504	// 50V/us tune quadratic coefficient P1
+#define REG_RATE_TUNE_50_P0			505	// 50V/us tune quadratic coefficient P0 
+#define REG_RATE_TUNE_100_P2		506	// 100V/us tune quadratic coefficient P2 
+#define REG_RATE_TUNE_100_P1		507	// 100V/us tune quadratic coefficient P1 
+#define REG_RATE_TUNE_100_P0		508	// 100V/us tune quadratic coefficient P0 
+#define REG_RATE_TUNE_200_P2		509	// 200V/us tune quadratic coefficient P2 
+#define REG_RATE_TUNE_200_P1		510	// 200V/us tune quadratic coefficient P1 
+#define REG_RATE_TUNE_200_P0		511	// 200V/us tune quadratic coefficient P0 
+#define REG_RATE_TUNE_320_P2		512	// 320V/us tune quadratic coefficient P2 
+#define REG_RATE_TUNE_320_P1		513	// 320V/us tune quadratic coefficient P1 
+#define REG_RATE_TUNE_320_P0		514	// 320V/us tune quadratic coefficient P0 
+//
+#define REG_RATE_TUNE_500_P2		515	// 500V/us tune quadratic coefficient P2
+#define REG_RATE_TUNE_500_P1		516	// 500V/us tune quadratic coefficient P1
+#define REG_RATE_TUNE_500_P0		517	// 500V/us tune quadratic coefficient P0
+#define REG_RATE_TUNE_1000_P2		518	// 1000V/us tune quadratic coefficient P2
+#define REG_RATE_TUNE_1000_P1		519	// 1000V/us tune quadratic coefficient P1
+#define REG_RATE_TUNE_1000_P0		520	// 1000V/us tune quadratic coefficient P0
+#define REG_RATE_TUNE_1600_P2		521	// 1600V/us tune quadratic coefficient P2
+#define REG_RATE_TUNE_1600_P1		522	// 1600V/us tune quadratic coefficient P1
+#define REG_RATE_TUNE_1600_P0		523	// 1600V/us tune quadratic coefficient P0
+#define REG_RATE_TUNE_2000_P2		524	// 2000V/us tune quadratic coefficient P2
+#define REG_RATE_TUNE_2000_P1		525	// 2000V/us tune quadratic coefficient P1
+#define REG_RATE_TUNE_2000_P0		526	// 2000V/us tune quadratic coefficient P0
+#define REG_RATE_TUNE_2500_P2		527	// 2500V/us tune quadratic coefficient P2
+#define REG_RATE_TUNE_2500_P1		528	// 2500V/us tune quadratic coefficient P1
+#define REG_RATE_TUNE_2500_P0		529	// 2500V/us tune quadratic coefficient P0
+//
 // CELL ACTIONS
 //
 #define CELL_ACT_ENABLE_POWER		1	// Enable flyback converter
