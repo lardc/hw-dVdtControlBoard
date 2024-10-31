@@ -44,7 +44,7 @@ void CONTROL_NotifyCANFault(ZwCAN_SysFlags Flag);
 void CONTROL_NotifyEndTest(Boolean Result, Int16U FaultReason, Int16U Warning);
 void CONTROL_HandleFanLogic(Boolean IsImpulse);
 // Rate calculator
-Int16U CONTROL_СorrectRate(Int16U cellVoltage, Int16U VRate);
+Int16U CONTROL_СorrectRate(Int16U Voltage, Int16U VRate, Int16U ActionID);
 // Enable external sync
 void CONTROL_EnableExternalSync(Boolean Enable);
 // Start test from external sync

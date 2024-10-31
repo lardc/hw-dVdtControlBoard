@@ -7,6 +7,8 @@
 
 // Include
 #include "SysConfig.h"
+#include "DataTable.h"
+#include "DeviceObjectDictionary.h"
 #include "Global.h"
 
 // Functions
@@ -23,7 +25,7 @@ void ZbGPIO_Init()
     ZwGPIO_WritePin(PIN_DEBUG, FALSE);
     ZwGPIO_WritePin(PIN_RESULT_OUT, FALSE);
     ZwGPIO_WritePin(PIN_START_PULSE, FALSE);
-    ZwGPIO_WritePin(PIN_SYNC_EN, TRUE);
+    ZwGPIO_WritePin(PIN_SYNC_EN, DataTable[REG_INVERT_SYNC] ? TRUE: FALSE);
     ZwGPIO_WritePin(PIN_OPT_V1V2, FALSE);
     ZwGPIO_WritePin(PIN_OPT_V3V4, FALSE);
     ZwGPIO_WritePin(PIN_OPT_V5V6, FALSE);

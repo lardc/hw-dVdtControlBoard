@@ -40,7 +40,7 @@ static Boolean CONTROL_DispatchAction(Int16U ActionID, pInt16U UserError);
 static void CONTROL_SwitchToFault(Int16U FaultReason, Int16U ErrorCodeEx);
 static void CONTROL_SwitchToFaultEx();
 Boolean CONTROL_ApplySettings(Int16U CellVRate_x10, Int16U CellVoltage);
-static void CONTROL_PrepareStart(pInt16U UserError, Int16U VRate_x10, Boolean StartTest);
+static void CONTROL_PrepareStart(pInt16U UserError, Int16U VRate_x10, Boolean StartTest, Int16U ActionID);
 
 // Functions
 //
@@ -119,9 +119,32 @@ Int16U CONTROL_CorrectVoltage()
 }
 // ----------------------------------------
 
-Int16U CONTROL_СorrectRate(Int16U cellVoltage, Int16U VRate_x10)
+Int16U CONTROL_СorrectRate(Int16U Voltage, Int16U VRate_x10, Int16U ActionID)
 {
-	return (Int32S)DataTable[REG_RATE_GLOBAL_OFFSET] * VRate_x10 / cellVoltage +
+	Int16U offset = 0;
+
+	switch (ActionID) {
+		case ACT_START_TEST_20:		offset = REG_RATE_TUNE_20_P0; break;
+		case ACT_START_TEST_50:		offset = REG_RATE_TUNE_50_P0; break;
+		case ACT_START_TEST_100:	offset = REG_RATE_TUNE_100_P0; break;
+		case ACT_START_TEST_200:	offset = REG_RATE_TUNE_200_P0; break;
+		case ACT_START_TEST_320:	offset = REG_RATE_TUNE_320_P0; break;
+		case ACT_START_TEST_500:	offset = REG_RATE_TUNE_500_P0; break;
+		case ACT_START_TEST_1000:	offset = REG_RATE_TUNE_1000_P0; break;
+		case ACT_START_TEST_1600:	offset = REG_RATE_TUNE_1600_P0; break;
+		case ACT_START_TEST_2000:	offset = REG_RATE_TUNE_2000_P0; break;
+		case ACT_START_TEST_2500:	offset = REG_RATE_TUNE_2500_P0; break;
+		default: return 0;
+	}
+
+	Int32S P2 = DataTable[offset];
+	Int32S P1 = DataTable[offset + 1];
+	Int32S P0 = DataTable[offset + 2];
+
+	Int32S correctedRate = VRate_x10 + P2 * Voltage * Voltage + P1 * Voltage + P0;
+
+	return (correctedRate > 0) ? correctedRate : 0;
+return (Int32S)DataTable[REG_RATE_GLOBAL_OFFSET] * VRate_x10 / cellVoltage +
 			(Int32S)VRate_x10 * DataTable[REG_RATE_GLOBAL_K_N] / DataTable[REG_RATE_GLOBAL_K_D];
 }
 // ----------------------------------------
@@ -285,7 +308,7 @@ static Boolean CONTROL_DispatchAction(Int16U ActionID, pInt16U UserError)
 
 		case ACT_APPLY_SETTINGS:
 			if(CONTROL_State == DS_Ready)
-				CONTROL_PrepareStart(UserError, DataTable[REG_VOLTAGE_RATE], FALSE);
+				CONTROL_PrepareStart(UserError, DataTable[REG_VOLTAGE_RATE], FALSE, 0);
 			break;
 
 		case ACT_ENABLE_EXT_SYNC_START:
@@ -298,47 +321,47 @@ static Boolean CONTROL_DispatchAction(Int16U ActionID, pInt16U UserError)
 			break;
 
 		case ACT_START_TEST_CUSTOM:
-			CONTROL_PrepareStart(UserError, DataTable[REG_VOLTAGE_RATE], TRUE);
+			CONTROL_PrepareStart(UserError, DataTable[REG_VOLTAGE_RATE], TRUE, ACT_START_TEST_CUSTOM);
 			break;
 
 		case ACT_START_TEST_500:
-			CONTROL_PrepareStart(UserError, 500 * 10, TRUE);
+			CONTROL_PrepareStart(UserError, 500 * 10, TRUE, ACT_START_TEST_500);
 			break;
 
 		case ACT_START_TEST_1000:
-			CONTROL_PrepareStart(UserError, 1000 * 10, TRUE);
+			CONTROL_PrepareStart(UserError, 1000 * 10, TRUE, ACT_START_TEST_1000);
 			break;
 
 		case ACT_START_TEST_1600:
-			CONTROL_PrepareStart(UserError, 1600 * 10, TRUE);
+			CONTROL_PrepareStart(UserError, 1600 * 10, TRUE, ACT_START_TEST_1600);
 			break;
 
 		case ACT_START_TEST_2000:
-			CONTROL_PrepareStart(UserError, 2000 * 10, TRUE);
+			CONTROL_PrepareStart(UserError, 2000 * 10, TRUE, ACT_START_TEST_2000);
 			break;
 
 		case ACT_START_TEST_2500:
-			CONTROL_PrepareStart(UserError, 2500 * 10, TRUE);
+			CONTROL_PrepareStart(UserError, 2500 * 10, TRUE, ACT_START_TEST_2500);
 			break;
 
 		case ACT_START_TEST_200:
-			CONTROL_PrepareStart(UserError, 200 * 10, TRUE);
+			CONTROL_PrepareStart(UserError, 200 * 10, TRUE, ACT_START_TEST_200);
 			break;
 
 		case ACT_START_TEST_320:
-			CONTROL_PrepareStart(UserError, 320 * 10, TRUE);
+			CONTROL_PrepareStart(UserError, 320 * 10, TRUE, ACT_START_TEST_320);
 			break;
 
 		case ACT_START_TEST_20:
-			CONTROL_PrepareStart(UserError, 20 * 10, TRUE);
+			CONTROL_PrepareStart(UserError, 20 * 10, TRUE, ACT_START_TEST_20);
 			break;
 
 		case ACT_START_TEST_50:
-			CONTROL_PrepareStart(UserError, 50 * 10, TRUE);
+			CONTROL_PrepareStart(UserError, 50 * 10, TRUE, ACT_START_TEST_50);
 			break;
 
 		case ACT_START_TEST_100:
-			CONTROL_PrepareStart(UserError, 100 * 10, TRUE);
+			CONTROL_PrepareStart(UserError, 100 * 10, TRUE, ACT_START_TEST_100);
 			break;
 
 		case ACT_CLR_FAULT:
@@ -370,13 +393,13 @@ static Boolean CONTROL_DispatchAction(Int16U ActionID, pInt16U UserError)
 }
 // ----------------------------------------
 
-void CONTROL_PrepareStart(pInt16U UserError, Int16U VRate_x10, Boolean StartTest)
+void CONTROL_PrepareStart(pInt16U UserError, Int16U VRate_x10, Boolean StartTest, Int16U ActionID)
 {
 	if(CONTROL_State == DS_Ready)
 	{
 		Int16U cellCount = CELLMUX_CellCount();
 		Int16U cellVoltage = CONTROL_CorrectVoltage() / cellCount;
-		Int16U cellVRate_x10 = CONTROL_СorrectRate(cellVoltage, VRate_x10) / cellCount;
+		Int16U cellVRate_x10 = CONTROL_СorrectRate(cellVoltage * cellCount, VRate_x10, ActionID) / cellCount;
 
 		// Проверка уставки по напряжению и скорости нарастания
 		if(DataTable[REG_CELL_MIN_VOLTAGE] <= cellVoltage && cellVoltage <= DataTable[REG_CELL_MAX_VOLTAGE] &&

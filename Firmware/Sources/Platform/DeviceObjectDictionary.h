@@ -58,17 +58,15 @@
 #define REG_V_FINE_D				1	// Voltage amplitude fine (D)
 #define REG_V_OFFSET				2	// Voltage offset (in V)
 #define REG_CSU_V_OFFSET			3	// CSU Voltage Offset V
-// 4
-#define REG_RATE_GLOBAL_OFFSET		5	// Offset correction ([V/us]/V)
-#define REG_RATE_GLOBAL_K_N			6	// Global rate correction (N)
-#define REG_RATE_GLOBAL_K_D			7	// Global rate correction (D)
-
+// 4 - 7
 #define REG_CELL_MASK				8	// Cell presence mask
 #define REG_CELL_MIN_VOLTAGE		9	// Cell min voltage (in V)
 #define REG_CELL_MAX_VOLTAGE		10	// Cell max voltage (in V)
 // 11 - 12
 #define REG_FAN_OPERATE_PERIOD		13	// Default fan turn on period (in s)
 #define REG_FAN_OPERATE_MIN_TIME	14	// Minimum fan turn on time (in s)
+//
+#define REG_INVERT_SYNC				15	// Invert sync pin boolean
 // 15 - 16
 #define REG_UNIT_USE_RANGE_LOW		17	// Use setpoint data for range low
 #define REG_UNIT_USE_RANGE_MID		18	// Use setpoint data for range mid
