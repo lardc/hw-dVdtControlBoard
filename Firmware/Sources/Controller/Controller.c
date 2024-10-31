@@ -144,8 +144,6 @@ Int16U CONTROL_СorrectRate(Int16U Voltage, Int16U VRate_x10, Int16U ActionID)
 	Int32S correctedRate = VRate_x10 + P2 * Voltage * Voltage + P1 * Voltage + P0;
 
 	return (correctedRate > 0) ? correctedRate : 0;
-return (Int32S)DataTable[REG_RATE_GLOBAL_OFFSET] * VRate_x10 / cellVoltage +
-			(Int32S)VRate_x10 * DataTable[REG_RATE_GLOBAL_K_N] / DataTable[REG_RATE_GLOBAL_K_D];
 }
 // ----------------------------------------
 
