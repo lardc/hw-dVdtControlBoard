@@ -72,6 +72,7 @@
 #define REG_UNIT_USE_RANGE_MID		18	// Use setpoint data for range mid
 #define REG_UNIT_USE_RANGE_HIGH		19	// Use setpoint data for range high
 // 20 - 39
+// Range 0
 #define REG_CELL1_HIGH_GATEV1		40	// Gate voltage setpoint 1 for cell 1
 #define REG_CELL1_HIGH_VRATE1		41	// Voltage rate setpoint 1 for cell 1
 // 42 - 121								// Setpoints for 6 cells (7 per cell)
@@ -82,16 +83,16 @@
 // Range 1
 #define REG_CELL1_LOW_GATEV1		320	// Gate voltage setpoint 1 for cell 1
 #define REG_CELL1_LOW_VRATE1		321	// Voltage rate setpoint 1 for cell 1
-// 322 - 400							// Setpoints for 6 cells (7 per cell)
-#define REG_CELL6_LOW_GATEV7		401	// Gate voltage setpoint 7 for cell 6
-#define REG_CELL6_LOW_VRATE7		402	// Voltage rate setpoint 7 for cell 6
+// 322 - 401							// Setpoints for 6 cells (7 per cell)
+#define REG_CELL6_LOW_GATEV7		402	// Gate voltage setpoint 7 for cell 6
+#define REG_CELL6_LOW_VRATE7		403	// Voltage rate setpoint 7 for cell 6
 //
 // Range 2
 #define REG_CELL1_MID_GATEV1		410	// Gate voltage setpoint 1 for cell 1
 #define REG_CELL1_MID_VRATE1		411	// Voltage rate setpoint 1 for cell 1
-// 412 - 490							// Setpoints for 6 cells (7 per cell)
-#define REG_CELL6_MID_GATEV7		491	// Gate voltage setpoint 7 for cell 6
-#define REG_CELL6_MID_VRATE7		492	// Voltage rate setpoint 7 for cell 6
+// 412 - 491							// Setpoints for 6 cells (7 per cell)
+#define REG_CELL6_MID_GATEV7		492	// Gate voltage setpoint 7 for cell 6
+#define REG_CELL6_MID_VRATE7		493	// Voltage rate setpoint 7 for cell 6
 //
 // ----------------------------------------
 //
