@@ -124,16 +124,16 @@ Int16U CONTROL_СorrectRate(Int16U Voltage, Int16U VRate_x10, Int16U ActionID)
 	Int16U offset = 0;
 
 	switch (ActionID) {
-		case ACT_START_TEST_20:		offset = REG_RATE_TUNE_20_P0; break;
-		case ACT_START_TEST_50:		offset = REG_RATE_TUNE_50_P0; break;
-		case ACT_START_TEST_100:	offset = REG_RATE_TUNE_100_P0; break;
-		case ACT_START_TEST_200:	offset = REG_RATE_TUNE_200_P0; break;
-		case ACT_START_TEST_320:	offset = REG_RATE_TUNE_320_P0; break;
-		case ACT_START_TEST_500:	offset = REG_RATE_TUNE_500_P0; break;
-		case ACT_START_TEST_1000:	offset = REG_RATE_TUNE_1000_P0; break;
-		case ACT_START_TEST_1600:	offset = REG_RATE_TUNE_1600_P0; break;
-		case ACT_START_TEST_2000:	offset = REG_RATE_TUNE_2000_P0; break;
-		case ACT_START_TEST_2500:	offset = REG_RATE_TUNE_2500_P0; break;
+		case ACT_START_TEST_20:		offset = REG_RATE_TUNE_20_P2; break;
+		case ACT_START_TEST_50:		offset = REG_RATE_TUNE_50_P2; break;
+		case ACT_START_TEST_100:	offset = REG_RATE_TUNE_100_P2; break;
+		case ACT_START_TEST_200:	offset = REG_RATE_TUNE_200_P2; break;
+		case ACT_START_TEST_320:	offset = REG_RATE_TUNE_320_P2; break;
+		case ACT_START_TEST_500:	offset = REG_RATE_TUNE_500_P2; break;
+		case ACT_START_TEST_1000:	offset = REG_RATE_TUNE_1000_P2; break;
+		case ACT_START_TEST_1600:	offset = REG_RATE_TUNE_1600_P2; break;
+		case ACT_START_TEST_2000:	offset = REG_RATE_TUNE_2000_P2; break;
+		case ACT_START_TEST_2500:	offset = REG_RATE_TUNE_2500_P2; break;
 		default: return 0;
 	}
 
