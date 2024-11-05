@@ -123,7 +123,8 @@ Int16U CONTROL_СorrectRate(Int16U Voltage, Int16U VRate_x10, Int16U ActionID)
 {
 	Int16U offset = 0;
 
-	switch (ActionID) {
+	switch (ActionID)
+	{
 		case ACT_START_TEST_20:		offset = REG_RATE_TUNE_20_P2; break;
 		case ACT_START_TEST_50:		offset = REG_RATE_TUNE_50_P2; break;
 		case ACT_START_TEST_100:	offset = REG_RATE_TUNE_100_P2; break;
@@ -134,11 +135,11 @@ Int16U CONTROL_СorrectRate(Int16U Voltage, Int16U VRate_x10, Int16U ActionID)
 		case ACT_START_TEST_1600:	offset = REG_RATE_TUNE_1600_P2; break;
 		case ACT_START_TEST_2000:	offset = REG_RATE_TUNE_2000_P2; break;
 		case ACT_START_TEST_2500:	offset = REG_RATE_TUNE_2500_P2; break;
-		default: return 0;
+		default: return VRate_x10;
 	}
 
-	Int32S P2 = DataTable[offset];
-	Int32S P1 = DataTable[offset + 1];
+	Int32S P2 = DataTable[offset] / 1000000;
+	Int32S P1 = DataTable[offset + 1] / 1000;
 	Int32S P0 = DataTable[offset + 2];
 
 	Int32S correctedRate = VRate_x10 + P2 * Voltage * Voltage + P1 * Voltage + P0;
