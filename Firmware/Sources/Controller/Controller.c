@@ -138,11 +138,11 @@ Int16U CONTROL_СorrectRate(Int16U Voltage, Int16U VRate_x10, Int16U ActionID)
 		default: return VRate_x10;
 	}
 
-	Int32S P2 = DataTable[offset] / 1000000;
-	Int32S P1 = DataTable[offset + 1] / 1000;
+	Int32S P2 = DataTable[offset];
+	Int32S P1 = DataTable[offset + 1];
 	Int32S P0 = DataTable[offset + 2];
 
-	Int32S correctedRate = VRate_x10 + P2 * Voltage * Voltage + P1 * Voltage + P0;
+	Int32S correctedRate = VRate_x10 + P2 * Voltage * Voltage / 100000 + P1 * Voltage / 100 + P0;
 
 	return (correctedRate > 0) ? correctedRate : 0;
 }
