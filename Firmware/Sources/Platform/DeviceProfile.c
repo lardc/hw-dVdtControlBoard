@@ -86,8 +86,8 @@ void DEVPROFILE_Init(xCCI_FUNC_CallbackAction SpecializedDispatch, volatile Bool
 			DATA_TABLE_SIZE_PLUS_EXT, &CAN_EPState);
 	
 	// Set write protection
-	SCCI_AddProtectedArea(&DEVICE_RS232_Interface, DATA_TABLE_WP_START, DATA_TABLE_SIZE - 1);
-	BCCI_AddProtectedArea(&DEVICE_CAN_Interface, DATA_TABLE_WP_START, DATA_TABLE_SIZE - 1);
+	SCCI_AddProtectedArea(&DEVICE_RS232_Interface, DATA_TABLE_WP_START, DATA_TABLE_BASE_SIZE - 1);
+	BCCI_AddProtectedArea(&DEVICE_CAN_Interface, DATA_TABLE_WP_START, DATA_TABLE_BASE_SIZE - 1);
 	
 	DataTable[REG_CAN_BUSOFF_COUNTER] = 0;
 	DataTable[REG_CAN_STATUS_REG] = 0;
@@ -212,9 +212,13 @@ static void DEVPROFILE_FillNVPartDefault()
 {
 	Int16U i;
 	
-	// Write default values to data table
+	// Стандартная область
 	for(i = 0; i < DATA_TABLE_NV_SIZE; ++i)
 		DataTable[DATA_TABLE_NV_START + i] = NVConstraint[i].Default;
+
+	// Расширенная область
+	for(i = DATA_TABLE_BASE_SIZE; i < DATA_TABLE_SIZE_PLUS_EXT; ++i)
+		DataTable[i] = ExtNVConstraint[i - DATA_TABLE_BASE_SIZE].Default;
 }
 // ----------------------------------------
 
@@ -222,7 +226,6 @@ static void DEVPROFILE_FillWRPartDefault()
 {
 	Int16U i;
 	
-	// Write default values to data table
 	for(i = 0; i < (DATA_TABLE_WP_START - DATA_TABLE_WR_START); ++i)
 		DataTable[DATA_TABLE_WR_START + i] = VConstraint[i].Default;
 }
@@ -240,6 +243,12 @@ static Boolean DEVPROFILE_Validate16(Int16U Address, Int16U Data)
 	{
 		if(Data < VConstraint[Address - DATA_TABLE_WR_START].Min
 				|| Data > VConstraint[Address - DATA_TABLE_WR_START].Max)
+			return FALSE;
+	}
+	else if(DATA_TABLE_BASE_SIZE <= Address && Address < DATA_TABLE_SIZE_PLUS_EXT)
+	{
+		if(Data < ExtNVConstraint[Address - DATA_TABLE_BASE_SIZE].Min
+				|| Data > ExtNVConstraint[Address - DATA_TABLE_BASE_SIZE].Max)
 			return FALSE;
 	}
 	
