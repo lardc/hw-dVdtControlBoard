@@ -54,9 +54,9 @@
 // ----------------------------------------
 
 // REGISTERS
-#define REG_V_FINE_N				0	// Voltage amplitude fine (N)
-#define REG_V_FINE_D				1	// Voltage amplitude fine (D)
-#define REG_V_OFFSET				2	// Voltage offset (in V)
+#define REG_V_P2					0	// Voltage tune quadratic coefficient P2 x1e6
+#define REG_V_P1					1	// Voltage tune quadratic coefficient P1 x1000
+#define REG_V_P0					2	// Voltage tune quadratic coefficient P0
 #define REG_CSU_V_OFFSET			3	// CSU Voltage Offset V
 // 4 - 7
 #define REG_CELL_MASK				8	// Cell presence mask
