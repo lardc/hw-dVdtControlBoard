@@ -27,6 +27,12 @@ extern volatile Int64U CONTROL_TimeCounter;
 extern volatile DeviceState CONTROL_State;
 extern volatile Boolean CycleActive;
 extern volatile Int16U CONTROL_BootLoaderRequest;
+//
+extern Int16U CONTROL_ExtInfoCounter;
+
+// EP
+//
+extern Int16U CONTROL_ExtInfoData[];
 
 // Functions
 //

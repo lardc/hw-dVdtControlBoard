@@ -19,6 +19,7 @@
 #include "Diagnostics.h"
 #include "Constraints.h"
 #include "Setpoint.h"
+#include "SaveToFlash.h"
 
 // Variables
 //
@@ -27,6 +28,9 @@ volatile DeviceState CONTROL_State = DS_None;
 volatile Boolean CycleActive = FALSE;
 static Int16U cellVoltageCopy = 0, cellVRate_x10Copy = 0;
 static Int16U CONTROL_RateRangeArray[MAX_CELLS_COUNT], CONTROL_GateVArray[MAX_CELLS_COUNT];
+//
+Int16U CONTROL_ExtInfoData[VALUES_EXT_INFO_SIZE] = {0};
+Int16U CONTROL_ExtInfoCounter = 0;
 //
 // Boot-loader flag
 #pragma DATA_SECTION(CONTROL_BootLoaderRequest, "bl_flag");
@@ -41,11 +45,17 @@ static void CONTROL_SwitchToFault(Int16U FaultReason, Int16U ErrorCodeEx);
 static void CONTROL_SwitchToFaultEx();
 Boolean CONTROL_ApplySettings(Int16U CellVRate_x10, Int16U CellVoltage);
 static void CONTROL_PrepareStart(pInt16U UserError, Int16U VRate_x10, Boolean StartTest, Int16U ActionID);
+void CONTROL_InitStoragePointers();
 
 // Functions
 //
 void CONTROL_Init(Boolean BadClockDetected)
 {
+	Int16U EPIndexes[EP_COUNT] = { EP16_ExtInfoData };
+	Int16U EPSized[EP_COUNT] = { VALUES_EXT_INFO_SIZE };
+	pInt16U EPCounters[EP_COUNT] = { &CONTROL_ExtInfoCounter };
+	pInt16U EPDatas[EP_COUNT] = { CONTROL_ExtInfoData };
+
 	// Data-table EPROM service configuration
 	EPROMServiceConfig EPROMService = {&ZbMemory_WriteValuesEPROM, &ZbMemory_ReadValuesEPROM};
 	
@@ -56,9 +66,12 @@ void CONTROL_Init(Boolean BadClockDetected)
 	// Fill state variables with default values
 	CONTROL_SetDeviceState(DS_None);
 	CONTROL_FillWPPartDefault();
+
+	CONTROL_InitStoragePointers();
 	
 	// Device profile initialization
 	DEVPROFILE_Init(&CONTROL_DispatchAction, &CycleActive);
+	DEVPROFILE_InitEPService(EPIndexes, EPSized, EPCounters, EPDatas);
 	// Reset control values
 	DEVPROFILE_ResetControlSection();
 	

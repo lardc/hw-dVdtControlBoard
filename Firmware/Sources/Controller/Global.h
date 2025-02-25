@@ -10,7 +10,8 @@
 
 // Global parameters
 //--------------------------------------------------------
-#define EP_COUNT						0
+#define EP_COUNT						1
+#define VALUES_EXT_INFO_SIZE			300
 
 // Cell ID mask
 #define CELL1_MASK						BIT0
