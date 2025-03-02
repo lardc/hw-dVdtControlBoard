@@ -26,21 +26,6 @@
 	</natures>
 	<linkedResources>
 		<link>
-			<name>Sources/Interface</name>
-			<type>2</type>
-			<locationURI>virtual:/virtual</locationURI>
-		</link>
-		<link>
-			<name>Sources/Library</name>
-			<type>2</type>
-			<locationURI>virtual:/virtual</locationURI>
-		</link>
-		<link>
-			<name>Sources/RTS</name>
-			<type>2</type>
-			<locationURI>virtual:/virtual</locationURI>
-		</link>
-		<link>
 			<name>FlashAPI/Flash2809_API_V100.lib</name>
 			<type>1</type>
 			<locationURI>PARENT-2-PROJECT_LOC/hw-TMS-libs/FlashAPI/Flash2809_API_V100.lib</locationURI>
@@ -54,6 +39,21 @@
 			<name>FlashAPI/Flash280x_API_Library.h</name>
 			<type>1</type>
 			<locationURI>PARENT-2-PROJECT_LOC/hw-TMS-libs/FlashAPI/Flash280x_API_Library.h</locationURI>
+		</link>
+		<link>
+			<name>Sources/Interface</name>
+			<type>2</type>
+			<locationURI>virtual:/virtual</locationURI>
+		</link>
+		<link>
+			<name>Sources/Library</name>
+			<type>2</type>
+			<locationURI>virtual:/virtual</locationURI>
+		</link>
+		<link>
+			<name>Sources/RTS</name>
+			<type>2</type>
+			<locationURI>virtual:/virtual</locationURI>
 		</link>
 		<link>
 			<name>Sources/Interface/BCCISlave.c</name>
@@ -326,6 +326,21 @@
 			<locationURI>PARENT-2-PROJECT_LOC/hw-TMS-libs/Library/_ZwXINT_Defs.h</locationURI>
 		</link>
 		<link>
+			<name>Sources/Platform/Flash.c</name>
+			<type>1</type>
+			<locationURI>PARENT-2-PROJECT_LOC/hw-TMS-libs/BootLoader/Controller/Flash.c</locationURI>
+		</link>
+		<link>
+			<name>Sources/Platform/Flash.h</name>
+			<type>1</type>
+			<locationURI>PARENT-2-PROJECT_LOC/hw-TMS-libs/BootLoader/Controller/Flash.h</locationURI>
+		</link>
+		<link>
+			<name>Sources/Platform/SaveToFlash.c</name>
+			<type>1</type>
+			<locationURI>PARENT-2-PROJECT_LOC/hw-TMS-libs/Firmware/SaveToFlash.c</locationURI>
+		</link>
+		<link>
 			<name>Sources/RTS/boot28.asm</name>
 			<type>1</type>
 			<locationURI>PARENT-2-PROJECT_LOC/hw-TMS-libs/RTS/boot28.asm</locationURI>
@@ -364,26 +379,6 @@
 			<name>Sources/RTS/u_div28.asm</name>
 			<type>1</type>
 			<locationURI>PARENT-2-PROJECT_LOC/hw-TMS-libs/RTS/u_div28.asm</locationURI>
-		</link>
-		<link>
-			<name>Sources/Platform/Flash.c</name>
-			<type>1</type>
-			<locationURI>PARENT-2-PROJECT_LOC/hw-TMS-libs/BootLoader/Controller/Flash.c</locationURI>
-		</link>
-		<link>
-			<name>Sources/Platform/Flash.h</name>
-			<type>1</type>
-			<locationURI>PARENT-2-PROJECT_LOC/hw-TMS-libs/BootLoader/Controller/Flash.h</locationURI>
-		</link>
-		<link>
-			<name>Sources/Platform/SaveToFlash.c</name>
-			<type>1</type>
-			<locationURI>PARENT-2-PROJECT_LOC/hw-TMS-libs/Firmware/SaveToFlash.c</locationURI>
-		</link>
-		<link>
-			<name>Sources/Platform/SaveToFlash.h</name>
-			<type>1</type>
-			<locationURI>PARENT-2-PROJECT_LOC/hw-TMS-libs/Firmware/SaveToFlash.h</locationURI>
 		</link>
 	</linkedResources>
 </projectDescription>

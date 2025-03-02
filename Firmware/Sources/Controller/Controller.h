@@ -61,5 +61,7 @@ void CONTROL_ExtSyncFinish();
 Int16U CONTROL_CorrectVoltage();
 // Ext LED
 void CONTROL_HandleExtLed(Boolean IsImpulse);
+// JSON pointers init
+void CONTROL_InitJSONPointers();
 
 #endif // __CONTROLLER_H
