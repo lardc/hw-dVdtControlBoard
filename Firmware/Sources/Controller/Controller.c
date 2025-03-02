@@ -25,7 +25,7 @@
 //
 volatile Int64U CONTROL_TimeCounter = 0;
 volatile DeviceState CONTROL_State = DS_None;
-volatile Boolean CycleActive = FALSE;
+volatile Boolean CycleActive = FALSE, RequestSaveToFlash = FALSE;
 static Int16U cellVoltageCopy = 0, cellVRate_x10Copy = 0;
 static Int16U CONTROL_RateRangeArray[MAX_CELLS_COUNT], CONTROL_GateVArray[MAX_CELLS_COUNT];
 //
@@ -102,6 +102,12 @@ void CONTROL_Idle()
 {
 	DEVPROFILE_ProcessRequests();
 	DEVPROFILE_UpdateCANDiagStatus();
+
+	if (REG_DIAG_ALLOW_WRITE && RequestSaveToFlash)
+	{
+		STF_SaveDiagData();
+		RequestSaveToFlash = FALSE;
+	}
 }
 // ----------------------------------------
 
@@ -275,6 +281,8 @@ static void CONTROL_SwitchToFault(Int16U FaultReason, Int16U ErrorCodeEx)
 	CONTROL_SetDeviceState(DS_Fault);
 	DataTable[REG_FAULT_REASON] = FaultReason;
 	DataTable[REG_FAULT_REASON_EX] = ErrorCodeEx;
+
+	RequestSaveToFlash = TRUE;
 }
 // ----------------------------------------
 
@@ -284,6 +292,38 @@ static void CONTROL_SwitchToFaultEx()
 	Int16U fault = CELLMUX_GetFaultReason(&errorCodeEx);
 	
 	CONTROL_SwitchToFault(fault, errorCodeEx);
+}
+// ----------------------------------------
+
+void CONTROL_InitStoragePointers()
+{
+	STF_AssignPointer(0, (Int32U)&DataTable[REG_DEV_STATE]);
+	STF_AssignPointer(1, (Int32U)&DataTable[REG_DEV_STATE]);
+	STF_AssignPointer(2, (Int32U)&DataTable[REG_FAULT_REASON]);
+	STF_AssignPointer(3, (Int32U)&DataTable[REG_DISABLE_REASON]);
+	STF_AssignPointer(4, (Int32U)&DataTable[REG_WARNING]);
+	STF_AssignPointer(5, (Int32U)&DataTable[REG_PROBLEM]);
+	STF_AssignPointer(6, (Int32U)&DataTable[REG_TEST_RESULT]);
+	STF_AssignPointer(7, (Int32U)&DataTable[REG_FAULT_REASON_EX]);
+	STF_AssignPointer(8, (Int32U)&DataTable[REG_VOLTAGE_OK]);
+	STF_AssignPointer(9, (Int32U)&DataTable[REG_VOLTAGE_OK_1]);
+	STF_AssignPointer(10, (Int32U)&DataTable[REG_VOLTAGE_OK_2]);
+	STF_AssignPointer(11, (Int32U)&DataTable[REG_VOLTAGE_OK_3]);
+	STF_AssignPointer(12, (Int32U)&DataTable[REG_VOLTAGE_OK_4]);
+	STF_AssignPointer(13, (Int32U)&DataTable[REG_VOLTAGE_OK_5]);
+	STF_AssignPointer(14, (Int32U)&DataTable[REG_VOLTAGE_OK_6]);
+	STF_AssignPointer(15, (Int32U)&DataTable[REG_ACTUAL_VOLTAGE_1]);
+	STF_AssignPointer(16, (Int32U)&DataTable[REG_ACTUAL_VOLTAGE_2]);
+	STF_AssignPointer(17, (Int32U)&DataTable[REG_ACTUAL_VOLTAGE_3]);
+	STF_AssignPointer(18, (Int32U)&DataTable[REG_ACTUAL_VOLTAGE_4]);
+	STF_AssignPointer(19, (Int32U)&DataTable[REG_ACTUAL_VOLTAGE_5]);
+	STF_AssignPointer(20, (Int32U)&DataTable[REG_ACTUAL_VOLTAGE_6]);
+	STF_AssignPointer(21, (Int32U)&DataTable[REG_CELL_STATE_1]);
+	STF_AssignPointer(22, (Int32U)&DataTable[REG_CELL_STATE_2]);
+	STF_AssignPointer(23, (Int32U)&DataTable[REG_CELL_STATE_3]);
+	STF_AssignPointer(24, (Int32U)&DataTable[REG_CELL_STATE_4]);
+	STF_AssignPointer(25, (Int32U)&DataTable[REG_CELL_STATE_5]);
+	STF_AssignPointer(26, (Int32U)&DataTable[REG_CELL_STATE_6]);
 }
 // ----------------------------------------
 

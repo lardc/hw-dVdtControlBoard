@@ -71,7 +71,9 @@
 #define REG_UNIT_USE_RANGE_LOW		17	// Use setpoint data for range low
 #define REG_UNIT_USE_RANGE_MID		18	// Use setpoint data for range mid
 #define REG_UNIT_USE_RANGE_HIGH		19	// Use setpoint data for range high
-// 20 - 39
+//
+#define REG_DIAG_ALLOW_WRITE		20	// Allow saving diagnostic data to flash
+// 21 - 39
 // Range 0
 #define REG_CELL1_HIGH_GATEV1		40	// Gate voltage setpoint 1 for cell 1
 #define REG_CELL1_HIGH_VRATE1		41	// Voltage rate setpoint 1 for cell 1
