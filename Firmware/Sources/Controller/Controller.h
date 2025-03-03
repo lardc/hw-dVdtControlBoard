@@ -29,6 +29,8 @@ extern volatile Boolean CycleActive;
 extern volatile Int16U CONTROL_BootLoaderRequest;
 //
 extern Int16U CONTROL_ExtInfoCounter;
+//
+extern Int16U CONTROL_CorrectedRate;
 
 // EP
 //

@@ -122,7 +122,7 @@ Int16U LOGIC_GetFaultReason(pInt16U pErrorCodeEx)
 Boolean LOGIC_TestSequence()
 {
 	Boolean Result;
-	Int32U Delay = 10ul * DataTable[REG_DESIRED_VOLTAGE] / DataTable[REG_VOLTAGE_RATE] + PRE_PROBE_TIME_US;
+	Int32U Delay = 10ul * DataTable[REG_DESIRED_VOLTAGE] / CONTROL_CorrectedRate + PRE_PROBE_TIME_US;
 
 	DINT;
 	ZbGPIO_SwitchStartPulse(TRUE);

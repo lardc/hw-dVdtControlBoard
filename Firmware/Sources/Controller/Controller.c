@@ -34,6 +34,8 @@ static Int16U CONTROL_RateRangeArray[MAX_CELLS_COUNT], CONTROL_GateVArray[MAX_CE
 Int16U CONTROL_ExtInfoData[VALUES_EXT_INFO_SIZE] = {0};
 Int16U CONTROL_ExtInfoCounter = 0;
 //
+Int16U CONTROL_CorrectedRate = 0;
+//
 // Boot-loader flag
 #pragma DATA_SECTION(CONTROL_BootLoaderRequest, "bl_flag");
 volatile Int16U CONTROL_BootLoaderRequest = 0;
@@ -477,16 +479,16 @@ void CONTROL_PrepareStart(pInt16U UserError, Int16U VRate_x10, Boolean StartTest
 	{
 		Int16U cellCount = CELLMUX_CellCount();
 		Int16U cellVoltage = CONTROL_CorrectVoltage() / cellCount;
-		Int16U cellVRate_x10 = CONTROL_СorrectRate(cellVoltage * cellCount, VRate_x10, ActionID) / cellCount;
+		CONTROL_CorrectedRate = CONTROL_СorrectRate(cellVoltage * cellCount, VRate_x10, ActionID) / cellCount;
 
 		// Проверка уставки по напряжению и скорости нарастания
 		if(DataTable[REG_CELL_MIN_VOLTAGE] <= cellVoltage && cellVoltage <= DataTable[REG_CELL_MAX_VOLTAGE] &&
-				SP_GetSetpointArray(cellVRate_x10, CONTROL_RateRangeArray, CONTROL_GateVArray))
+				SP_GetSetpointArray(CONTROL_CorrectedRate, CONTROL_RateRangeArray, CONTROL_GateVArray))
 		{
 			CONTROL_FillWPPartDefault();
 
 			// Применение настроеек к ячейкам
-			if(CONTROL_ApplySettings(cellVRate_x10, cellVoltage))
+			if(CONTROL_ApplySettings(CONTROL_CorrectedRate, cellVoltage))
 			{
 				CONTROL_HandleFanLogic(StartTest);
 				CONTROL_HandleExtLed(StartTest);
