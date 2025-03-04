@@ -333,15 +333,15 @@ void CONTROL_InitStoragePointers()
 
 void CONTROL_InitJSONPointers()
 {
-	Int16U Rate20_Active  = (DataTable[REG_ACTIVE_RATE_MASK] >> 0) & 0x1;
-	Int16U Rate50_Active  = (DataTable[REG_ACTIVE_RATE_MASK] >> 1) & 0x1;
-	Int16U Rate200_Active = (DataTable[REG_ACTIVE_RATE_MASK] >> 2) & 0x1;
-	Int16U Rate320_Active = (DataTable[REG_ACTIVE_RATE_MASK] >> 3) & 0x1;
-	Int16U Rate500_Active = (DataTable[REG_ACTIVE_RATE_MASK] >> 4) & 0x1;
-	Int16U Rate1000_Active = (DataTable[REG_ACTIVE_RATE_MASK] >> 5) & 0x1;
-	Int16U Rate1600_Active = (DataTable[REG_ACTIVE_RATE_MASK] >> 6) & 0x1;
-	Int16U Rate2000_Active = (DataTable[REG_ACTIVE_RATE_MASK] >> 7) & 0x1;
-	Int16U Rate2500_Active = (DataTable[REG_ACTIVE_RATE_MASK] >> 8) & 0x1;
+	Rate20_Active  = (DataTable[REG_ACTIVE_RATE_MASK] >> 0) & 0x1;
+	Rate50_Active  = (DataTable[REG_ACTIVE_RATE_MASK] >> 1) & 0x1;
+	Rate200_Active = (DataTable[REG_ACTIVE_RATE_MASK] >> 2) & 0x1;
+	Rate320_Active = (DataTable[REG_ACTIVE_RATE_MASK] >> 3) & 0x1;
+	Rate500_Active = (DataTable[REG_ACTIVE_RATE_MASK] >> 4) & 0x1;
+	Rate1000_Active = (DataTable[REG_ACTIVE_RATE_MASK] >> 5) & 0x1;
+	Rate1600_Active = (DataTable[REG_ACTIVE_RATE_MASK] >> 6) & 0x1;
+	Rate2000_Active = (DataTable[REG_ACTIVE_RATE_MASK] >> 7) & 0x1;
+	Rate2500_Active = (DataTable[REG_ACTIVE_RATE_MASK] >> 8) & 0x1;
 
 	JSON_AssignPointer(0, (pInt16U)Rate20_Active);
 	JSON_AssignPointer(1, (pInt16U)Rate50_Active);
