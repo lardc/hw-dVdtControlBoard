@@ -71,13 +71,13 @@ void CONTROL_Init(Boolean BadClockDetected)
 	CONTROL_SetDeviceState(DS_None);
 	CONTROL_FillWPPartDefault();
 
-	CONTROL_InitStoragePointers();
-	
 	// Device profile initialization
 	DEVPROFILE_Init(&CONTROL_DispatchAction, &CycleActive);
 	DEVPROFILE_InitEPService(EPIndexes, EPSized, EPCounters, EPDatas);
 	// Reset control values
 	DEVPROFILE_ResetControlSection();
+
+	CONTROL_InitStoragePointers();
 	
 	if(!BadClockDetected)
 	{
@@ -343,15 +343,15 @@ void CONTROL_InitJSONPointers()
 	Rate2000_Active = (DataTable[REG_ACTIVE_RATE_MASK] >> 7) & 0x1;
 	Rate2500_Active = (DataTable[REG_ACTIVE_RATE_MASK] >> 8) & 0x1;
 
-	JSON_AssignPointer(0, (pInt16U)Rate20_Active);
-	JSON_AssignPointer(1, (pInt16U)Rate50_Active);
-	JSON_AssignPointer(2, (pInt16U)Rate200_Active);
-	JSON_AssignPointer(3, (pInt16U)Rate320_Active);
-	JSON_AssignPointer(4, (pInt16U)Rate500_Active);
-	JSON_AssignPointer(5, (pInt16U)Rate1000_Active);
-	JSON_AssignPointer(6, (pInt16U)Rate1600_Active);
-	JSON_AssignPointer(7, (pInt16U)Rate2000_Active);
-	JSON_AssignPointer(8, (pInt16U)Rate2500_Active);
+	JSON_AssignPointer(0, (pInt16U)&Rate20_Active);
+	JSON_AssignPointer(1, (pInt16U)&Rate50_Active);
+	JSON_AssignPointer(2, (pInt16U)&Rate200_Active);
+	JSON_AssignPointer(3, (pInt16U)&Rate320_Active);
+	JSON_AssignPointer(4, (pInt16U)&Rate500_Active);
+	JSON_AssignPointer(5, (pInt16U)&Rate1000_Active);
+	JSON_AssignPointer(6, (pInt16U)&Rate1600_Active);
+	JSON_AssignPointer(7, (pInt16U)&Rate2000_Active);
+	JSON_AssignPointer(8, (pInt16U)&Rate2500_Active);
 }
 // ----------------------------------------
 

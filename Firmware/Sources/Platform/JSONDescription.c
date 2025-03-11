@@ -71,5 +71,3 @@ Int16U Rate1600_Active;
 Int16U Rate2000_Active;
 Int16U Rate2500_Active;
 
-Int16U JSONPointers[JSON_POINTERS_SIZE] = {0};
-

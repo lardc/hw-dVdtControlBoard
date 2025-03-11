@@ -51,6 +51,15 @@
 //
 #define ACT_BOOT_LOADER_REQUEST		320	// Request reboot to bootloader
 //
+#define ACT_FLASH_DIAG_READ_SYMBOL	330	// Выполнить чтение символа из памяти отладочной информации
+#define ACT_FLASH_DIAG_INIT_READ	331	// Инициализировать начало считывания отладочной информации
+#define ACT_FLASH_DIAG_TO_EP		340	// Выполнить чтение массива из памяти отладочной информации в EP
+#define ACT_FLASH_DIAG_SAVE			332	// Сохранение блока отладочной информации во флэш
+#define ACT_FLASH_DIAG_ERASE		333	// Стирание области отладочной информации
+//
+#define ACT_JSON_INIT_READ			341	// Инициализация начала считывания JSON
+#define ACT_JSON_TO_EP				342	// Выполнить чтение шаблона JSON в EP
+
 // ----------------------------------------
 
 // REGISTERS
@@ -174,13 +183,7 @@
 //
 #define REG_MEM_SYMBOL				299	// Считанный по адресу памяти символ
 //
-#define ACT_FLASH_DIAG_READ_SYMBOL	330	// Выполнить чтение символа из памяти отладочной информации
-#define ACT_FLASH_DIAG_INIT_READ	331	// Инициализировать начало считывания отладочной информации
-#define ACT_FLASH_DIAG_TO_EP		340	// Выполнить чтение массива из памяти отладочной информации в EP
-#define ACT_FLASH_DIAG_SAVE			332	// Сохранение блока отладочной информации во флэш
-#define ACT_FLASH_DIAG_ERASE		333	// Стирание области отладочной информации
-//
-// 334 - 499
+// 300 - 499
 //
 #define REG_RATE_TUNE_20_P2			500	// 20V/us tune quadratic coefficient P2 x1e6
 #define REG_RATE_TUNE_20_P1			501	// 20V/us tune quadratic coefficient P1 x1000
@@ -237,7 +240,7 @@
 // ENDPOINTS
 //
 #define EP16_Data_V					1	// Data V
-#define EP16_ExtInfoData			20	// Diag data drom flash
+#define EP16_ExtInfoData			2	// Diag data drom flash
 
 // FAULT CODES
 //

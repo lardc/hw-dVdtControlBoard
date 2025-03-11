@@ -336,6 +336,16 @@
 			<locationURI>PARENT-2-PROJECT_LOC/hw-TMS-libs/BootLoader/Controller/Flash.h</locationURI>
 		</link>
 		<link>
+			<name>Sources/Platform/FormatOutputJSON.c</name>
+			<type>1</type>
+			<locationURI>PARENT-2-PROJECT_LOC/hw-TMS-libs/Firmware/FormatOutputJSON.c</locationURI>
+		</link>
+		<link>
+			<name>Sources/Platform/FormatOutputJSON.h</name>
+			<type>1</type>
+			<locationURI>PARENT-2-PROJECT_LOC/hw-TMS-libs/Firmware/FormatOutputJSON.h</locationURI>
+		</link>
+		<link>
 			<name>Sources/Platform/SaveToFlash.c</name>
 			<type>1</type>
 			<locationURI>PARENT-2-PROJECT_LOC/hw-TMS-libs/Firmware/SaveToFlash.c</locationURI>

@@ -43,6 +43,9 @@
 									<listOptionValue builtIn="false" value="../../../hw-TMS-libs/Library"/>
 									<listOptionValue builtIn="false" value="../../../hw-TMS-libs/RTS"/>
 									<listOptionValue builtIn="false" value="../../../hw-TMS-libs/IQmath"/>
+									<listOptionValue builtIn="false" value="${PROJECT_LOC}/../../hw-TMS-libs/Firmware"/>
+									<listOptionValue builtIn="false" value="${PROJECT_LOC}/../../hw-TMS-libs/FlashAPI"/>
+									<listOptionValue builtIn="false" value="${PROJECT_LOC}/../../hw-TMS-libs/BootLoader/Controller"/>
 								</option>
 								<option id="com.ti.ccstudio.buildDefinitions.C2000_6.4.compilerID.DEBUGGING_MODEL.541841180" name="Debugging model" superClass="com.ti.ccstudio.buildDefinitions.C2000_6.4.compilerID.DEBUGGING_MODEL" value="com.ti.ccstudio.buildDefinitions.C2000_6.4.compilerID.DEBUGGING_MODEL.SYMDEBUG__DWARF" valueType="enumerated"/>
 								<option id="com.ti.ccstudio.buildDefinitions.C2000_6.4.compilerID.DIAG_WARNING.1849392282" name="Treat diagnostic &lt;id&gt; as warning (--diag_warning, -pdsw)" superClass="com.ti.ccstudio.buildDefinitions.C2000_6.4.compilerID.DIAG_WARNING" valueType="stringList">
@@ -129,6 +132,9 @@
 									<listOptionValue builtIn="false" value="../../../hw-TMS-libs/Library"/>
 									<listOptionValue builtIn="false" value="../../../hw-TMS-libs/RTS"/>
 									<listOptionValue builtIn="false" value="../../../hw-TMS-libs/IQmath"/>
+									<listOptionValue builtIn="false" value="${PROJECT_LOC}/../../hw-TMS-libs/Firmware"/>
+									<listOptionValue builtIn="false" value="${PROJECT_LOC}/../../hw-TMS-libs/FlashAPI"/>
+									<listOptionValue builtIn="false" value="${PROJECT_LOC}/../../hw-TMS-libs/BootLoader/Controller"/>
 								</option>
 								<option id="com.ti.ccstudio.buildDefinitions.C2000_6.4.compilerID.DEBUGGING_MODEL.768455245" name="Debugging model" superClass="com.ti.ccstudio.buildDefinitions.C2000_6.4.compilerID.DEBUGGING_MODEL" value="com.ti.ccstudio.buildDefinitions.C2000_6.4.compilerID.DEBUGGING_MODEL.SYMDEBUG__DWARF" valueType="enumerated"/>
 								<option id="com.ti.ccstudio.buildDefinitions.C2000_6.4.compilerID.PROGRAM_LEVEL_COMPILE.448729496" name="Program mode compilation (--program_level_compile, -pm)" superClass="com.ti.ccstudio.buildDefinitions.C2000_6.4.compilerID.PROGRAM_LEVEL_COMPILE" value="true" valueType="boolean"/>
