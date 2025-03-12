@@ -86,7 +86,8 @@ PAGE 0:    /* Program Memory */
    CSM_RSVD     : origin = 0x3F7F80, length = 0x000076     /* Part of FLASHA.  Program with all 0x0000 when CSM is in use. */
    LOADER_BEGIN : origin = 0x3F7FF6, length = 0x000002     /* Part of FLASHA.  Used for "boot to Flash" bootloader mode. */
    CSM_PWL      : origin = 0x3F7FF8, length = 0x000008     /* Part of FLASHA.  CSM password locations in FLASHA */
-   
+
+
    ROM          : origin = 0x3FF000, length = 0x000FC0     /* Boot ROM */
    RESET        : origin = 0x3FFFC0, length = 0x000002     /* part of boot ROM  */
    VECTORS      : origin = 0x3FFFC2, length = 0x00003E     /* part of boot ROM  */
@@ -112,6 +113,16 @@ PAGE 1 :   /* Data Memory */
  
 SECTIONS
 {
+Flash28_API:
+	{
+		-lFlash2809_API_V100.lib(.econst)
+		-lFlash2809_API_V100.lib(.text)
+	}					LOAD = FLASHC,
+						RUN = RAML0,
+						LOAD_START(_Flash28_API_LoadStart),
+						LOAD_END(_Flash28_API_LoadEnd),
+						RUN_START(_Flash28_API_RunStart),
+						PAGE = 0
  
    /* Allocate program areas: */
    .cinit              : > FLASHC      PAGE = 0
