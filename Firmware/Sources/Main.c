@@ -75,8 +75,6 @@ void main()
 		ZwSystem_SelectDogFunc(FALSE);
 		// Enable watch-dog
 		ZwSystem_EnableDog(SYS_WD_PRESCALER);
-		// Lock WD configuration
-		ZwSystem_LockDog();
 
 		// Start system ticks timer
 		ZwTimer_StartT0();
