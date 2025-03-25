@@ -107,7 +107,7 @@ void CONTROL_Idle()
 	DEVPROFILE_ProcessRequests();
 	DEVPROFILE_UpdateCANDiagStatus();
 
-	if (REG_DIAG_ALLOW_WRITE && RequestSaveToFlash)
+	if (DataTable[REG_DIAG_ALLOW_WRITE] && RequestSaveToFlash)
 	{
 		STF_SaveDiagData();
 		RequestSaveToFlash = FALSE;
