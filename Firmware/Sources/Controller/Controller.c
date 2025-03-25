@@ -184,8 +184,7 @@ void CONTROL_ExtSyncFinish()
 
 	ZbGPIO_SwitchResultOut(FALSE);
 	ZbGPIO_SwitchSyncEn(FALSE);
-	ZbGPIO_SwitchOutRelay(FALSE);
-	ZbGPIO_SwitchLED2(FALSE);
+	LOGIC_Reset();
 
 	CONTROL_NotifyEndTest(PinState, FAULT_NONE, WARNING_NONE);
 }
@@ -369,7 +368,7 @@ void CONTROL_PrepareStart(pInt16U UserError, Int16U VRate_x10, Boolean StartTest
 				ZbGPIO_SwitchLED2(StartTest);
 
 				// Реле включается только при явном запросе
-				if(StartTest)
+//				if(StartTest)
 					ZbGPIO_SwitchOutRelay(TRUE);
 
 				if(StartTest)
