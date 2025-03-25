@@ -51,7 +51,6 @@
 //
 #define ACT_BOOT_LOADER_REQUEST		320	// Request reboot to bootloader
 //
-#define ACT_FLASH_DIAG_READ_SYMBOL	330	// Выполнить чтение символа из памяти отладочной информации
 #define ACT_FLASH_DIAG_INIT_READ	331	// Инициализировать начало считывания отладочной информации
 #define ACT_FLASH_DIAG_TO_EP		340	// Выполнить чтение массива из памяти отладочной информации в EP
 #define ACT_FLASH_DIAG_SAVE			332	// Сохранение блока отладочной информации во флэш
@@ -179,9 +178,7 @@
 #define REG_FWINFO_STR_LEN			260	// Length of the information string record
 #define REG_FWINFO_STR_BEGIN		261	// Begining of the information string record
 //
-// 262 - 298
-//
-#define REG_MEM_SYMBOL				299	// Считанный по адресу памяти символ
+// 262 - 299
 //
 // 300 - 499
 //
