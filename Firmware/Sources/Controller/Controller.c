@@ -136,13 +136,13 @@ void CONTROL_Update()
 Int16U CONTROL_CorrectVoltage()
 {
 	Int32S Voltage = (Int32S)DataTable[REG_DESIRED_VOLTAGE];
-	Int32S correctedVoltage = Voltage * Voltage * DataTable[REG_V_P2] / 1000000 + Voltage * DataTable[REG_V_P1] / 1000 + DataTable[REG_V_P0] + DataTable[REG_CSU_V_OFFSET];
+	Int32S correctedVoltage = Voltage  * Voltage * (Int16S)DataTable[REG_V_P2] / 1000000 + Voltage * DataTable[REG_V_P1] / 1000 + (Int16S)DataTable[REG_V_P0] + (Int16S)DataTable[REG_CSU_V_OFFSET];
 
 	return (correctedVoltage > 0) ? correctedVoltage : 0;
 }
 // ----------------------------------------
 
-Int16U CONTROL_СorrectRate(Int16U Voltage, Int16U VRate_x10, Int16U ActionID)
+Int16U CONTROL_CorrectRate(Int16U Voltage, Int16U VRate_x10, Int16U ActionID)
 {
 	Int16U offset = 0;
 
@@ -161,11 +161,13 @@ Int16U CONTROL_СorrectRate(Int16U Voltage, Int16U VRate_x10, Int16U ActionID)
 		default: return VRate_x10;
 	}
 
-	Int32S P2 = DataTable[offset];
-	Int32S P1 = DataTable[offset + 1];
-	Int32S P0 = DataTable[offset + 2];
+	Int16S P2 = DataTable[offset];
+	Int16S P1 = DataTable[offset + 1];
+	Int16S P0 = DataTable[offset + 2];
 
-	Int32S correctedRate = VRate_x10 + P2 * Voltage * Voltage / 100000 + P1 * Voltage / 100 + P0;
+	Int32S Error = (Int32S)Voltage * Voltage / 1000 * P2 / 10000 + (Int32S)Voltage * P1 / 10000 + P0 / 10;
+
+	Int16U correctedRate = VRate_x10 - VRate_x10 * Error / 100;
 
 	return (correctedRate > 0) ? correctedRate : 0;
 }
@@ -478,7 +480,7 @@ void CONTROL_PrepareStart(pInt16U UserError, Int16U VRate_x10, Boolean StartTest
 	{
 		Int16U cellCount = CELLMUX_CellCount();
 		Int16U cellVoltage = CONTROL_CorrectVoltage() / cellCount;
-		CONTROL_CorrectedRate = CONTROL_СorrectRate(cellVoltage * cellCount, VRate_x10, ActionID) / cellCount;
+		CONTROL_CorrectedRate = CONTROL_CorrectRate(cellVoltage * cellCount, VRate_x10, ActionID) / cellCount;
 
 		// Проверка уставки по напряжению и скорости нарастания
 		if(DataTable[REG_CELL_MIN_VOLTAGE] <= cellVoltage && cellVoltage <= DataTable[REG_CELL_MAX_VOLTAGE] &&

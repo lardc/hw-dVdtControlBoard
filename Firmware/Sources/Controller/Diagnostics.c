@@ -67,7 +67,7 @@ Boolean DIAG_DispatchCommand(Int16U Command)
 
 		case ACT_DIAG_GENERATE_SETP:
 			{
-				Int16U cellVRate_x10 = CONTROL_СorrectRate(DataTable[REG_DESIRED_VOLTAGE], DataTable[REG_VOLTAGE_RATE], 0) / CELLMUX_CellCount();
+				Int16U cellVRate_x10 = CONTROL_CorrectRate(DataTable[REG_DESIRED_VOLTAGE], DataTable[REG_VOLTAGE_RATE], 0) / CELLMUX_CellCount();
 				SP_GetSetpointArray(cellVRate_x10, NULL, NULL);
 			}
 			break;
