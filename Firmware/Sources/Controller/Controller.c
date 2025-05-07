@@ -367,9 +367,7 @@ void CONTROL_PrepareStart(pInt16U UserError, Int16U VRate_x10, Boolean StartTest
 				CONTROL_HandleExtLed(StartTest);
 				ZbGPIO_SwitchLED2(StartTest);
 
-				// Реле включается только при явном запросе
-//				if(StartTest)
-					ZbGPIO_SwitchOutRelay(TRUE);
+				ZbGPIO_SwitchOutRelay(TRUE);
 
 				if(StartTest)
 					LOGIC_BeginTest(CONTROL_TimeCounter);

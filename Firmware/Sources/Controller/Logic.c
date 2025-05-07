@@ -32,6 +32,8 @@ void LOGIC_BeginTest(Int64U TimerTicks)
 void LOGIC_ApplyParameters(Int64U TimerTicks)
 {
 	Timeout = TimerTicks + TEST_PREPARE_TIMEOUT_MS;
+	ZbGPIO_SwitchLED2(TRUE);
+	ZbGPIO_SwitchSyncEn(TRUE);
 	LOGIC_State = LS_Apply;
 }
 // ----------------------------------------
@@ -84,7 +86,7 @@ void LOGIC_Update(Int64U TimerTicks)
 
 		case LS_Apply:
 			if(voltageOK)
-				CONTROL_NotifyEndTest(FALSE, FAULT_NONE, WARNING_NONE);
+				CONTROL_NotifyEndTest(OPRESULT_NONE, FAULT_NONE, WARNING_NONE);
 			else if(TimerTicks > Timeout)
 			{
 				CONTROL_NotifyEndTest(FALSE, FAULT_NOT_READY_1 + targetCell, WARNING_NONE);
