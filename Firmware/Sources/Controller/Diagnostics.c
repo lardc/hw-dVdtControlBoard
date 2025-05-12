@@ -76,6 +76,10 @@ Boolean DIAG_DispatchCommand(Int16U Command)
 		    DataTable[REG_TEST_RESULT] = ZbGPIO_ReadSyncIn();
 		    break;
 
+		case ACT_DIAG_PULSE_SYNC_EN:
+			ZbGPIO_SwitchSyncEn(DataTable[REG_DBG]);
+		    break;
+
 		default:
 			return FALSE;
 	}
