@@ -85,8 +85,8 @@ void LOGIC_Update(Int64U TimerTicks)
 		case LS_Apply:
 			if(voltageOK)
 			{
-				CONTROL_NotifyEndTest(FALSE, FAULT_NONE, WARNING_NONE);
-				LOGIC_Reset();
+				CONTROL_NotifyEndTest(OPRESULT_NONE, FAULT_NONE, WARNING_NONE);
+//				LOGIC_Reset();
 			}
 			else if(TimerTicks > Timeout)
 			{

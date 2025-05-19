@@ -231,8 +231,9 @@ void CONTROL_ExtSyncFinish()
 
 	ZbGPIO_SwitchResultOut(FALSE);
 	ZbGPIO_SwitchSyncEn(FALSE);
-	ZbGPIO_SwitchOutRelay(FALSE);
-	ZbGPIO_SwitchLED2(FALSE);
+//	ZbGPIO_SwitchOutRelay(FALSE);
+//	ZbGPIO_SwitchLED2(FALSE);
+	LOGIC_Reset();
 
 	CONTROL_NotifyEndTest(PinState, FAULT_NONE, WARNING_NONE);
 }
@@ -482,6 +483,7 @@ void CONTROL_PrepareStart(pInt16U UserError, Int16U VRate_x10, Boolean StartTest
 		Int16U cellVoltage = CONTROL_CorrectVoltage() / cellCount;
 		CONTROL_CorrectedRate = CONTROL_CorrectRate(cellVoltage * cellCount, VRate_x10, ActionID) / cellCount;
 
+
 		// Проверка уставки по напряжению и скорости нарастания
 		if(DataTable[REG_CELL_MIN_VOLTAGE] <= cellVoltage && cellVoltage <= DataTable[REG_CELL_MAX_VOLTAGE] &&
 				SP_GetSetpointArray(CONTROL_CorrectedRate, CONTROL_RateRangeArray, CONTROL_GateVArray))
@@ -496,7 +498,7 @@ void CONTROL_PrepareStart(pInt16U UserError, Int16U VRate_x10, Boolean StartTest
 				ZbGPIO_SwitchLED2(StartTest);
 
 				// Реле включается только при явном запросе
-				if(StartTest)
+//				if(StartTest)
 					ZbGPIO_SwitchOutRelay(TRUE);
 
 				if(StartTest)
