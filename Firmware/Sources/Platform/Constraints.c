@@ -16,7 +16,7 @@ const TableItemConstraint NVConstraint[DATA_TABLE_NV_SIZE] =
 										{0, INT16U_MAX, X_D_DEF2},												// 0
 										{1, X_D_DEF3, X_D_DEF2},												// 1
 										{0, INT16U_MAX, 0},														// 2
-										{0, INT16U_MAX, 0},														// 3
+										{0, 0, 0},																// 3
 										{0, 0, 0},																// 4
 										{0, 0, 0},																// 5
 										{0, 0, 0},																// 6
@@ -147,7 +147,7 @@ const TableItemConstraint VConstraint[DATA_TABLE_WP_START - DATA_TABLE_WR_START]
 									{
 										{DESIRED_VOLTAGE_MIN, DESIRED_VOLTAGE_MAX, DESIRED_VOLTAGE_DEF},		// 128
 										{VOLTAGE_RATE_MIN, VOLTAGE_RATE_MAX, VOLTAGE_RATE_DEF},					// 129
-										{0, 0, 0},																// 130
+										{0, MAX_CSU_VOLTAGE_X10, 0},											// 130
 										{0, 0, 0},																// 131
 										{0, 0, 0},																// 132
 										{0, 0, 0},																// 133

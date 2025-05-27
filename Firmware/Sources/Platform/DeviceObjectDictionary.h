@@ -66,8 +66,7 @@
 #define REG_V_P2					0	// Voltage tune quadratic coefficient P2 x1e6
 #define REG_V_P1					1	// Voltage tune quadratic coefficient P1 x1000
 #define REG_V_P0					2	// Voltage tune quadratic coefficient P0
-#define REG_CSU_V_OFFSET			3	// CSU Voltage Offset V
-// 4 - 7
+// 3 - 7
 #define REG_CELL_MASK				8	// Cell presence mask
 #define REG_CELL_MIN_VOLTAGE		9	// Cell min voltage (in V)
 #define REG_CELL_MAX_VOLTAGE		10	// Cell max voltage (in V)
@@ -111,6 +110,7 @@
 //
 #define REG_DESIRED_VOLTAGE			128	// Desired plate voltage (in V)
 #define REG_VOLTAGE_RATE			129	// dV/dt rate (in V/us x10)
+#define REG_CSU_VOLTAGE				130	// Дополнительное смещение напряжения для CSU (В х10)
 
 #define REG_DBG						150	// Отладочный регистр
 

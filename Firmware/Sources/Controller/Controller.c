@@ -139,7 +139,8 @@ void CONTROL_Update()
 Int16U CONTROL_CorrectVoltage()
 {
 	Int32S Voltage = (Int32S)DataTable[REG_DESIRED_VOLTAGE];
-	Int32S correctedVoltage = Voltage  * Voltage * (Int16S)DataTable[REG_V_P2] / 1000000 + Voltage * DataTable[REG_V_P1] / 1000 + (Int16S)DataTable[REG_V_P0] + (Int16S)DataTable[REG_CSU_V_OFFSET];
+	Int32S correctedVoltage = Voltage * Voltage * (Int16S)DataTable[REG_V_P2] / 1000000
+			+ Voltage * DataTable[REG_V_P1] / 1000 + (Int16S)DataTable[REG_V_P0] + DataTable[REG_CSU_VOLTAGE] / 10;
 
 	return (correctedVoltage > 0) ? correctedVoltage : 0;
 }
