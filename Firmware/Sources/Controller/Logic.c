@@ -85,8 +85,9 @@ void LOGIC_Update(Int64U TimerTicks)
 		case LS_Apply:
 			if(voltageOK)
 			{
-				CONTROL_NotifyEndTest(OPRESULT_NONE, FAULT_NONE, WARNING_NONE);
-//				LOGIC_Reset();
+				CONTROL_NotifyEndTest(FALSE, FAULT_NONE, WARNING_NONE);
+				if(!DataTable[REG_QRR_TQ_MODE])
+					LOGIC_Reset();
 			}
 			else if(TimerTicks > Timeout)
 			{
@@ -122,7 +123,8 @@ Int16U LOGIC_GetFaultReason(pInt16U pErrorCodeEx)
 Boolean LOGIC_TestSequence()
 {
 	Boolean Result;
-	Int32U Delay = 10ul * DataTable[REG_DESIRED_VOLTAGE] / CONTROL_CorrectedRate + PRE_PROBE_TIME_US;
+	Int32U Delay = 10ul * DataTable[REG_DESIRED_VOLTAGE] / CONTROL_CorrectedRate + \
+			(DataTable[REG_QRR_TQ_MODE] ? PRE_PROBE_TIME_QRR_TQ_US : PRE_PROBE_TIME_US);
 
 	DINT;
 	ZbGPIO_SwitchStartPulse(TRUE);

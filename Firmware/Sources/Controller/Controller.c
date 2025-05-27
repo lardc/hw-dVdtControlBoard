@@ -93,6 +93,9 @@ void CONTROL_Init(Boolean BadClockDetected)
 		ZbGPIO_SwitchLED2(TRUE);
 		CONTROL_SetDeviceState(DS_Disabled);
 	}
+
+	// Настройка таймера с учётом значения регистра
+	ZwTimer_SetT1(DataTable[REG_QRR_TQ_MODE] ? PRE_PROBE_TIME_QRR_TQ_US : PRE_PROBE_TIME_US);
 }
 // ----------------------------------------
 
@@ -250,9 +253,13 @@ void CONTROL_ExtSyncFinish()
 
 	ZbGPIO_SwitchResultOut(FALSE);
 	ZbGPIO_SwitchSyncEn(FALSE);
-//	ZbGPIO_SwitchOutRelay(FALSE);
-//	ZbGPIO_SwitchLED2(FALSE);
-	LOGIC_Reset();
+	if(DataTable[REG_QRR_TQ_MODE])
+		LOGIC_Reset();
+	else
+	{
+		ZbGPIO_SwitchOutRelay(FALSE);
+		ZbGPIO_SwitchLED2(FALSE);
+	}
 
 	CONTROL_NotifyEndTest(PinState, FAULT_NONE, WARNING_NONE);
 }

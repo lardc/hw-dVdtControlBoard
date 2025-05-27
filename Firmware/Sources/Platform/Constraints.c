@@ -20,7 +20,7 @@ const TableItemConstraint NVConstraint[DATA_TABLE_NV_SIZE] =
 										{0, 0, 0},																// 4
 										{0, 0, 0},																// 5
 										{0, 0, 0},																// 6
-										{1, 0, 0},																// 7
+										{0, 0, 0},																// 7
 										{0, 0x3F, 0x3F},														// 8
 										{CELL_V_MIN, CELL_V_MAX, CELL_V_DEF_MIN},								// 9
 										{CELL_V_MIN, CELL_V_MAX, CELL_V_DEF_MAX},								// 10

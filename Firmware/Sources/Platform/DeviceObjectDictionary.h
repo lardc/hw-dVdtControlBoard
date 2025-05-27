@@ -83,7 +83,8 @@
 //
 #define REG_DIAG_ALLOW_WRITE		20	// Allow saving diagnostic data to flash
 #define REG_ACTIVE_RATE_MASK		21	// 
-// 22 - 39
+#define REG_QRR_TQ_MODE				22	// Настройка для работы в составе Qrr-tq
+// 23 - 39
 // Range 0
 #define REG_CELL1_HIGH_GATEV1		40	// Gate voltage setpoint 1 for cell 1
 #define REG_CELL1_HIGH_VRATE1		41	// Voltage rate setpoint 1 for cell 1

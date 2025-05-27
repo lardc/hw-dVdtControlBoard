@@ -39,7 +39,8 @@
 #define RELAY_SWITCH_DELAY_US			5000		// (in us)
 #define RELAY_SWITCH_DELAY_L_US			25000		// (in us)
 
-#define PRE_PROBE_TIME_US				300			// (in us)
+#define PRE_PROBE_TIME_US				100			// (in us)
+#define PRE_PROBE_TIME_QRR_TQ_US		300			// (in us)
 
 #define EXT_LED_SWITCH_ON_TIME			500		 	// (in ms)
 //--------------------------------------------------------
