@@ -144,8 +144,27 @@ Int16U CONTROL_CorrectVoltage()
 
 Int16U CONTROL_CorrectRate(Int16U Voltage, Int16U VRate_x10, Int16U ActionID)
 {
-	Int16U offset = 0;
+	// Подстановка для скорости, заданной через регистр
+	if(ActionID == ACT_APPLY_SETTINGS || ActionID == ACT_START_TEST_CUSTOM)
+	{
+		switch(VRate_x10)
+		{
+			case 20 * 10:		ActionID = ACT_START_TEST_20;	break;
+			case 50 * 10:		ActionID = ACT_START_TEST_50;	break;
+			case 100 * 10:		ActionID = ACT_START_TEST_100;	break;
+			case 200 * 10:		ActionID = ACT_START_TEST_200;	break;
+			case 320 * 10:		ActionID = ACT_START_TEST_320;	break;
+			case 500 * 10:		ActionID = ACT_START_TEST_500;	break;
+			case 1000 * 10:		ActionID = ACT_START_TEST_1000;	break;
+			case 1600 * 10:		ActionID = ACT_START_TEST_1600;	break;
+			case 2000 * 10:		ActionID = ACT_START_TEST_2000;	break;
+			case 2500 * 10:		ActionID = ACT_START_TEST_2500;	break;
+			default:
+				break;
+		}
+	}
 
+	Int16U offset = 0;
 	switch (ActionID)
 	{
 		case ACT_START_TEST_20:		offset = REG_RATE_TUNE_20_P2; break;
@@ -390,7 +409,7 @@ static Boolean CONTROL_DispatchAction(Int16U ActionID, pInt16U UserError)
 
 		case ACT_APPLY_SETTINGS:
 			if(CONTROL_State == DS_Ready)
-				CONTROL_PrepareStart(UserError, DataTable[REG_VOLTAGE_RATE], FALSE, 0);
+				CONTROL_PrepareStart(UserError, DataTable[REG_VOLTAGE_RATE], FALSE, ACT_APPLY_SETTINGS);
 			break;
 
 		case ACT_ENABLE_EXT_SYNC_START:
@@ -482,7 +501,6 @@ void CONTROL_PrepareStart(pInt16U UserError, Int16U VRate_x10, Boolean StartTest
 		Int16U cellCount = CELLMUX_CellCount();
 		Int16U cellVoltage = CONTROL_CorrectVoltage() / cellCount;
 		CONTROL_CorrectedRate = CONTROL_CorrectRate(cellVoltage * cellCount, VRate_x10, ActionID) / cellCount;
-
 
 		// Проверка уставки по напряжению и скорости нарастания
 		if(DataTable[REG_CELL_MIN_VOLTAGE] <= cellVoltage && cellVoltage <= DataTable[REG_CELL_MAX_VOLTAGE] &&
