@@ -508,7 +508,7 @@ void CONTROL_PrepareStart(pInt16U UserError, Int16U VRate_x10, Boolean StartTest
 	{
 		Int16U cellCount = CELLMUX_CellCount();
 		Int16U cellVoltage = CONTROL_CorrectVoltage() / cellCount;
-		CONTROL_CorrectedRate = CONTROL_CorrectRate(cellVoltage * cellCount, VRate_x10, ActionID) / cellCount;
+		CONTROL_CorrectedRate = CONTROL_CorrectRate(DataTable[REG_DESIRED_VOLTAGE], VRate_x10, ActionID) / cellCount;
 
 		// Проверка уставки по напряжению и скорости нарастания
 		if(DataTable[REG_CELL_MIN_VOLTAGE] <= cellVoltage && cellVoltage <= DataTable[REG_CELL_MAX_VOLTAGE] &&
