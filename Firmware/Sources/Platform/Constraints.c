@@ -395,34 +395,34 @@ const TableItemConstraint ExtNVConstraint[DATA_TABLE_NV_EXT_SIZE] =
 										{0, 0, 0},																// 499
 
 										{0, INT16U_MAX, 0},														// 500
-										{X_D_DEF1, X_D_DEF3, 0},												// 501
+										{0, INT16U_MAX, 0},														// 501
 										{0, INT16U_MAX, 0},														// 502
 										{0, INT16U_MAX, 0},														// 503
-										{X_D_DEF1, X_D_DEF3, 0},												// 504
+										{0, INT16U_MAX, 0},														// 504
 										{0, INT16U_MAX, 0},														// 505
 										{0, INT16U_MAX, 0},														// 506
-										{X_D_DEF1, X_D_DEF3, 0},												// 507
+										{0, INT16U_MAX, 0},														// 507
 										{0, INT16U_MAX, 0},														// 508
 										{0, INT16U_MAX, 0},														// 509
-										{X_D_DEF1, X_D_DEF3, 0},												// 510
+										{0, INT16U_MAX, 0},														// 510
 										{0, INT16U_MAX, 0},														// 511
 										{0, INT16U_MAX, 0},														// 512
-										{X_D_DEF1, X_D_DEF3, 0},												// 513
+										{0, INT16U_MAX, 0},														// 513
 										{0, INT16U_MAX, 0},														// 514
 										{0, INT16U_MAX, 0},														// 515
-										{X_D_DEF1, X_D_DEF3, 0},												// 516
+										{0, INT16U_MAX, 0},														// 516
 										{0, INT16U_MAX, 0},														// 517
 										{0, INT16U_MAX, 0},														// 518
-										{X_D_DEF1, X_D_DEF3, 0},												// 519
+										{0, INT16U_MAX, 0},														// 519
 										{0, INT16U_MAX, 0},														// 520
 										{0, INT16U_MAX, 0},														// 521
-										{X_D_DEF1, X_D_DEF3, 0},												// 522
+										{0, INT16U_MAX, 0},														// 522
 										{0, INT16U_MAX, 0},														// 523
 										{0, INT16U_MAX, 0},														// 524
-										{X_D_DEF1, X_D_DEF3, 0},												// 525
+										{0, INT16U_MAX, 0},														// 525
 										{0, INT16U_MAX, 0},														// 526
 										{0, INT16U_MAX, 0},														// 527
-										{X_D_DEF1, X_D_DEF3, 0},												// 528
+										{0, INT16U_MAX, 0},														// 528
 										{0, INT16U_MAX, 0},														// 529
 
 										{0, 0, 0},																// 530
