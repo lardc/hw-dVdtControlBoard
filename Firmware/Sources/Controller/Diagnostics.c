@@ -30,10 +30,12 @@ Boolean DIAG_DispatchCommand(Int16U Command)
 			break;
 
 		case ACT_DIAG_PULSE_START:
+			CONTROL_HandleExtLed(TRUE);
 			DataTable[REG_TEST_RESULT] = OPRESULT_NONE;
 			ZbGPIO_SwitchOutRelay(TRUE);
 			DELAY_US(20000);
 			DataTable[REG_TEST_RESULT] = LOGIC_TestSequence();
+			CONTROL_HandleExtLed(FALSE);
 			break;
 
 		case ACT_DIAG_PULSE_SWITCH:
