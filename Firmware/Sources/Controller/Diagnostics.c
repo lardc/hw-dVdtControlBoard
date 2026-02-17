@@ -64,7 +64,7 @@ Boolean DIAG_DispatchCommand(Int16U Command)
 			break;
 
 		case ACT_DIAG_READ_DETECTOR:
-		    DataTable[REG_TEST_RESULT] = ZbGPIO_ReadDetectorPin() ? OPRESULT_OK : OPRESULT_FAIL;
+		    DataTable[REG_TEST_RESULT] = ZbGPIO_ReadDetectorPin() ? TESTRESULT_OK : TESTRESULT_FAIL;
 		    break;
 
 		case ACT_DIAG_GENERATE_SETP:

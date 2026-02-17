@@ -125,7 +125,7 @@
 #define REG_DISABLE_REASON			194	// Disbale reason in the case DeviceState -> DISABLE
 #define REG_WARNING					195	// Warning if present
 #define REG_PROBLEM					196	// Problem if present
-//
+#define REG_TEST_FINISHED			197	// Operation result
 #define REG_TEST_RESULT				198	// Test result
 #define REG_FAULT_REASON_EX			199 // External fault code
 //
@@ -262,6 +262,11 @@
 #define OPRESULT_NONE				0	// No information or not finished
 #define OPRESULT_OK					1	// Operation was successful
 #define OPRESULT_FAIL				2	// Operation failed
+
+// TEST RESULTS
+//
+#define TESTRESULT_FAIL				0	// Прибор открыт, низкое напряжение на выходе
+#define TESTRESULT_OK				1	// Прибор остался в закрытом состоянии
 
 // WARNING CODES
 //

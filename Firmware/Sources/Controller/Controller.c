@@ -215,6 +215,7 @@ Boolean CONTROL_ApplySettings(Int16U CellVRate_x10, Int16U CellVoltage)
 
 void CONTROL_EnableExternalSync(Boolean Enable)
 {
+	DataTable[REG_TEST_FINISHED] = TESTRESULT_FAIL;
 	DataTable[REG_TEST_RESULT] = OPRESULT_NONE;
 	ZwPWM_EnableTZInterruptsGlobal(FALSE);
 
@@ -268,7 +269,8 @@ void CONTROL_ExtSyncFinish()
 
 void CONTROL_NotifyEndTest(Boolean Result, Int16U FaultReason, Int16U Warning)
 {
-	DataTable[REG_TEST_RESULT] = Result ? OPRESULT_OK : OPRESULT_FAIL;
+	DataTable[REG_TEST_FINISHED] = Result ? OPRESULT_OK : OPRESULT_FAIL;
+	DataTable[REG_TEST_RESULT] = Result ? TESTRESULT_OK : TESTRESULT_FAIL;
 	DataTable[REG_WARNING] = Warning;
 	
 	if(FaultReason != FAULT_NONE)
@@ -301,6 +303,7 @@ static void CONTROL_FillWPPartDefault()
 {
 	DataTable[REG_FAULT_REASON] = FAULT_NONE;
 	DataTable[REG_WARNING] = WARNING_NONE;
+	DataTable[REG_TEST_FINISHED] = TESTRESULT_FAIL;
 	DataTable[REG_TEST_RESULT] = OPRESULT_NONE;
 	
 	Int16U i;
